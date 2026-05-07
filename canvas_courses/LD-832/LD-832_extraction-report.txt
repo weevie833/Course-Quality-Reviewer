@@ -1,0 +1,76 @@
+LD-832 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:43.450639+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 60
+
+EXTRACTED (48 files):
+  - Page: Faculty Notes About Badges (Micro-Credentials)
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Student Notes: About Badges (Micro-Credentials)
+  - Page: Module 1: Readings, Resources & Media
+  - Page: Module 1 Faculty Guide--do not publish
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Changing NH demographics
+  - Discussion: Module 1 Discussion: Top two topics
+  - Page: Module 2 Faculty guide-Please do not publish
+  - Page: Module 2: Readings, Resources & Media
+  - Discussion: Module 2 Discussion: Bias in the workplace
+  - Discussion: Module 2 Discussion: Bias and truthfulness
+  - Assignment: Module 2 Submission: Implicit Bias Test
+  - Page: Module 3 Faculty Guide--Do not publish
+  - Page: Module 3: Readings, Resources & Media
+  - Page: Instructions for recording a video of yourself
+  - Discussion: Module 3 Discussion: DEI and Institutions
+  - Discussion: Module 3 Discussion: Workplace culture
+  - Assignment: Module 3 Submission: Addressing DEI in the Workplace
+  - Assignment: Module 3 Video Practice: Record yourself and upload (required)
+  - Page: Module 4 Faculty Guide--do not publish
+  - Page: Module 4: Readings, Resources & Media
+  - Discussion: Module 4 Discussion: LGBTQ individuals in the workplace
+  - Discussion: Module 4 Discussion: The current climate around trust in your workplace
+  - Assignment: Module 4 Video Assignment: Diversity in the Workplace
+  - Page: Module 5 Faculty Guide--Do not publish
+  - Page: Module 5: Readings, Resources & Media
+  - Discussion: Module 5 Discussion: The Impact of COVID
+  - Discussion: Module 5 Discussion: Work/Life balance
+  - Page: Module 6 Faculty Guide--do not publish
+  - Page: Module 6: Readings, Resources & Media
+  - Discussion: Module 6 Discussion: Communication breakdown
+  - Discussion: Module 6 Discussion: Inclusion in the workplace
+  - Assignment: Module 6 Submission: Agency Analysis
+  - Page: Module 7 Faculty Guide--do not publish
+  - Page: Module 7: Readings, Resources & Media
+  - Discussion: Module 7 Discussion: Inclusive leadership
+  - Discussion: Module 7 Discussion: The Sandra Bland Case
+  - Assignment: Module 7 Submission: Final Paper
+  - Page: Module 8: Readings, Resources & Media
+  - Page: Students: Accessing & Sharing Your Badge
+  - Page: Module 8 Faculty Guide--do not publish
+  - Discussion: Module 8 Discussion: Takeaways
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: Recorded (Online) Presentation Rubric (LD)
+  - Rubric: Writing Rubric (LD)
+
+IGNORED (15 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

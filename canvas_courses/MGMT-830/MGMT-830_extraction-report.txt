@@ -1,0 +1,63 @@
+MGMT-830 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:43.995405+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 47
+
+EXTRACTED (36 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Page: About Discussion Forums
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Key components of a strategic planning model
+  - Assignment: Module 1 Submission: A plan is not a strategy
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Corporate governance
+  - Assignment: Module 2 Submission: The concept of corporate organization
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: Corporate finances
+  - Assignment: Module 3 Submission: Fiscal management concepts
+  - Assignment: Module 3 Submission: ERP Budget
+  - Page: Module 4:  Overview, Readings & Resources
+  - Page: About the Final Project
+  - Discussion: Module 4 Discussion: Overseeing budgets, costs, contingencies, and performance
+  - Assignment: Module 4 Submission: IT Vision
+  - Assignment: Module 4 Submission: Financial decision tree
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Communication methods
+  - Assignment: Module 5 Submission: Costs of SW/HW
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: The primary advantages to using ERP
+  - Assignment: Module 6 Submission: Executive Summary
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: Stability vs. agility
+  - Assignment: Module 7 Submission: ERP from a strategic and financial perspective.
+  - Page: Module 8:  Overview, Readings & Resources
+  - Page: About the Final Project
+  - Page: About Reflective Thinking
+  - Assignment: Module 8 Submission: Final ERP Plan
+  - Assignment: Module 8 Submission: Reflective Narrative Paper
+  - Rubric: BSTC Discussion Rubric
+  - Rubric: BSTC Weekly/Written Assignment Rubric
+  - Rubric: Reflective Thinking Rubric (Grad)
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

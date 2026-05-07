@@ -1,0 +1,59 @@
+HRM-815 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:40.697282+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 43
+
+EXTRACTED (32 files):
+  - Page: How to create a Team in Office 365
+  - Page: Instructor guidance on group formation
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Employment law
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Discrimination in Hiring: Subtle but Serious Risks
+  - Assignment: Module 2 Submission: Chapter Assignment
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: Employment screening
+  - Assignment: Module 3 Submission: Chapter Assignment
+  - Page: Module 4:  Overview, Readings & Resources
+  - Page: Group Participation Instructions
+  - Page: Instructions for scheduling a group meeting using UNH's Outlook Calendar
+  - Discussion: Module 4 Discussion: Harassment and Inclusion - Navigating the Grey Areas
+  - Assignment: Module 4 Submission: Chapter Assignment
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Balancing Accommodation, Identity, and Organizational Needs
+  - Assignment: Module 5 Submission: Case Study
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Wage Law and Pay Equity in the Real World
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: Monitoring employee activity
+  - Assignment: Module 7 Submission: Case Study
+  - Page: Module 8:  Overview, Readings & Resources
+  - Discussion: Module 8 Discussion: Recent trends in employment law
+  - Assignment: Module 8 Submission: Final Group Presentation
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Presentation Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

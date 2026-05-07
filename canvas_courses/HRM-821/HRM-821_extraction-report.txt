@@ -1,0 +1,57 @@
+HRM-821 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:41.127667+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 42
+
+EXTRACTED (30 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: The Pay Model as Framework
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Aligning with organizational objectives
+  - Discussion: Module 2 Discussion: Project Proposals (Non-graded but required)
+  - Assignment: Module 2 Submission:  Case Study #1 - Aligning Compensation Strategy with Business Goals
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: Internal Alignment
+  - Assignment: Module 3 Submission: Organization Application #1 So You Want to Lead an Orchestra!
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: External Competitiveness and Pay Strategy
+  - Assignment: Module 4 Submission: Organization Application #2 Utility Analysis
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Pay-for-Performance and Organizational Strategy
+  - Assignment: Module 5 Submission:  Case Study #2 - Designing a Pay-for-Performance Plan
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Performance Appraisals and Compensation
+  - Assignment: Module 6 Submission: Organization Application #2 Performance Appraisal at American Energy Development
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: Special Groups and Compensation Strategy
+  - Assignment: Module 7 Submission:  Case Study #3 - Managing Compensation for Special Groups
+  - Assignment: Module 7 Submission: Completed Draft the Final Course Concept Paper (For Feedback)
+  - Page: Module 8:  Overview, Readings & Resources
+  - Discussion: Module 8 Discussion: Trends and Technology in Rewards and Performance
+  - Assignment: Module 8 Submission: Final Course Concept Paper
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

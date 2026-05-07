@@ -1,0 +1,58 @@
+OPS-800 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:44.114670+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 42
+
+EXTRACTED (31 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: PM Program Resources: Rubrics, Discussions & APA
+  - Page: Module 1: Required Readings, Resources & Media
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Impact of Operations Management
+  - Page: Module 2: Required Readings, Resources & Media
+  - Discussion: Module 2 Discussion: Conflict of management roles
+  - Page: Module 3: Required Readings, Resources & Media
+  - Discussion: Module 3 Discussion: Disrupted supply chain
+  - Page: Module 4: Required Readings, Resources & Media
+  - Page: Module 4: Begin the Conflict Resolution assignment (Due Week 5)
+  - Discussion: Module 4 Discussion: Supply chains for manufacturing vs service-based organizations
+  - Page: Module 5: Required Readings, Resources & Media
+  - Discussion: Module 5 Discussion: Aggregate planning
+  - Discussion: Module 5 Discussion: Conflict in the workplace
+  - Assignment: Module 5 Submission: Conflict resolution
+  - Page: Module 6: Required Readings, Resources & Media
+  - Discussion: Module 6 Discussion: Operations functions
+  - Assignment: Module 6 Submission: The relative priority of each operations function
+  - Page: Module 7: Required Readings, Resources & Media
+  - Page: Module 4: Begin the Conflict Resolution assignment (Due Week 5)
+  - Discussion: Module 7 Discussion: Back-up planning & implementation
+  - Assignment: Module 7 Submission: Risk planning
+  - Page: Module 8: Required Readings, Resources & Media
+  - Discussion: Module 8 Discussion: Matrix or No Matrix
+  - Discussion: Module 8 Discussion: Implementation of a back-up plan
+  - Assignment: Module 8 Submission: Course reflection
+  - Rubric: PM Discussion Forum Rubric (1)
+  - Rubric: PM Assignment Rubric
+  - Rubric: PM Writing Rubric (1)
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Chalk and Wire - Dashboard (Do not use this for assignments)  (ExternalUrl)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

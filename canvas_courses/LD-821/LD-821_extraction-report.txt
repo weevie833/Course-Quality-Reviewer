@@ -1,0 +1,72 @@
+LD-821 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:42.522844+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 54
+
+EXTRACTED (42 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1: Required Readings, Resources & Media
+  - Page: Module one: Faculty Guide--do not publish
+  - Discussion: Module 1 Discussion: Ice Breaker, Please Introduce Yourself
+  - Discussion: Module 1 Discussion: Building a Career Centered on Leadership
+  - Page: Module 2: Required Readings, Resources & Media
+  - Page: Module 2: Faculty Guide--do not publish
+  - Discussion: Module 2 Discussion: Why be ethical?
+  - Assignment: Module 2 Submission: Response Paper #1 (Introduction to Ethics)
+  - Page: Module 3: Required Readings, Resources & Media
+  - Page: Module 3: Faculty Guide--Do not publish
+  - Discussion: Module 3 Discussion:  What Values are Important to Identify?
+  - Discussion: Module 3 Discussion: Themes of Ethical Problems
+  - Page: Module 4: Required Readings, Resources & Media
+  - Page: Module 4: Faculty Guide--Do not publish
+  - Discussion: Module 4 Discussion:  What is a Good life?
+  - Assignment: Module 4 Submission: IRB Training
+  - Page: Module 5: Required Readings, Resources & Media
+  - Page: Module 5: Faculty Guide--Do not publish
+  - Discussion: Module 5 Discussion: Identifying Current Ethical Problems
+  - Discussion: Module 5 Discussion: IRB and Methods
+  - Page: Module 6: Required Readings, Resources & Media
+  - Page: Module 6: Faculty Guide--do not publish
+  - Discussion: Module 6 Discussion: Perspectives in Ethical Theory
+  - Assignment: Module 6 Submission: Response Paper #2 (Perspectives in Ethical Theory)
+  - Discussion: Module 6 Discussion: Ethics of AI Integration in Leadership
+  - Page: Module 7: Required Readings, Resources & Media
+  - Page: Module 7: Faculty Guide--do not publish
+  - Assignment: Module 7 Submission: Infographic - Analyzing the Institutional Review Board
+  - Assignment: Module 7 Submission: Ethical Leadership Signature Assignment (Leadership and Nonprofit Students)
+  - Assignment: Module 7 Submission: Ethical Leadership Signature Assignment (Health Care Management Students)
+  - Assignment: Module 7 Submission: Ethical Leadership Signature Assignment (All Other Students)
+  - Page: Module 8: Required Readings, Resources & Media
+  - Page: Module 8 Faculty Guide--do not publish
+  - Discussion: Module 8 Discussion: Considering the Capstone
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+  - Rubric: Writing Rubric (LD)
+  - Rubric: BSTC Graduate Writing Assignment Rubric (HCM Ethical)
+  - Rubric: BSTC Graduate Writing Assignment Rubric (LD Ethical)
+
+IGNORED (17 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - General Q & A  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - PROGRAM SPECIFIC ASSIGNMENTS: Select the appropriate Signature Assignment for your academic program. (If not listed, select "All Other Students.")  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - PROGRAM SPECIFIC ASSIGNMENTS: Select the appropriate Narrative for your academic program. (If not listed, select "All Other Students.")  (ContextModuleSubHeader)
+
+======================================================================

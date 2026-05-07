@@ -1,0 +1,62 @@
+CMPL-801 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:39.013648+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 45
+
+EXTRACTED (35 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Page: About the Final Paper Assignment
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Structure and responsibilities of IT departments
+  - Assignment: Module 1 Submission: Organizational structure
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Porter’s Five Forces
+  - Assignment: Module 2 Submission: Employee Resistance
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: Evaluating the Impact of SLAs on Vendor Performance
+  - Assignment: Module 3 Submission: External support
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: Making Strategic Technology Choices for a Growing Business
+  - Assignment: Module 4 Submission: IT asset governance
+  - Assignment: Module 4 Submission: Draft work-in-progress
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Strategic IT Budgeting and Cost Justification
+  - Assignment: Module 5 Submission: Salary costs
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Ethical Decision Making in IT Leadership
+  - Assignment: Module 6 Submission: Corporate accountability
+  - Assignment: Module 6 Submission: Draft work-in-progress
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: Kiva Robotics
+  - Assignment: Module 7 Submission: Final project proposal
+  - Page: Module 8:  Overview, Readings & Resources
+  - Page: About Reflective Thinking
+  - Assignment: Module 8 Submission: Case study
+  - Assignment: Module 8 Submission: Narrative Reflection
+  - Rubric: Reflective Thinking Rubric (Grad)
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+  - Rubric: BSTC Graduate Project Assignment Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

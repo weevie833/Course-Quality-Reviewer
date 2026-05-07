@@ -1,0 +1,87 @@
+LD-850 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:43.704100+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 68
+
+EXTRACTED (50 files):
+  - Page: Notes for Instructor/Course History: DO NOT PUBLISH  (updated: 5/15/23)
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1: Required Readings, Resources & Media
+  - Page: Module 1: How to Create Your Capstone ePortfolio
+  - Page: Module 1: Instructor guide--do not publish
+  - Discussion: Module 1 Discussion: Introductions/Re-introductions
+  - Discussion: Module 1 Discussion: Capstone Research Paper Titles
+  - Assignment: Module 1: Mandatory Synchronous (Video) Session Feedback
+  - Assignment: Module 1 Submission: Leadership Reflection Paper
+  - Page: Module 2: Required Readings, Resources & Media
+  - Discussion: Module 2 Discussion: Academic/Scholarly Writing
+  - Assignment: Module 2: Mandatory Synchronous (Video) Session Feedback
+  - Assignment: Module 2 Submission: Capstone Research Paper Draft  #1
+  - Assignment: Module 2 Peer Review: Capstone Research Paper Draft  #1 (optional)
+  - Page: Module 3: Required Readings, Resources & Media
+  - Discussion: Module 3 Discussion: Professional Portfolio Advantages
+  - Assignment: Module 3: Mandatory Synchronous (Video) Session Feedback
+  - Page: Module 4: Required Readings, Resources & Media
+  - Discussion: Module 4 Discussion: Sharing Your Research Method
+  - Assignment: Module 4: Mandatory Synchronous (Video) Session Feedback
+  - Assignment: Module 4 Submission: Capstone Research Paper Draft  #2
+  - Assignment: Module 4 Peer Review: Capstone Research Paper Draft  #2 (optional)
+  - Page: Module 5: Required Readings, Resources & Media
+  - Discussion: Module 5 Discussion: Developing a Strong Conclusion
+  - Assignment: Module 5 Submission: Abstract & Biography Form Submission
+  - Assignment: Module 5: Mandatory Synchronous (Video) Session Feedback
+  - Page: Module 6: Required Readings, Resources & Media
+  - Discussion: Module 6 Discussion: What Makes a Great Speaker?
+  - Discussion: Module 6 Discussion: Presentation and Preparatory Items
+  - Discussion: Module 6 Assignment: Capstone ePortfolio Practical Application
+  - Assignment: Module 6 Submission: Capstone Research Paper Draft #3
+  - Assignment: Module 6 Peer Review: Capstone Research Paper Draft #3 (optional)
+  - Assignment: Module 6 Assignment: Capstone Research Presentation PowerPoint Slides
+  - Assignment: Module 6 Optional: Capstone Research Presentation Handouts
+  - Page: Module 7: Required Readings, Resources & Media
+  - Assignment: Module 7: Mandatory Synchronous (Video) Session Feedback
+  - Assignment: Module 7 Assignment: Capstone Research Paper
+  - Page: Module 7: Upload Capstone Research Paper to CPS Repository
+  - Assignment: Module 7 Assignment: Capstone Research Presentation Grade and Feedback
+  - Assignment: Module 7 Submission: Capstone ePortfolio Grade and Feedback
+  - Page: Module 8: Required Readings, Resources & Media
+  - Assignment: Module 8: Mandatory Synchronous (Video) Session Feedback
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Capstone Research Paper Rubric (LD)
+  - Rubric: Class Participation Rubric (LD)
+  - Rubric: Live (F2F or Virtual) Oral Presentation Rubric (LD)
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: My Capstone ePortfolio Rubric (LD)
+  - Rubric: BSTC Graduate Writing Assignment Rubric (LD Reflection)
+
+IGNORED (24 items):
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas Instructor Guide (External Site)  (ExternalUrl)
+  - Chalk and Wire - Dashboard (Do not use this for submitting assignments)  (ContextExternalTool)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 2 Instructor notes--do not publish  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 3: Instructor Notes--do not publish  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 4 Instructor notes--do not publish  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 5 Instructor Notes--Do not publish  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 6 Instructor notes--do not publish  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 6: Register for MS Capstone Presentation  (ExternalUrl)
+  - Module 7 Instructor notes--do not publish  (excluded title)
+  - Instructor Note: Please manually enter the ePortfolio grade. (do not publish)  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Module 8 Instructor notes--do not publish  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

@@ -1,0 +1,93 @@
+PM-811 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:44.495251+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 66
+
+EXTRACTED (59 files):
+  - Page: Faculty Notes About Badges (Micro-Credentials)
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Student Notes: About Badges (Micro-Credentials)
+  - Page: PM Program Resources: Rubrics, Discussions & APA
+  - Discussion: Virtual Student Lounge
+  - Page: Module 1: Required Readings, Resources & Media
+  - Discussion: Introductions Discussion
+  - Discussion: Module 1 Discussion: Project Culture and Methodology
+  - Assignment: Module 1 Submission: Payback Period Exercise
+  - Assignment: Module 1 Submission: Net Present Value (NPV) Analysis and Communication Exercise
+  - Page: Module 2: Required Readings, Resources & Media
+  - Discussion: Module 2 Discussion: Project Charter
+  - Discussion: Module 2 Discussion: Change Control
+  - Assignment: Module 2 Submission: Project Charter Development for Event Planning
+  - Assignment: Module 2 Submission: Scope Document for Event Planning Project
+  - Assignment: Module 2 Submission: Change Management Plan for Event Planning
+  - Page: Module 3: Required Readings, Resources & Media
+  - Discussion: Module 3 Discussion: Work Breakdown Structure
+  - Assignment: Module 3 Submission: Work Breakdown Structure (WBS) for the Event Planning Project
+  - Assignment: Module 3 Submission: Schedule Development and Critical Path Analysis for Event Planning Project
+  - Assignment: Module 3 Submission: Schedule Management Plan for Event Planning Project
+  - Page: Module 4: Required Readings, Resources & Media
+  - Assignment: Module 4 Submission: Resource Breakdown Structure (RBS) for Event Planning Project
+  - Assignment: Module 4 Submission: Resource Assignment and Schedule Refinement for Event Planning Project
+  - Assignment: Module 4 Submission: Resource Management Plan
+  - Page: Module 5: Required Readings, Resources & Media
+  - Discussion: Module 5 Discussion: Estimating Techniques
+  - Assignment: Module 5 Submission: Cost Estimation for Event Planning Project
+  - Assignment: Module 5 Submission: Draft Cost Management Plan for Event Planning Project
+  - Page: Module 6: Required Readings, Resources & Media
+  - Discussion: Module 6 Discussion: Risk Management and you
+  - Discussion: Module 6 Discussion: Project Risk Management
+  - Assignment: Module 6 Submission: Risk Register for Event Planning Project
+  - Assignment: Module 6 Submission: Risk Management Plan for Event Planning Project
+  - Page: Module 7: Required Readings, Resources & Media
+  - Discussion: Module 7 Discussion: Visual Tools
+  - Assignment: Module 7 Submission: Budget Development and Cumulative Cost Curve for Event Planning Project
+  - Assignment: Module 7 Submission: Final Cost Management Plan for the  Event Planning Project
+  - Page: Module 8: Required Readings, Resources & Media
+  - Page: Students: Accessing & Sharing Your Badge
+  - Discussion: Module 8 Discussion: Project Communications
+  - Assignment: Module 8 Submission: Communications Management Plan for Event Planning Project
+  - Assignment: Module 8 Submission: Stakeholder Engagement Plan for Event Planning Project
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: PM Discussion Forum Rubric (1)
+  - Rubric: PM Assignment Rubric
+  - Rubric: PM Assignment Rubric-WBS
+  - Rubric: Writing Rubric
+  - Rubric: PM Assignment Rubric-Change Mgt Plan
+  - Rubric: PM Assignment Rubric-Stakeholder Engagement
+  - Rubric: PM Assignment Rubric-Budget
+  - Rubric: PM Assignment Rubric-Project Charter
+  - Rubric: PM Assignment Rubric-Scope
+  - Rubric: PM Assignment Rubric-Schedule
+  - Rubric: PM Assignment Rubric-Risk Mgt Plan
+  - Rubric: PM Discussion Forum Rubric-Project Culture
+  - Rubric: PM Assignment Rubric-Cost Mgt Plan
+  - Rubric: PM Assignment Rubric-Resource Mgt Plan
+
+IGNORED (21 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - General Q & A  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Project Management Students Only: Competency Assessment  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Project Management Students Only: Competency Assessment  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Project Management Students Only: Competency Assessment  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Project Management Students Only: Competency Assessment  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Project Management Students Only: Competency Assessment  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Project Management Students Only: Competency Assessment  (ContextModuleSubHeader)
+  - Leadership Students Only: Competency Assessment  (ContextModuleSubHeader)
+
+======================================================================

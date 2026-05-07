@@ -1,0 +1,75 @@
+LD-823 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:42.718739+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 54
+
+EXTRACTED (46 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: OER (eBook)  Information
+  - Page: How to Download the eBook
+  - Page: Module 1: Faculty Guide--do not publish
+  - Page: Module 1: Readings, Media & Resources
+  - Discussion: Module 1 Video Discussion: Introductions
+  - Assignment: Module 1 Submission: Strategic Leadership Plan  – Topic Selection
+  - Page: Module 2: Faculty Guide--do not publish
+  - Page: Module 2: Readings, Media & Resources
+  - Discussion: Module 2 Discussion: Decision Making
+  - Assignment: Module 2 Submission: Identifying Desired Future States
+  - Page: Module 3: Faculty guide--do not publish
+  - Page: Module 3: Readings, Media & Resources
+  - Discussion: Module 3 Discussion: Stakeholders
+  - Assignment: Module 3 Submission: Building a Stakeholder Map
+  - Assignment: Module 3 Submission: Strategic Leadership Plan  – Annotated Bibliography
+  - Page: Module 4 Faculty Guide--do not publish
+  - Page: Module 4: Readings, Media & Resources
+  - Discussion: Module 4 Video Discussion: Human Resources
+  - Assignment: Module 4 Submission: Strategic Human Resources Infographic
+  - Assignment: Module 4 Submission: The Value of Diversity in Leadership
+  - Page: Module 5 Faculty Guide--do not publish
+  - Page: Module 5: Readings, Media & Resources
+  - Discussion: Module 5 Discussion: Motivation
+  - Assignment: Module 5 Submission: Strategic Leadership Plan  – Literature Review
+  - Page: Module 6 Faculty guide--do not publish
+  - Page: Module 6: Readings, Media & Resources
+  - Assignment: Module 6 Submission: Case Study Reflection
+  - Page: Module 7 Faculty guide--do not publish
+  - Page: Module 7: Readings, Media & Resources
+  - Discussion: Module 7 Video Discussion: Organizational Structure and Culture
+  - Assignment: Module 7 Submission: Strategic Leadership Plan
+  - Page: Module 8 Faculty Guide--do not publish
+  - Page: Module 8: Readings, Media & Resources
+  - Discussion: Module 8 Discussion: Strategic Leadership
+  - Discussion: Module 8 Discussion: Considering the Capstone
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Video Discussion Rubric (LD)
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: Annotated Bibliography Rubric (LD)
+  - Rubric: Infographic Rubric (LD)
+  - Rubric: Writing Rubric (LD)
+  - Rubric: Literature Review Rubric (LD)
+  - Rubric: Writing Rubric (LD Identifying)
+  - Rubric: Writing Rubric (LD Value of Diversity)
+
+IGNORED (16 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - eTextbook: Emergence of a Strategic Leader  (ExternalUrl)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

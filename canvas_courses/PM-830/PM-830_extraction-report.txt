@@ -1,0 +1,56 @@
+PM-830 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:45.419481+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 38
+
+EXTRACTED (30 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Assignment: Module 1 Submission: Pressman on the role of the IT Manager
+  - Assignment: Module 1 Submission: Case study - The Role of the IT Project Manager
+  - Page: Module 2:  Overview, Readings & Resources
+  - Page: About the Research Paper Assignment
+  - Discussion: Module 2 Discussion: SDLC and PMLC
+  - Assignment: Module 2 Practice Tech Activity: Record yourself and upload (required)
+  - Page: Module 3:  Overview, Readings & Resources
+  - Page: Instructions for recording a video of yourself
+  - Assignment: Module 3 Submission: Video Presentation - Application Project Case Study
+  - Page: Module 4:  Overview, Readings & Resources
+  - Assignment: Module 4 Submission: Insurance System Project
+  - Page: Module 5:  Overview, Readings & Resources
+  - Assignment: Module 5 Submission: Quality Control Integration
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: CI/CD delivery model
+  - Assignment: Module 6 Submission: Completed DRAFT of your Research Paper
+  - Page: Module 7:  Overview, Readings & Resources
+  - Assignment: Module 7 Submission: DevOps Short Paper
+  - Page: Module 8:  Overview, Readings & Resources
+  - Discussion: Module 8 Discussion: Frontier technologies in IT Project Management
+  - Assignment: Module 8 Submission: Final version of your Research Paper
+  - Rubric: PM Writing Rubric
+  - Rubric: PM Discussion Forum Rubric
+  - Rubric: BSTC Graduate Presentation Rubric
+  - Rubric: PM 830 DevOps Assignment Rubric
+  - Rubric: PM Assignment Rubric
+
+IGNORED (13 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

@@ -1,0 +1,72 @@
+LD-806 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:41.924119+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 55
+
+EXTRACTED (43 files):
+  - Page: Notes for Instructor/Course History: DO NOT PUBLISH  (updated: 5/15/23)
+  - Page: Course Overview Faculty Guide: Do not publish
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1 Faculty Guide: Do not publish
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Fundraising vs. Development
+  - Page: Module 2 Faculty Guide: Do not publish
+  - Page: Module 2:  Overview, Readings & Resources
+  - Page: Optional: Module 2 Video Conference Class Discussion
+  - Assignment: Module 2 OER Project Deliverable: Group Chapter Selection
+  - Page: Module 3: Faculty Guide: Do not publish
+  - Page: Module 3:  Overview, Readings & Resources
+  - Page: Optional: Module 3 Video Conference Class Discussion
+  - Discussion: Module 3 Discussion: Donor Values
+  - Assignment: Module 3 Assignment: Group Selected Chapter Proposal/Outline
+  - Discussion: Module 3 Discussion Forum: Share OER Chapter Outline
+  - Page: Module 4: Faculty Guide: Do not publish
+  - Page: Module 4:  Overview, Readings & Resources
+  - Page: Optional: Module 4 Video Conference Class Discussion
+  - Discussion: Module 4 Discussion: How fundraising fails
+  - Page: Module 5: Faculty Guide:  Do not publish
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Fundraising as a performance
+  - Page: Module 6: Faculty Guide:  Do not publish
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Share OER Drafts
+  - Assignment: Module 6 Assignment: OER Draft
+  - Page: Module 7: Faculty Guide:  Do not publish
+  - Page: Module 7:  Overview, Readings & Resources
+  - Assignment: Module 7 Submission: OER Final Draft
+  - Assignment: Module 7 Submission: Interview Reflection
+  - Page: Module 8: Faculty Guide:  Do not publish
+  - Page: Module 8:  Overview, Readings & Resources
+  - Assignment: Module 8 Submission: Student Self-Assessment
+  - Assignment: Module 8 Submission: OER Submission Assessment
+  - Assignment: Module 8 Submission: Self and Classmate OER Contribution Assessment
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Self and Classmate-Assessment OER Contribution Rubric
+  - Rubric: Writing Rubric (LD)
+  - Rubric: OER Self Assessment Submission Rubric
+  - Rubric: OER Rubric (LD)
+
+IGNORED (16 items):
+  - Download required syllabus template from Syllabus Repository  (ExternalUrl)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - UNH Library eBook: Achieving Excellence in Fundraising (Essential Texts for Nonprofit and Public Leadership and Management  (ExternalUrl)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - ----------PROGRAM SPECIFIC ASSIGNMENTS----------Submit only what applies to you.  (ContextModuleSubHeader)
+
+======================================================================

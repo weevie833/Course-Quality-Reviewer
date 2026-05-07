@@ -1,0 +1,55 @@
+PM-819 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:45.045968+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 36
+
+EXTRACTED (28 files):
+  - Page: Course Overview
+  - Page: PM Program Resources: Rubrics, Discussions & APA
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Defining Quality
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: The role of values
+  - Page: Module 3:  Overview, Readings & Resources
+  - Page: Instructions for Developing Your Quality Management Plan
+  - Assignment: Module 3 Submission: QM Plan Draft
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: The ISO 9000 Standard
+  - Page: Module 5:  Overview, Readings & Resources
+  - Assignment: Module 5 Submission:  Updated QM Plan Draft
+  - Assignment: Module 5 Submission: Project/Process Flowchart
+  - Page: Module 6:  Overview, Readings & Resources
+  - Assignment: Module 6 Submission: Final Draft Quality Management Plan
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: An ethical dilemma
+  - Page: Module 8:  Overview, Readings & Resources
+  - Assignment: Module 8 Submission: Project Quality Management Plan
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: PM Assignment Rubric
+  - Rubric: PM Discussion Forum Rubric
+  - Rubric: Writing Rubric
+  - Rubric: PM Writing Rubric
+  - Rubric: PM Assignment Rubric-Project QM Plan
+  - Rubric: PM Assignment Rubric-Project-Process
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

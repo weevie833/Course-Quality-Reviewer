@@ -1,0 +1,60 @@
+tmp5bv58w8a Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T21:12:06.558713+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 44
+
+EXTRACTED (32 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: Attitudes about emerging technology
+  - Assignment: Module 1 Submission: Trending technologies
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Ethical dilemmas
+  - Assignment: Module 2 Research Paper Outline & Draft Literature Review
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: AI implementation
+  - Assignment: Module 3 Submission: AI as a disruptive force
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: Implications of blockchain technology
+  - Assignment: Module 4 Submission: Literature Review & Initial Draft of Research Paper
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Implementing and Managing Robotics Process Automation (RPA)
+  - Assignment: Module 5 Submission: In-Depth Analysis of a Lesser-Known Robotics Automation Application
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: The Role of IoT in Smart Retail
+  - Assignment: Module 6 Develop a Security Survey Instrument for an IoT Device
+  - Page: Module 7:  Overview, Readings & Resources
+  - Assignment: Module 7 Submission: Uses for AR
+  - Assignment: Module 7 Draft Submission: Emerging Technology Research Paper
+  - Page: Module 8:  Overview, Readings & Resources
+  - Page: About the Reflective Thinking Rubric
+  - Page: About the Final Research paper
+  - Assignment: Module 8 Submission: Final Research Paper
+  - Assignment: Module 8 Submission: Reflection Narrative
+  - Rubric: Reflective Thinking Rubric (Grad)
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+
+IGNORED (15 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Reflective Thinking Tutorial (10:00)  (ExternalUrl)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

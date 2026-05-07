@@ -1,0 +1,10 @@
+{
+  "name": "canvas-course-scraper",
+  "version": "0.2.0",
+  "description": "Canvas IMSCC batch processor that extracts course content (pages, assignments, discussions, quizzes, rubrics) and prepares clean HTML files for PLO/CLO mapping analysis.",
+  "author": {
+    "name": "Steve Covello"
+  },
+  "homepage": "",
+  "keywords": ["canvas", "imscc", "course-extraction", "learning-outcomes", "instructional-design"]
+}

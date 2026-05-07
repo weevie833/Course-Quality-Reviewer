@@ -1,0 +1,79 @@
+LD-831 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:43.315036+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 63
+
+EXTRACTED (49 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1: Required Readings, Resources & Media
+  - Page: Module 1 Faculty Guide--do not publish
+  - Discussion: Module 1 Discussion: Introduction Forum
+  - Assignment: Module 1 Submission: Real Conflict Assessment
+  - Assignment: Module 1 Submission: Topic Selection
+  - Assignment: Module 1 Submission: Conflict Management Assessment
+  - Page: Module 2: Required Readings, Resources & Media
+  - Page: Module 2 Faculty guide-Please do not publish
+  - Discussion: Module 2 Discussion: Fresh Eyes
+  - Discussion: Module 2 Discussion: Biggest Deficit & Best Quality
+  - Page: Module 3: Required Readings, Resources & Media
+  - Page: Module 3 Faculty guide--Do not publish
+  - Discussion: Module 3 Discussion: Constructive Conflict
+  - Assignment: Module 3 Submission: Annotated Bibliography
+  - Assignment: Module 3 Submission: Active Listening
+  - Page: Module 4: Required Readings, Resources & Media
+  - Page: Module 4 Faculty Guide--do not publish
+  - Discussion: Module 4 Discussion: Conflict Escalation
+  - Discussion: Module 4 Discussion: Global Setting
+  - Assignment: Module 4 Submission: Midterm Test
+  - Page: Module 5: Required Readings, Resources & Media
+  - Page: Module 5 Faculty Guide--Do not publish
+  - Discussion: Module 5 Discussion: BATNA Questions
+  - Assignment: Module 5 Submission: Getting Past No - The 5-Step Process
+  - Discussion: Module 5 Discussion: Acknowledgments
+  - Page: Module 6: Required Readings, Resources & Media
+  - Page: Module 6 Faculty Guide-do not publish
+  - Discussion: Module 6 Discussion: Tools to Share
+  - Discussion: Module 6 Discussion: Seven Elements
+  - Discussion: Module 6 Discussion: Difficult Discussions
+  - Assignment: Module 6 Submission: Alternative Dispute Resolution (ADR)
+  - Page: Module 7: Required Readings, Resources & Media
+  - Page: Module 7 Faculty Guide--do not publish
+  - Discussion: Module 7 Discussion: Reframing
+  - Discussion: Module 7 Discussion: Challenge me
+  - Assignment: Module 7 Submission: Interview
+  - Assignment: Module 7 Submission: Final Term Paper
+  - Discussion: Module 7 Discussion: Help me (Course Evaluation)
+  - Page: Module 8: Required Readings, Resources & Media
+  - Page: Module 8 Faculty Guide--do not publish
+  - Discussion: Module 8 Discussion: Rights
+  - Discussion: Module 8 Discussion: What I took away
+  - Assignment: Module 8 Submission: Public Sector Collective Bargaining Issue
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: Annotated Bibliography Rubric (LD)
+  - Rubric: Writing Rubric (LD)
+
+IGNORED (17 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Chalk and Wire - Dashboard  (ContextExternalTool)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - ----------PROGRAM SPECIFIC ASSIGNMENTS----------Submit only what applies to you.  (ContextModuleSubHeader)
+
+======================================================================

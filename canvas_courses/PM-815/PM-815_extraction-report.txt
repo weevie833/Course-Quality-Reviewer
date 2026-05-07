@@ -1,0 +1,69 @@
+PM-815 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:44.791263+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 49
+
+EXTRACTED (40 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: OER Textbooks
+  - Page: PM Program Resources: Rubrics, Discussions & APA
+  - Discussion: Virtual Student Lounge
+  - Page: Module 1: Required Readings, Resources & Media
+  - Discussion: Module 1: Personal Introduction
+  - Discussion: Module 1 Discussion: Why do companies outsource?
+  - Discussion: Module 1 Discussion: Ethics & Procurement Management
+  - Assignment: Module 1 Submission: Project Charter (Non-Graded)
+  - Assignment: Module 1 Submission: Centralized/Decentralized Contracting
+  - Page: Module 2: Required Readings, Resources & Media
+  - Assignment: Module 2 Submission: Make or Buy
+  - Assignment: Module 2 Submission: Procurement Statement of Work for the Party Project
+  - Assignment: Module 2 Submission: Source Selection Criteria
+  - Page: Module 3: Required Readings, Resources & Media
+  - Discussion: Module 3 Discussion: Negotiation - What Makes an Effective Negotiator
+  - Assignment: Module 3 Submission: Interview Strategy, Technique and Questions
+  - Page: Module 4: Required Readings, Resources & Media
+  - Discussion: Module 4 Discussion: Confidentiality
+  - Discussion: Module 4 Discussion: Contracts Type
+  - Page: Module 5: Required Readings, Resources & Media
+  - Discussion: Module 5: Discussion: Terms and Conditions
+  - Assignment: Module 5 Submission: Procurement Management Plan (Draft and Ungraded)
+  - Page: Module 6: Required Readings, Resources & Media
+  - Assignment: Module 6 Submission: Procurement Management Plan
+  - Assignment: Module 6 Submission: Negotiate/BATNA
+  - Page: Module 7: Required Readings, Resources & Media
+  - Discussion: Module 7 Discussion: Negotiation Impasses
+  - Discussion: Module 7 Discussion: Seller Issues
+  - Page: Module 8: Required Readings, Resources & Media
+  - Discussion: Module 8  Discussion: Best Practices in Negotiations
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: PM Assignment Rubric
+  - Rubric: PM Discussion Forum Rubric (1)
+  - Rubric: PM Discussion Forum Rubric-Best Practices
+  - Rubric: PM Discussion Forum Rubric-Negotiation
+  - Rubric: PM Writing Rubric (1)
+  - Rubric: PM Assignment Rubric-BATNA
+  - Rubric: PM Assignment Rubric-Procurement
+
+IGNORED (16 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Chalk and Wire - Dashboard (Do not use this for assignments)  (ContextExternalTool)
+  - General Discussions  (ContextModuleSubHeader)
+  - General Q & A  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

@@ -1,0 +1,71 @@
+LD-810 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:42.114284+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 52
+
+EXTRACTED (39 files):
+  - Page: Faculty Course Guide (DO NOT PUBLISH)
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1: Required Readings, Resources & Media
+  - Page: Module 1 Faculty Guide-Do not publish
+  - Discussion: Module 1 Discussion: Introduce Yourself
+  - Discussion: Module 1 Video Discussion: Change Leader
+  - Page: Module 2: Required Readings, Resources & Media
+  - Page: Module 2 Faculty Guide-Do not publish
+  - Assignment: Module 2 Video Submission: Examining the Workplace
+  - Discussion: Module 2 Discussion: How Do You Respond to Change in the Workplace?
+  - Page: Module 3: Required Readings, Resources & Media
+  - Page: Module 3 Faculty Guide-Do not publish
+  - Discussion: Module 3 Discussion: Change Management Skills
+  - Assignment: Module 3 Submission: Change Management Plan Outline
+  - Page: Module 4: Required Readings, Resources & Media
+  - Page: Module 4 Faculty Guide-Do not publish
+  - Assignment: Module 4 Submission: Change Management Plan
+  - Page: Module 5: Required Readings, Resources & Media
+  - Page: Module 5 Faculty Guide-Do not publish
+  - Assignment: Module 5 Simulation: Change Management Simulation - Part 1
+  - Discussion: Module 5 Discussion: Change Management Simulation - Part 1
+  - Page: Module 6: Required Readings, Resources & Media
+  - Page: Module 6 Faculty Guide-Do not publish
+  - Assignment: Module 6 Submission: Communication Management Plan (Leadership Students Only)
+  - Page: Module 7: Required Readings, Resources & Media
+  - Page: Module 7 Faculty Guide-Do not publish
+  - Discussion: Module 7 Discussion: Change Management Simulation - Part 2
+  - Assignment: Module 7 Simulation: Change Management Simulation - Part 2
+  - Page: Module 8: Required Readings, Resources & Media
+  - Page: Module 8 Faculty Guide--Do not publish
+  - Discussion: Module 8 Discussion: Considering the Capstone
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: Video Discussion Rubric (LD)
+  - Rubric: Writing Rubric (LD)
+  - Rubric: Recorded (Online) Presentation Rubric (LD)
+  - Rubric: Writing Rubric (LD Change Mgt)
+  - Rubric: Writing Rubric (LD Comm Mgt Plan)
+
+IGNORED (19 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - UNH Library eBook: Planning and Managing Change,  Payne, Vivette (2005) American Management  (ExternalUrl)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Module 3: Optional Video Conference Session (see Announcements)  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - ----------PROGRAM SPECIFIC ASSIGNMENTS----------Submit only what applies to you.  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - ----------PROGRAM SPECIFIC ASSIGNMENTS----------Submit only what applies to you.  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

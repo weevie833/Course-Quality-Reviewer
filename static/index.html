@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Intelligence Interface</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --wildcat-blue: #001B43;
+      --spring-green: #CBDB2A;
+      --seacoast-blue: #4C9BD5;
+      --parchment: #F5F4EC;
+      --white: #FFFFFF;
+      --border: #D0CEBC;
+      --user-bubble: #E8EDF5;
+      --font-body: 'Calibri', Arial, sans-serif;
+      --font-label: 'Arial Narrow', Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font-body);
+      background: var(--parchment);
+      color: #1a1a1a;
+    }
+
+    /* ── Layout ── */
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--wildcat-blue);
+      color: var(--white);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 64px;
+      flex-shrink: 0;
+    }
+    header .accent-bar {
+      width: 4px;
+      height: 36px;
+      background: var(--spring-green);
+      border-radius: 2px;
+    }
+    header .titles { flex: 1; }
+    header h1 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    header .subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: var(--font-label);
+    }
+    header .badge {
+      background: var(--spring-green);
+      color: var(--wildcat-blue);
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--font-label);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+
+    /* ── Chat area ── */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 0;
+      scroll-behavior: smooth;
+    }
+
+    .messages {
+      max-width: 80%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Welcome state ── */
+    .welcome {
+      text-align: center;
+      padding: 40px 24px 0;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .welcome h2 {
+      font-size: 24px;
+      color: var(--wildcat-blue);
+      margin-bottom: 10px;
+    }
+    .welcome p {
+      font-size: 14px;
+      color: #595959;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Messages ── */
+    .message { display: flex; flex-direction: column; gap: 4px; }
+
+    .message.user { align-items: flex-end; }
+    .message.assistant { align-items: flex-start; }
+
+    .bubble {
+      max-width: 90%;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .message.user .bubble {
+      background: var(--wildcat-blue);
+      color: var(--white);
+      border-bottom-right-radius: 2px;
+    }
+    .message.assistant .bubble {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 2px;
+      color: #1a1a1a;
+    }
+
+    /* Markdown rendering inside assistant bubbles */
+    .bubble h1, .bubble h2, .bubble h3 {
+      color: var(--wildcat-blue);
+      margin: 14px 0 6px;
+      font-size: 15px;
+    }
+    .bubble h1:first-child, .bubble h2:first-child, .bubble h3:first-child { margin-top: 0; }
+    .bubble p { margin-bottom: 8px; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble ul, .bubble ol { padding-left: 20px; margin-bottom: 8px; }
+    .bubble li { margin-bottom: 4px; }
+    .bubble strong { color: var(--wildcat-blue); }
+    .bubble em { font-style: italic; }
+    .bubble code {
+      background: #f0f0ea;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .bubble table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+    .bubble th {
+      background: var(--wildcat-blue);
+      color: var(--white);
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .bubble td {
+      border: 1px solid var(--border);
+      padding: 7px 10px;
+      vertical-align: top;
+    }
+    .bubble tr:nth-child(even) td { background: var(--parchment); }
+    /* Download button on assistant bubbles */
+    .message.assistant { position: relative; }
+    .download-btn {
+      display: none;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: var(--parchment);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: #555;
+      cursor: pointer;
+      font-family: var(--font-label);
+      letter-spacing: 0.04em;
+    }
+    .download-btn:hover { background: var(--white); border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
+    .message.assistant:hover .download-btn { display: block; }
+
+    .bubble blockquote {
+      border-left: 3px solid var(--spring-green);
+      padding-left: 12px;
+      margin: 8px 0;
+      color: #555;
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      gap: 5px;
+      padding: 14px 18px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      border-bottom-left-radius: 2px;
+      width: fit-content;
+    }
+    .typing-indicator span {
+      width: 7px;
+      height: 7px;
+      background: var(--seacoast-blue);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ── Input bar ── */
+    .input-bar {
+      flex-shrink: 0;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+    .input-inner {
+      max-width: 80%;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    #user-input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      resize: none;
+      min-height: 44px;
+      max-height: 160px;
+      overflow-y: auto;
+      outline: none;
+      transition: border-color 0.15s;
+      background: var(--parchment);
+      color: #1a1a1a;
+    }
+    #user-input:focus { border-color: var(--seacoast-blue); background: var(--white); }
+    #user-input::placeholder { color: #595959; }
+
+    #send-btn {
+      background: var(--wildcat-blue);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    #send-btn:hover:not(:disabled) { background: #002a6b; }
+    #send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    #send-btn svg { width: 18px; height: 18px; fill: var(--white); }
+    #send-btn.stop-mode { background: #c0392b; }
+    #send-btn.stop-mode:hover { background: #a93226; }
+
+    /* ── No-program confirmation modal ── */
+    #scope-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    #scope-modal.visible { display: flex; }
+    .modal-box {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 28px 32px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    .modal-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--wildcat-blue);
+      margin-bottom: 10px;
+    }
+    .modal-box p {
+      font-size: 0.92rem;
+      color: #444;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .modal-actions button {
+      padding: 8px 18px;
+      border-radius: 5px;
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+    #modal-cancel {
+      background: #e8e8e8;
+      color: #333;
+    }
+    #modal-cancel:hover { background: #d4d4d4; }
+    #modal-proceed {
+      background: var(--wildcat-blue);
+      color: var(--white);
+    }
+    #modal-proceed:hover { background: #002a6b; }
+
+    /* ── Program selector ── */
+    .program-selector {
+      max-width: 80%;
+      margin: 0 auto 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .program-selector-label {
+      font-size: 11px;
+      font-family: var(--font-label);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #595959;
+      margin-right: 4px;
+      white-space: nowrap;
+    }
+    .prog-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--parchment);
+      font-size: 12px;
+      font-family: var(--font-label);
+      color: #555;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .prog-pill:hover { border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
+    .prog-pill.active {
+      background: var(--seacoast-blue);
+      border-color: var(--seacoast-blue);
+      color: var(--white);
+    }
+    .prog-pill.active:hover { background: #002a6b; border-color: #002a6b; }
+
+    .input-hint {
+      text-align: center;
+      font-size: 11px;
+      color: #595959;
+      margin-top: 6px;
+    }
+
+    /* ── Inline content-type filter prompt (injected after broad responses) ── */
+    .filter-prompt {
+      margin: 6px 0 4px 0;
+      padding: 10px 14px;
+      background: #f0f4f8;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+    }
+    .filter-prompt-label {
+      font-size: 11px;
+      font-family: var(--font-label);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #595959;
+      white-space: nowrap;
+      margin-right: 2px;
+    }
+    .filter-chip-inline {
+      padding: 4px 11px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 12px;
+      font-family: var(--font-label);
+      color: #555;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .filter-chip-inline:hover { border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
+    .filter-chip-inline.active {
+      background: var(--wildcat-blue);
+      border-color: var(--wildcat-blue);
+      color: var(--white);
+    }
+    .filter-chip-inline.active:hover { background: #002a6b; border-color: #002a6b; }
+    .filter-rerun-btn {
+      padding: 4px 14px;
+      background: var(--spring-green);
+      color: var(--wildcat-blue);
+      border: none;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: var(--font-label);
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 4px;
+      transition: opacity 0.15s;
+    }
+    .filter-rerun-btn:hover { opacity: 0.82; }
+
+    /* ── Send button tooltip ── */
+    #send-btn-wrapper {
+      position: relative;
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+    #send-btn-wrapper[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      right: 0;
+      background: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ── Admin toggle button (header) ── */
+    .admin-toggle-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.8);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: var(--font-label);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: border-color 0.15s, color 0.15s;
+      margin-right: 8px;
+    }
+    .admin-toggle-btn:hover { border-color: var(--spring-green); color: var(--spring-green); }
+
+    /* ── Admin panel ── */
+    #admin-panel {
+      display: none;
+      background: #f4f5f7;
+      border-bottom: 1px solid #d0d4db;
+      padding: 14px 20px;
+    }
+    #admin-panel.visible { display: block; }
+    .admin-panel-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .admin-field { display: flex; flex-direction: column; gap: 4px; }
+    .admin-field label { font-size: 11px; font-family: var(--font-label); text-transform: uppercase; letter-spacing: 0.06em; color: #595959; }
+    .admin-field input[type="file"] { font-size: 13px; }
+    .admin-field input[type="text"] {
+      font-size: 13px;
+      padding: 5px 8px;
+      border: 1px solid #c0c4cc;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      width: 110px;
+    }
+    #admin-ingest-btn {
+      background: var(--wildcat-blue);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-family: var(--font-label);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.15s;
+      height: 32px;
+    }
+    #admin-ingest-btn:hover:not(:disabled) { background: #002a6b; }
+    #admin-ingest-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    #admin-status {
+      font-size: 12px;
+      color: #333;
+      font-family: var(--font-body);
+      margin-top: 8px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      min-height: 18px;
+    }
+    #admin-status.error { color: #b00020; }
+    #admin-status.success { color: #1a5c1a; }
+
+    /* ── New chat button ── */
+    .new-chat-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.8);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: var(--font-label);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .new-chat-btn:hover {
+      border-color: var(--spring-green);
+      color: var(--spring-green);
+    }
+
+    /* ── Option buttons (injected below assistant bubbles) ── */
+    .option-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .option-btn {
+      background: #002a6b;
+      border: 1px solid #002a6b;
+      color: var(--white);
+      border-radius: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: background 0.15s;
+      text-align: left;
+    }
+    .option-btn:hover:not(:disabled) {
+      background: var(--seacoast-blue);
+      border-color: var(--seacoast-blue);
+    }
+    .option-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .option-hint {
+      font-size: 11px;
+      color: #595959;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    /* ── Visualization blocks ── */
+    .viz-block {
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+    .viz-block svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .viz-block canvas {
+      max-width: 100%;
+    }
+    .viz-loading {
+      color: #888;
+      font-style: italic;
+      font-size: 0.9em;
+    }
+    .viz-error {
+      color: #a00;
+      font-style: italic;
+      font-size: 0.88em;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<!-- Scope confirmation modal (no program selected / multiple programs selected) -->
+<div id="scope-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <h3 id="modal-title"></h3>
+    <p id="modal-body"></p>
+    <div class="modal-actions">
+      <button id="modal-cancel"></button>
+      <button id="modal-proceed">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <header>
+    <div class="accent-bar"></div>
+    <div class="titles">
+      <div class="subtitle">University of New Hampshire · College of Professional Studies</div>
+      <h1>Program Intelligence Interface</h1>
+    </div>
+    <button class="admin-toggle-btn" onclick="toggleAdmin()">Admin</button>
+    <button class="new-chat-btn" onclick="newChat()">New Chat</button>
+  </header>
+
+  <div id="admin-panel">
+    <div class="admin-panel-inner">
+      <div class="admin-field">
+        <label for="admin-file">Canvas Export (.imscc)</label>
+        <input type="file" id="admin-file" accept=".imscc">
+      </div>
+      <button id="admin-ingest-btn" onclick="ingestCourse()">Ingest</button>
+    </div>
+    <div id="admin-status"></div>
+  </div>
+
+  <div class="chat-area" id="chat-area">
+    <div class="messages" id="messages" aria-live="polite" aria-label="Conversation">
+      <div class="welcome" id="welcome">
+        <h2>Program Intelligence Interface</h2>
+        <p>Ask questions about PLO coverage, CLO alignment, assignments, and rubrics across any program.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <div class="program-selector" id="program-selector">
+      <span class="program-selector-label input-hint">Select at least one program to begin</span>
+      <!-- pills injected by JS -->
+    </div>
+    <div class="input-inner">
+      <textarea
+        id="user-input"
+        aria-label="Chat input"
+        placeholder="Ask about PLOs, CLOs, assignments, rubrics, or program alignment…"
+        rows="3"
+        autofocus
+      ></textarea>
+      <span id="send-btn-wrapper" style="display:inline-flex;flex-shrink:0;">
+      <button id="send-btn" onclick="handleSendStop()" title="Send">
+        <svg class="icon-send" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+        <svg class="icon-stop" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="display:none">
+          <rect x="5" y="5" width="14" height="14" rx="2"/>
+        </svg>
+      </button>
+      </span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let history = [];
+  let isStreaming = false;
+  let selectedPrograms = new Set();      // short_names of active filter pills
+  let selectedContentTypes = new Set();  // e.g. "Assignment", "Rubric" — empty = no filter
+
+  const CONTENT_TYPE_LABELS = [
+    { label: 'Submissions',   value: 'Assignment' },
+    { label: 'Discussions',   value: 'Discussion' },
+    { label: 'Pages',         value: 'Page' },
+    { label: 'Rubrics',       value: 'Rubric' },
+    { label: 'Competencies',  value: 'Competency' },
+  ];
+
+  function toggleInlineChip(type, el) {
+    if (selectedContentTypes.has(type)) {
+      selectedContentTypes.delete(type);
+    } else {
+      selectedContentTypes.add(type);
+    }
+    // Sync all inline chips of this type across any injected filter prompts
+    document.querySelectorAll(`.filter-chip-inline[data-type="${type}"]`).forEach(chip => {
+      chip.classList.toggle('active', selectedContentTypes.has(type));
+    });
+  }
+
+  function rerunWithFilter(text) {
+    document.querySelectorAll('.filter-prompt').forEach(el => el.remove());
+    sendWithText(text);
+  }
+
+  function injectContentFilterPrompt(lastUserMessage, targetEl) {
+    // Remove any prior filter prompt so only one is shown at a time
+    document.querySelectorAll('.filter-prompt').forEach(el => el.remove());
+
+    const prompt = document.createElement('div');
+    prompt.className = 'filter-prompt';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'filter-prompt-label';
+    lbl.textContent = 'Narrow results to:';
+    prompt.appendChild(lbl);
+
+    CONTENT_TYPE_LABELS.forEach(({ label, value }) => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip-inline' + (selectedContentTypes.has(value) ? ' active' : '');
+      btn.dataset.type = value;
+      btn.textContent = label;
+      btn.addEventListener('click', () => toggleInlineChip(value, btn));
+      prompt.appendChild(btn);
+    });
+
+    const rerun = document.createElement('button');
+    rerun.className = 'filter-rerun-btn';
+    rerun.textContent = 'Re-run';
+    rerun.addEventListener('click', () => rerunWithFilter(lastUserMessage));
+    prompt.appendChild(rerun);
+
+    // Append inside the message div (same parent as the bubble) so it stays
+    // anchored to this response and isn't affected by scroll or layout changes.
+    targetEl.appendChild(prompt);
+    scrollToBottom();
+  }
+
+  // Inject the filter prompt only when Claude's response is a Stage 1 scope summary.
+  // The system prompt instructs Claude to say "filter chips" in that response — detect it here.
+  function maybeShowContentFilter(queryText, responseText, bubble) {
+    if (selectedContentTypes.size === 0 && /filter chips/i.test(responseText)) {
+      injectContentFilterPrompt(queryText, bubble.parentElement);
+    }
+  }
+
+  // Load program pills from /programs on startup
+  async function loadPrograms() {
+    try {
+      const res = await fetch('/programs');
+      const programs = await res.json();
+      const container = document.getElementById('program-selector');
+      programs.forEach(p => {
+        const pill = document.createElement('button');
+        pill.className = 'prog-pill';
+        pill.textContent = p.short_name;
+        pill.title = p.name;
+        pill.setAttribute('aria-pressed', 'false');
+        pill.dataset.shortName = p.short_name;
+        pill.addEventListener('click', () => toggleProgram(pill, p.short_name));
+        container.appendChild(pill);
+      });
+    } catch (e) {
+      console.warn('Could not load programs:', e);
+    }
+  }
+
+  function toggleProgram(pill, shortName) {
+    if (selectedPrograms.has(shortName)) {
+      selectedPrograms.delete(shortName);
+      pill.classList.remove('active');
+      pill.setAttribute('aria-pressed', 'false');
+    } else {
+      selectedPrograms.add(shortName);
+      pill.classList.add('active');
+      pill.setAttribute('aria-pressed', 'true');
+      if (selectedPrograms.size > 2) {
+        const welcome = document.getElementById('welcome');
+        if (welcome) welcome.remove();
+        appendMessage('assistant', 'For best results, select no more than two programs at a time. Queries across three or more programs can produce very large responses and may take significantly longer to complete. Consider narrowing your selection before sending.');
+      }
+    }
+    updateSendButton();
+    updateHint();
+  }
+
+  function updateSendButton() {
+    const btn = document.getElementById('send-btn');
+    const wrapper = document.getElementById('send-btn-wrapper');
+    if (!isStreaming) {
+      const noProgram = selectedPrograms.size === 0;
+      btn.disabled = noProgram;
+      if (noProgram) {
+        wrapper.setAttribute('data-tooltip', 'Select at least one program to begin');
+      } else {
+        wrapper.removeAttribute('data-tooltip');
+      }
+    }
+  }
+
+  function updateHint() {
+    const hint = document.querySelector('.input-hint');
+    hint.textContent = selectedPrograms.size === 0
+      ? 'Select at least one program to begin'
+      : 'Enter to send · Shift+Enter for new line';
+  }
+
+  loadPrograms();
+  updateSendButton();
+  updateHint();
+
+  function renderMarkdown(text) {
+    // Extract visualization fenced blocks before HTML escaping so their
+    // content isn't mangled. Replace with safe sentinel tokens.
+    const vizBlocks = [];
+    text = text.replace(/```(mermaid|chartjs)\n([\s\S]*?)```/g, (_, lang, code) => {
+      const idx = vizBlocks.length;
+      vizBlocks.push({ lang, code: code.trim() });
+      return `%%VIZ${idx}%%`;
+    });
+
+    let html = text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n?)+)/g, (_, header, body) => {
+        const ths = header.split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
+        const rows = body.trim().split('\n').map(row => {
+          const tds = row.split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
+          return `<tr>${tds}</tr>`;
+        }).join('');
+        return `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+      })
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
+      .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      .replace(/\n{2,}/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+    if (!html.startsWith('<')) html = `<p>${html}</p>`;
+    html = html.replace(/(<li>.*?<\/li>)+/gs, m => `<ul>${m}</ul>`);
+
+    // Reinsert visualization placeholders
+    vizBlocks.forEach(({ lang, code }, i) => {
+      const encoded = encodeURIComponent(code);
+      const placeholder = lang === 'mermaid'
+        ? `<div class="viz-block viz-mermaid" data-code="${encoded}"><span class="viz-loading">Rendering diagram…</span></div>`
+        : `<div class="viz-block viz-chartjs" data-config="${encoded}"><span class="viz-loading">Rendering chart…</span></div>`;
+      html = html.replace(`%%VIZ${i}%%`, placeholder);
+    });
+
+    return html;
+  }
+
+  function appendMessage(role, content) {
+    const container = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `message ${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    if (role === 'assistant') {
+      bubble.innerHTML = renderMarkdown(content);
+      const dlBtn = document.createElement('button');
+      dlBtn.className = 'download-btn';
+      dlBtn.textContent = 'Download as text';
+      dlBtn.onclick = () => downloadResponse(bubble, content);
+      div.appendChild(dlBtn);
+    } else {
+      bubble.textContent = content;
+    }
+    div.appendChild(bubble);
+    container.appendChild(div);
+    scrollToBottom();
+    return bubble;
+  }
+
+  async function downloadResponse(bubble, fallbackText) {
+    const text = bubble.innerText || fallbackText;
+    try {
+      const res = await fetch('/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, filename: 'program-intelligence-response.txt' }),
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'program-intelligence-response.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert('Download failed: ' + e.message);
+    }
+  }
+
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'message assistant';
+    div.id = 'typing-msg';
+    div.innerHTML = `<div class="typing-indicator" role="status" aria-label="Processing"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></div>`;
+    document.getElementById('messages').appendChild(div);
+    scrollToBottom();
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing-msg');
+    if (t) t.remove();
+  }
+
+  function scrollToBottom() {
+    const area = document.getElementById('chat-area');
+    area.scrollTop = area.scrollHeight;
+  }
+
+  let abortController = null;
+
+  function setInputEnabled(enabled) {
+    document.getElementById('user-input').disabled = !enabled;
+    isStreaming = !enabled;
+    const btn = document.getElementById('send-btn');
+    btn.disabled = enabled ? selectedPrograms.size === 0 : false;
+    btn.classList.toggle('stop-mode', !enabled);
+    btn.title = enabled ? 'Send' : 'Stop';
+    btn.querySelector('.icon-send').style.display = enabled ? '' : 'none';
+    btn.querySelector('.icon-stop').style.display = enabled ? 'none' : '';
+  }
+
+  function handleSendStop() {
+    if (isStreaming) {
+      if (abortController) abortController.abort();
+    } else {
+      confirmAndSend();
+    }
+  }
+
+  let _modalReturnFocus = null;
+  function showScopeModal(title, body, cancelLabel) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').innerHTML = body;
+    document.getElementById('modal-cancel').textContent = cancelLabel;
+    _modalReturnFocus = document.activeElement;
+    document.getElementById('scope-modal').classList.add('visible');
+    document.getElementById('modal-cancel').focus();
+  }
+
+  function closeScopeModal() {
+    document.getElementById('scope-modal').classList.remove('visible');
+    if (_modalReturnFocus) { _modalReturnFocus.focus(); _modalReturnFocus = null; }
+  }
+
+  function confirmAndSend() {
+    const input = document.getElementById('user-input');
+    if (!input.value.trim() || isStreaming || selectedPrograms.size === 0) return;
+    if (selectedPrograms.size === 2) {
+      const names = [...selectedPrograms].join(' and ');
+      showScopeModal(
+        'Multiple Programs Selected',
+        `You have selected <strong>${names}</strong>. Results will span both programs. Note that the same course may be required in one program and an elective in the other — responses will reflect each program's designation.<br><br>Would you like to proceed?`,
+        'Cancel — Adjust Selection'
+      );
+    } else {
+      sendMessage();
+    }
+  }
+
+  document.getElementById('modal-proceed').addEventListener('click', () => {
+    closeScopeModal();
+    sendMessage();
+  });
+
+  document.getElementById('modal-cancel').addEventListener('click', () => {
+    closeScopeModal();
+  });
+
+  async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const text = input.value.trim();
+    if (!text || isStreaming) return;
+
+    const welcome = document.getElementById('welcome');
+    if (welcome) welcome.remove();
+
+    input.value = '';
+    input.style.height = 'auto';
+    setInputEnabled(false);
+    appendMessage('user', text);
+    showTyping();
+    history.push({ role: 'user', content: text });
+
+    abortController = new AbortController();
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          history: history.slice(0, -1),
+          programs: [...selectedPrograms],
+          content_types: [...selectedContentTypes],
+        }),
+        signal: abortController.signal,
+      });
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+      removeTyping();
+      const bubble = appendMessage('assistant', '');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          fullText += decoder.decode(value, { stream: true });
+          bubble.innerHTML = renderMarkdown(fullText);
+          scrollToBottom();
+        }
+      } catch (streamErr) {
+        if (streamErr.name !== 'AbortError') throw streamErr;
+      }
+      if (fullText) {
+        history.push({ role: 'assistant', content: fullText });
+        injectOptionButtons(bubble, fullText);
+        await renderVisualizations(bubble);
+        maybeShowContentFilter(text, fullText, bubble);
+      }
+
+    } catch (err) {
+      removeTyping();
+      if (err.name !== 'AbortError') {
+        appendMessage('assistant', `Something went wrong: ${err.message}`);
+      }
+    } finally {
+      abortController = null;
+      setInputEnabled(true);
+      input.focus();
+    }
+  }
+
+  function sendWithText(text) {
+    document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+    document.querySelectorAll('.option-hint').forEach(h => h.style.display = 'none');
+    const input = document.getElementById('user-input');
+    input.value = text;
+    sendMessage();
+  }
+
+  function injectOptionButtons(bubble, text) {
+    const matches = [...text.matchAll(/^> \*\*Option (\d+):\*\*\s*(.+)$/gm)];
+    if (matches.length < 1) return;
+    const messageDiv = bubble.parentElement;
+    const row = document.createElement('div');
+    row.className = 'option-buttons';
+    matches.forEach(m => {
+      const label = `Option ${m[1]}: ${m[2].trim()}`;
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = label;
+      btn.onclick = () => sendWithText(label);
+      row.appendChild(btn);
+    });
+    const hint = document.createElement('div');
+    hint.className = 'option-hint';
+    hint.textContent = 'You can select an option above or type your own reply below.';
+    messageDiv.appendChild(row);
+    messageDiv.appendChild(hint);
+  }
+
+  // ── Admin panel ──────────────────────────────────────────────────────────
+
+  function toggleAdmin() {
+    const panel = document.getElementById('admin-panel');
+    panel.classList.toggle('visible');
+    if (panel.classList.contains('visible')) {
+      document.getElementById('admin-status').textContent = '';
+      document.getElementById('admin-status').className = '';
+    }
+  }
+
+  async function ingestCourse() {
+    const fileInput = document.getElementById('admin-file');
+    const statusEl = document.getElementById('admin-status');
+    const btn = document.getElementById('admin-ingest-btn');
+
+    if (!fileInput.files.length) {
+      statusEl.textContent = 'Select a .imscc file first.';
+      statusEl.className = 'error';
+      return;
+    }
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    btn.disabled = true;
+    statusEl.className = '';
+    statusEl.textContent = `Ingesting ${file.name}…`;
+
+    try {
+      const resp = await fetch('/admin/ingest', { method: 'POST', body: formData });
+      const data = await resp.json();
+      if (!resp.ok) {
+        statusEl.textContent = `Error: ${data.detail || resp.statusText}`;
+        statusEl.className = 'error';
+        return;
+      }
+      const f = data.files_written;
+      const d = data.db_ingested;
+      statusEl.textContent = (
+        `✓ ${data.course_id} — "${data.course_title}" ingested. ` +
+        `Files: ${f.assignments} assignments, ${f.discussions} discussions, ` +
+        `${f.pages} pages, ${f.rubrics} rubrics. ` +
+        `DB: ${d.items} items, ${d.rubrics} rubrics.`
+      );
+      statusEl.className = 'success';
+      fileInput.value = '';
+    } catch (err) {
+      statusEl.textContent = `Request failed: ${err.message}`;
+      statusEl.className = 'error';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+
+  function newChat() {
+    history = [];
+    selectedContentTypes.clear();
+    document.getElementById('messages').innerHTML = `
+      <div class="welcome" id="welcome">
+        <h2>Program Intelligence Interface</h2>
+        <p>Ask questions about PLO coverage, CLO alignment, assignments, and rubrics across any program.</p>
+      </div>`;
+    const input = document.getElementById('user-input');
+    input.value = '';
+    input.style.height = 'auto';
+    input.focus();
+  }
+
+  // Initialize Mermaid (startOnLoad:false — we call render manually)
+  mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
+
+  async function renderVisualizations(bubble) {
+    // Mermaid diagrams
+    for (const el of bubble.querySelectorAll('.viz-mermaid')) {
+      try {
+        const code = decodeURIComponent(el.dataset.code);
+        const id = 'mermaid-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+        const { svg } = await mermaid.render(id, code);
+        el.innerHTML = svg;
+      } catch (err) {
+        el.innerHTML = `<span class="viz-error">Diagram could not be rendered: ${err.message}</span>`;
+      }
+    }
+    // Chart.js charts
+    for (const el of bubble.querySelectorAll('.viz-chartjs')) {
+      try {
+        const config = JSON.parse(decodeURIComponent(el.dataset.config));
+        const canvas = document.createElement('canvas');
+        el.innerHTML = '';
+        el.appendChild(canvas);
+        new Chart(canvas, config);
+      } catch (err) {
+        el.innerHTML = `<span class="viz-error">Chart could not be rendered: ${err.message}</span>`;
+      }
+    }
+  }
+
+  const textarea = document.getElementById('user-input');
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+  });
+  textarea.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); confirmAndSend(); }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+CMPL-815 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:39.573919+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 50
+
+EXTRACTED (40 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: The self-aware factory floor
+  - Discussion: Module 1 Discussion: Balancing the risks and benefits of AI
+  - Assignment: Module 1 Submission: Selecting a Track for your Final Project
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Back-office automation through AI technologies
+  - Discussion: Module 2 Discussion: The hiring process
+  - Assignment: Module 2 Submission: Final Project Build - Requirements Analysis
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: The synergy between domain expertise and AI capabilities
+  - Discussion: Module 3 Discussion: Driving business innovation with AI
+  - Assignment: Module 3 Submission: Final Project Build - Structure and Architecture
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: Shaping brands through AI
+  - Assignment: Module 4 Submission: Final Project Build - Data
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Leveraging Human-in-the-Loop (HITL)
+  - Discussion: Module 5 Discussion: AI with personality
+  - Assignment: Module 5 Submission: Final Project Build - Model and UX development
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: The impact of AI on task replacement
+  - Discussion: Module 6 Discussion: AI Augmentation
+  - Assignment: Module 6 Submission: Final Project Build - UX and Ethical issues
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: AI as co-creator
+  - Discussion: Module 7 Discussion: Guardrails
+  - Assignment: Module 7 Submission: Final Project Build - Completed draft + PPT
+  - Page: Module 8:  Overview, Readings & Resources
+  - Page: About Reflective Thinking
+  - Discussion: Module 8 Discussion: Rehumanizing
+  - Discussion: Module 8 Discussion: Reviewing presentations
+  - Assignment: Module 8 Submission: Final Project Build - Final
+  - Assignment: Module 8 Submission: Reflection Narrative
+  - Rubric: Reflective Thinking Rubric (Grad)
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Presentation Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

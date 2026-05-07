@@ -1,0 +1,65 @@
+PM-832 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:45.603182+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 47
+
+EXTRACTED (38 files):
+  - Page: Instructor Guidelines
+  - Page: Course Overview
+  - Page: Course Resources
+  - Discussion: AI Tools Setup & Q & A
+  - Page: Module 1:  Overview, Readings & Resources
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: AI reshaping the foundations of PM
+  - Assignment: Module 1 Submission: AI Transforming Project Initiation and Planning
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: AI and the project charter
+  - Assignment: Module 2 Submission: AI-Supported Project Charter
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: AI and the WBS
+  - Assignment: Module 3 Submission: AI-Supported WBS
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: AI, scheduling, and resource allocation
+  - Assignment: Module 4 Submission: AI-Supported scheduling and resource plan
+  - Assignment: Module 4 Submission: Midterm Reflection
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: AI and cost estimate
+  - Assignment: Module 5 Submission: AI-Supported Cost Management Plan
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Predictive analytics
+  - Assignment: Module 6 Submission: AI-Supported Risk Register
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: AI tools and stakeholder trust
+  - Assignment: Module 7 Submission: Stakeholder Map & AI-Informed Communication Plan
+  - Assignment: Module 7 Practice Tech Activity: Record yourself and upload (required)
+  - Page: Module 8:  Overview, Readings & Resources
+  - Page: About the Final AI Adoption in Project Management Assignment
+  - Discussion: Module 8 Discussion: Ethical responsibilities
+  - Assignment: Module 8 Submission: AI Adoption in Project Management – Video Presentation
+  - Assignment: Module 8 Submission: AI Adoption in Project Management – Paper
+  - Rubric: PM Discussion Forum Rubric
+  - Rubric: Reflective Thinking Rubric (Grad)
+  - Rubric: PM AI Assignment Rubric
+  - Rubric: PM Assignment Rubric
+  - Rubric: BSTC Graduate Presentation Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Download required syllabus template from Syllabus Repository  (ExternalUrl)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

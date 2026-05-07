@@ -1,0 +1,89 @@
+LD-820 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:42.359187+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 71
+
+EXTRACTED (50 files):
+  - Page: Faculty Notes About Badges (Micro-Credentials)
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: eBook Textbook: Cultivating Your Leadership Capabilities
+  - Page: Student Notes: About Badges (Micro-Credentials)
+  - Discussion: Resource Repository
+  - Page: Module 1: Required Readings, Resources & Media
+  - Discussion: Module 1 Discussion: Please Introduce Yourself
+  - Discussion: Module 1 Discussion: Katz & the 3 Skills Approach
+  - Discussion: Module 1 Discussion: Leaders vs. Management Infographic
+  - Assignment: Module 1 Video Assignment: Leadership Lessons from the Dancing Guy
+  - Page: Module 2: Required Readings, Resources & Media
+  - Discussion: Module 2 Discussion: Leadership Assessments
+  - Discussion: Module 2 Discussion: Collective Leadership
+  - Assignment: Module 2 Video Assignment: Leadership in the News
+  - Assignment: Module 2 Submission:  Leadership in the News Template Submission
+  - Page: Module 2 Preparing for Assignment: 360 Multi-Perspective Feedback Assessment
+  - Page: Module 3: Required Readings, Resources & Media
+  - Discussion: Module 3 Discussion: Values & Beliefs: A Leadership Perspective
+  - Assignment: Module 3 Submission: 360 Multi-Perspective Feedback Assessment
+  - Page: Module 4: Required Readings, Resources & Media
+  - Discussion: Module 4 Discussion: Diversity and Inclusion in the Workplace
+  - Assignment: Module 4 Submission: Extraordinary Leadership Assignment
+  - Assignment: Module 4 Submission: Competency Map
+  - Page: Module 5: Required Readings, Resources & Media
+  - Discussion: Module 5 Discussion: The Pilot and the Mountaineer
+  - Assignment: Module 5 Submission: Infographic - Leaderful Organization
+  - Assignment: Module 5 Video Assignment: Leadership in the News
+  - Assignment: Module 5 Submission:  Leadership in the News Template
+  - Page: Module 6: Required Readings, Resources & Media
+  - Discussion: Module 6 Discussion: Women in Leadership
+  - Discussion: Module 6 Discussion: Leadership and Change
+  - Discussion: Module 6 Discussion: A Transforming Vision
+  - Assignment: Module 6 Submission: Models of Leadership
+  - Page: Module 7: Required Readings, Resources & Media
+  - Assignment: Module 7 Submission: Leadership Action Plan Brainfuse Confirmation (due Tuesday)
+  - Discussion: Module 7 Discussion: Membership Exchange  & Path Goal Instruments
+  - Assignment: Module 7 Submission: Leadership Action Plan (Non-Program Students Only)
+  - Assignment: Module 7 Submission: Leadership Action Plan (Leadership and Nonprofit Students)
+  - Assignment: Module 7 Submission: Leadership Action Plan (Nursing Health Care Leadership Students)
+  - Page: Module 8: Required Readings, Resources & Media
+  - Page: Students: Accessing & Sharing Your Badge
+  - Assignment: Module 8 Video Assignment: Leadership Challenge
+  - Discussion: Module 8 Discussion: Considering the Capstone
+  - Assignment: Module 8 Submission: Narrative
+  - Rubric: Recorded (Online) Presentation Rubric (LD)
+  - Rubric: Discussion Post Rubric (LD)
+  - Rubric: Writing Rubric (LD)
+  - Rubric: Infographic Rubric (LD)
+  - Rubric: Writing Rubric (LD Action Plan)
+
+IGNORED (26 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Faculty Quick Guide: Academic Integrity, Artificial Intelligence & ePortfolio Competencies  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - UNH Library Textbook: Creating Leaderful Organizations  (ExternalUrl)
+  - General Q & A  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Module 1 Instructor Notes--do not publish (updated 3/22/24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 2 Instructor Notes--Do not publish (updated 3/22/24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 3 Instructor Notes--Do not publish (updated 3/22/24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 4 Instructor notes--do not publish (updated 3/22/24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 5 Instructor Notes--Do not publish (updated 3/22/24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 6 Instructor notes--do not publish (updated 3.26.24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Module 7 Instructor notes--do not publish (update 3.21.24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - ----------PROGRAM SPECIFIC ASSIGNMENTS----------Submit only what applies to you.  (ContextModuleSubHeader)
+  - Module 8 Instructor notes--do not publish (updated 3/21/24)  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - ----------PROGRAM SPECIFIC ASSIGNMENTS----------Submit only what applies to you.  (ContextModuleSubHeader)
+
+======================================================================

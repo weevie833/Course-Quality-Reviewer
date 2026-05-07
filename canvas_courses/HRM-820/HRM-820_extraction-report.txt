@@ -1,0 +1,68 @@
+HRM-820 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:40.904890+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 50
+
+EXTRACTED (40 files):
+  - Page: How to create a Team in Office 365
+  - Page: Instructor guidance on group formation
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Page: Instructions for scheduling a group meeting using UNH's Outlook Calendar
+  - Page: Group Project: Team Formation
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: The Strategic Necessity of Staffing
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: Legal and Strategic Dimensions of Workforce Planning
+  - Assignment: Module 2 Submission: Chapter 3 Application
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: The Role of Job Analysis in Effective Staffing
+  - Assignment: Module 3 Submission: Case Study #1 - Applying Job Analysis to Organizational Practice
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: Strategic Recruitment and Sourcing
+  - Assignment: Module 4 Submission: Chapter 5 Application
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Measurement and Initial Assessment in the Selection Process
+  - Assignment: Module 5 Submission: Case Study #2 - Evaluating Initial Assessment Methods in Hiring
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Making the Final Match – From Selection to Onboarding
+  - Assignment: Module 6 Submission: Group Project Outline
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: Retention and the Challenge of Employee Turnover
+  - Assignment: Module 7 Submission: Case Study #3 - Diagnosing and Addressing Employee Turnover Challenges
+  - Assignment: Module 7 Practice Tech Activity: Record yourself and upload (required)
+  - Page: Module 8:  Overview, Readings & Resources
+  - Page: About the Final Group Project and Presentation
+  - Assignment: Module 8 Submission: Evaluating AI-powered technologies
+  - Assignment: Module 8 Submission: Group Project – Final Written Deliverable
+  - Assignment: Module 8 Submission: Group Project – Final Video Presentation
+  - Discussion: Module 8 Discussion: Reflecting on the Group Project and Emerging Issues in Staffing
+  - Assignment: Module 8 Submission: Rate your peers' contributions
+  - Rubric: BSTC Graduate Presentation Rubric
+  - Rubric: Reflective Thinking Rubric (Grad)
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+  - Rubric: BSTC Graduate Project Assignment Rubric
+
+IGNORED (15 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Group Leaders: Use the practice assignment below for testing video recording and upload  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

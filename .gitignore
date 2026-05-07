@@ -1,0 +1,26 @@
+# Environment
+.env
+
+# Database and generated build artifacts
+data/program.db
+data/alignment_map.json
+
+# Raw Canvas exports (large source data, not app code)
+imscc_exports/
+
+# Benchmark run output (generated)
+benchmark/results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

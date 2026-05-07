@@ -1,0 +1,60 @@
+HRM-805 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:40.395427+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 43
+
+EXTRACTED (33 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: Module 1:  Overview, Readings & Resources
+  - Page: About the Strategic HROD Final Paper
+  - Discussion: Module 1 Discussion: Introductions
+  - Discussion: Module 1 Discussion: HR’s Strategic Value: Based on the Organization’s People
+  - Assignment: Module 1 Submission: Critical Thinking Exercise
+  - Page: Module 2:  Overview, Readings & Resources
+  - Discussion: Module 2 Discussion: HR transitioning from a transactional function to a strategic partner
+  - Assignment: Module 2 Submission: Critical Thinking Exercise
+  - Page: Module 3:  Overview, Readings & Resources
+  - Discussion: Module 3 Discussion: Strategic Workforce Planning and Succession Design
+  - Assignment: Module 3 Submission: Case Study #1 – Workforce planning, succession planning, and Design of Jobs
+  - Page: Module 4:  Overview, Readings & Resources
+  - Discussion: Module 4 Discussion: Ethical Talent Acquisition for Employment Law in Practice
+  - Assignment: Module 4 Submission: Using AI to Enhance Recruitment Strategies
+  - Page: Module 5:  Overview, Readings & Resources
+  - Discussion: Module 5 Discussion: Learning and Development (L&D) initiatives
+  - Assignment: Module 5 Submission: Case Study #2 – Learning and development, OD, and Performance Management
+  - Page: Module 6:  Overview, Readings & Resources
+  - Discussion: Module 6 Discussion: Compensation
+  - Assignment: Module 6 Submission: Case Study #3 – Employee Engagement and Retention
+  - Assignment: Module 6 Submission: HROD Final Paper Outline
+  - Page: Module 7:  Overview, Readings & Resources
+  - Discussion: Module 7 Discussion: Cultural differences
+  - Assignment: Module 7 Submission: Completed DRAFT of Final Strategic HROD paper
+  - Page: Module 8:  Overview, Readings & Resources
+  - Discussion: Module 8 Discussion: Assessing Culture in Global Workforce Planning and Engagement
+  - Assignment: Module 8 Submission: Final Strategic HROD paper
+  - Rubric: BSTC Graduate Discussion Rubric
+  - Rubric: BSTC Graduate Writing Assignment Rubric
+  - Rubric: BSTC Graduate Project Assignment Rubric
+  - Rubric: BSTC AI Reflection Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - General Q & A  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================

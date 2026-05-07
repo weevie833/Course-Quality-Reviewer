@@ -1,0 +1,55 @@
+PM-820 Extraction Report
+======================================================================
+Course title: (not detected)
+Extracted at: 2026-05-05T20:41:45.152112+00:00
+Source: .imscc (ingest_imscc.py)
+
+Total module items found: 40
+
+EXTRACTED (28 files):
+  - Page: Course Overview
+  - Page: Course Resources
+  - Page: PM Program Resources: Rubrics, Discussions & APA
+  - Discussion: Resource Repository
+  - Discussion: One-on-One Support
+  - Discussion: Virtual Student Lounge
+  - Page: Module 1: Required Readings, Resources & Media
+  - Discussion: Introduce Yourself
+  - Discussion: Module 1 Discussion: What is Lean Management?
+  - Discussion: Module 1 Discussion: Lean Project Management
+  - Page: Module 2: Required Readings, Resources & Media
+  - Discussion: Module 2 Discussion: Level Scheduling
+  - Assignment: Module 2 Submission: Reconstituting Lean in Healthcare
+  - Page: Module 3: Required Readings, Resources & Media
+  - Discussion: Module 3 Discussion: Resistance to Change
+  - Page: Module 4: Required Readings, Resources & Media
+  - Discussion: Module 4 Discussion: Action Plan
+  - Page: Module 5: Required Readings, Resources & Media
+  - Discussion: Module 5 Discussion: Change Agent
+  - Page: Module 6: Required Readings, Resources & Media
+  - Discussion: Module 6 Discussion:  Lean Principles
+  - Assignment: Module 6 Submission: Five Lean Principles
+  - Page: Module 7: Required Readings, Resources & Media
+  - Discussion: Module 7 Discussion: What is Lean Management?
+  - Page: Module 8: Required Readings, Resources & Media
+  - Assignment: Module 8 Submission: Course Reflection
+  - Rubric: PM Discussion Forum Rubric V3
+  - Rubric: PM Writing Rubric
+
+IGNORED (14 items):
+  - Ongoing Instructor Notes for Future Reference  (excluded title)
+  - Faculty Quick Guides: Add Syllabus, Prep Course, Update Instructor Page  (excluded title)
+  - Canvas: Instructor Guide (External Site)  (ExternalUrl)
+  - About Your Instructor  (excluded title)
+  - General Q & A  (excluded title)
+  - Getting Started: Canvas Resources & Help for Students  (excluded title)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+  - Activities  (ContextModuleSubHeader)
+
+======================================================================
