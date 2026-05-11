@@ -34,6 +34,10 @@ if _env_file.exists():
 DB_PATH = BASE_DIR / "data" / "program.db"
 ALIGNMENT_MAP_PATH = BASE_DIR / "data" / "alignment_map.json"
 MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+SMTP_HOST = os.environ.get("SMTP_HOST", "")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USER = os.environ.get("SMTP_USER", "")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
 
 COURSE_ID_RE = re.compile(r"\b(HRM[-\s]\d{3}|LD[-\s]\d{3}|MGMT[-\s]\d{3}|PM[-\s]\d{3}|CMPL[-\s]\d{3})\b", re.IGNORECASE)
 PLO_RE = re.compile(r"\bplo\s*(\d)\b", re.IGNORECASE)
@@ -1334,7 +1338,30 @@ The user has selected a filter and re-run. The context will include an "Active C
 - List: produce all filtered items at once.
 - One at a time: deliver the first item, end with "Ready for the next? (1 of N)". On each subsequent "next/yes/continue", deliver the next item and update the counter. Track position from conversation history. Say "That's all N items" when done.
 
-**Exception — single item:** If the request resolves to exactly one item (naturally or after filtering), deliver it directly without staging. If it is very long, confirm first then show it in full.
+**Exception — single item:** If the request resolves to exactly one item (naturally or after filtering), apply the Content Length Threshold rule below before delivering.
+
+## Content Length Threshold
+
+This rule applies to any single item whose body text (assignment prompt, discussion prompt, or page content) is estimated to exceed 400 words. It applies regardless of how the user phrased the request — including explicit requests like "show me" or "give me the prompt."
+
+**When the threshold is met:**
+Do not deliver the content yet. Instead, present exactly this:
+
+"This prompt is substantial. How would you like to see it?"
+
+> **Option 1:** Full prompt — complete assignment text as written
+> **Option 2:** Summary — key requirements, deliverables, and grading criteria only
+
+Stop. Nothing else in this response. Wait for the user to choose.
+
+**When Option 1 is selected:** Deliver the full body text without truncation.
+**When Option 2 is selected:** Deliver a structured summary: one sentence on the assignment purpose, a bulleted list of key requirements and deliverables, and the grading criteria or point breakdown if present.
+
+**Threshold exceptions — deliver directly without offering options:**
+- Rubric criteria (governed by the rubric staging rule)
+- PLO, CLO, or competency statement text
+- Factual answers, counts, or catalog listings
+- Any item whose body text is estimated at 400 words or fewer
 
 ## Let the User Lead
 - Answer only what was asked. Do not proactively surface gaps, areas for improvement, or problems.
@@ -1699,11 +1726,29 @@ The co-orientation question names what the system is about to do, not what the u
   Wrong: "PLO 3 says..."
 - Cite courses with their ID and title: "HRM-805 Managing Human Resources in a Global Economy"
 
+## Response Openers
+Never open a response with a compliment, affirmation, or self-description of the system's capabilities. Prohibited openers include:
+- Any statement that characterizes the user's question as meaningful, thoughtful, important, relevant, or well-framed
+- Any statement that the system is well-positioned, designed, or suited to answer the question
+- Any variation of "great question," "that's a good question," or equivalent praise
+Begin every response by directly addressing the question — no preamble.
+
+## Advisory and Process Responses
+When a user asks how to approach a process, make a decision, or structure a workflow, respond with numbered steps. Do not use "Stage" labels for process steps — those are reserved for internal delivery staging. Each step must name a concrete action, not an abstract principle. Where program-specific data is available (course IDs, PLO text, competency counts, credit hours), use it — generic advice without grounding in actual program content is a lower-quality response.
+
+Close every advisory response with formatted options (using the blockquote format) that name the specific next action the user can take with this system. Do not end with an open prose question. A question containing "or" is a choice and must be formatted as options, not written as a sentence.
+
+## Out-of-Scope Fallback
+When a question falls outside what this system can address from its loaded content — for example, a request requiring external data, information not ingested, or a task outside the system's design — do not apologize or explain at length. Instead:
+1. State in one sentence what the system can provide that is relevant to the intent of the question
+2. Ask: "Would you like to rephrase the question to work within what's available?"
+
 ## Response Format
 - Prose for open-ended or interpretive questions
 - Tables or structured lists when presenting multiple items or comparisons
 - Responses are rendered as markdown
 - Never use emoji or icons of any kind in responses.
+- Never use `---` or `***` as section dividers or horizontal rules. Use headings or blank lines to separate sections.
 - Whenever you present the user with any choice — multiple options, yes/no follow-ons, co-orientation questions, length-management offers, or any other moment where the user must decide how to proceed — format every choice on its own line using blockquote syntax with a bold label and a short descriptive phrase: `> **Option 1:** [descriptive phrase]`. Do not use bullet points, list markers, or plain prose for choices. This applies equally to two-option yes/no scenarios (e.g., `> **Option 1:** Yes, evaluate the language` / `> **Option 2:** No, continue`) and to multi-option selections. The descriptive phrase after the label is what the user will send as their reply if they click a button, so make it natural as a standalone message.
 
 ## Program Learning Outcomes (PLOs)
@@ -1786,6 +1831,13 @@ class DownloadRequest(BaseModel):
     filename: str = "response.txt"
 
 
+class EmailSessionRequest(BaseModel):
+    email: str
+    programs: list[str] = []
+    history: list[Message] = []
+    generated_at: str = ""
+
+
 # ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
@@ -1800,10 +1852,28 @@ async def programs():
     return app_state.get("programs", [])
 
 
+_EASTER_EGG_TEXT = """The PII was created by Steve Covello, Senior Instructional Designer at UNH-CPSO in May, 2026. It was developed locally on a MacBook Pro using Claude Code. The PII's content is derived from Canvas course content and from mapping data compiled by each program's respective directors. Specialized knowledge and service orientation in the PII's demeanor was sourced as follows:
+
+* Co-orientation principles were derived from the decades of research in information systems design by Dr. Brenda Dervin culminating in the development of her Sense-Making Methodology. User-based design principles were derived from Dr. Michael Nilan's research at Syracuse University's iSchool.
+* Service orientation in the PII's demeanor was created by Steve Covello according to principles of client relations developed from 30+ years of working in various creative fields.
+* Principles of AI integration in higher education were contributed from the "Controlling AI in Instruction" e-book authored by Steve Covello in 2025.
+* Principles of teaching with rich media in fully online asynchronous higher education were contributed from the "Teaching with Rich Media" e-book authored by Steve Covello in 2019.
+* Principles and best practice for teaching and learning online were informed by various academic sources.
+
+The PII was tested for feedback by the Instructional Design team at UNH-CPSO and overseen by Reta Chaffee, Director of Educational Technology."""
+
+_EASTER_EGG_RE = re.compile(r"^\s*about the pii\s*[.!?]?\s*$", re.IGNORECASE)
+
+
 @app.post("/chat")
 async def chat(req: ChatRequest):
     if not req.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
+
+    if _EASTER_EGG_RE.match(req.message):
+        def _egg():
+            yield _EASTER_EGG_TEXT
+        return StreamingResponse(_egg(), media_type="text/plain")
 
     program_course_ids = get_program_course_ids(req.programs) if req.programs else None
     messages = [{"role": m.role, "content": m.content} for m in req.history]
@@ -1853,6 +1923,76 @@ async def download(req: DownloadRequest):
         media_type="text/plain; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{req.filename}"'},
     )
+
+
+def _strip_markdown(text: str) -> str:
+    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)   # [label](url) → label
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)          # **bold**
+    text = re.sub(r'\*([^*]+)\*', r'\1', text)              # *italic*
+    text = re.sub(r'`{1,3}[^`\n]*`{1,3}', '', text)         # inline/fenced code
+    text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^>\s+', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^[-*+]\s+', '• ', text, flags=re.MULTILINE)
+    return text.strip()
+
+
+@app.post("/email-session")
+async def email_session(req: EmailSessionRequest):
+    import smtplib
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+
+    if not SMTP_HOST or not SMTP_USER or not SMTP_PASSWORD:
+        raise HTTPException(status_code=503, detail="Email relay not configured. Add SMTP_HOST, SMTP_USER, and SMTP_PASSWORD to .env.")
+
+    if not req.email or "@" not in req.email:
+        raise HTTPException(status_code=400, detail="Valid destination email address required.")
+
+    if not req.history:
+        raise HTTPException(status_code=400, detail="No session content to send.")
+
+    # Build plain-text body
+    program_line = ", ".join(req.programs) if req.programs else "All programs"
+    lines = [
+        "Program Intelligence Interface — Session Summary",
+        f"Generated: {req.generated_at}",
+        f"Program filter: {program_line}",
+        "",
+        "=" * 60,
+        "",
+    ]
+    for msg in req.history:
+        label = "You" if msg.role == "user" else "PII"
+        lines.append(f"[{label}]")
+        lines.append(_strip_markdown(msg.content))
+        lines.append("")
+
+    body = "\n".join(lines)
+
+    mime = MIMEMultipart()
+    mime["From"] = SMTP_USER
+    mime["To"] = req.email
+    mime["Subject"] = f"PII Session — {req.generated_at}"
+    mime.attach(MIMEText(body, "plain", "utf-8"))
+
+    try:
+        if SMTP_PORT == 465:
+            import ssl as _ssl
+            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=_ssl.create_default_context()) as smtp:
+                smtp.login(SMTP_USER, SMTP_PASSWORD)
+                smtp.sendmail(SMTP_USER, req.email, mime.as_string())
+        else:
+            with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login(SMTP_USER, SMTP_PASSWORD)
+                smtp.sendmail(SMTP_USER, req.email, mime.as_string())
+    except smtplib.SMTPAuthenticationError:
+        raise HTTPException(status_code=502, detail="SMTP authentication failed. Check SMTP_USER and SMTP_PASSWORD in .env.")
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Email send failed: {exc}")
+
+    return {"status": "sent"}
 
 
 @app.post("/admin/ingest")

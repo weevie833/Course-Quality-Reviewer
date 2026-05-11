@@ -485,7 +485,7 @@ For incremental updates: just restart the server — sync.py handles everything 
 - Supports --resume flag for crash recovery; writes incrementally to alignment_map.json
 
 ## Canvas Course Pipeline
-imscc_exports/ (raw Canvas XML) → Cowork extractor utility → canvas_courses/ (HTML per course)
+.imscc export from Canvas → POST /admin/ingest (ingest_imscc.py) → canvas_courses/ (HTML per course)
 → sync.py on startup → program.db
 
 Each course folder contains:
