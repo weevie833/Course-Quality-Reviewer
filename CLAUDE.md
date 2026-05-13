@@ -534,79 +534,27 @@ missing competency-framework mappings, not missing course content.
 - **Welcome / newChat text:** "Ask questions about PLO coverage, CLO alignment, assignments, and
   rubrics across any program."
 
-## Recent Implementation Changes (May 2026)
+## Implementation Notes
 
-### History Trimming for Rate Limit Management
-**Problem:** Long conversations hit Anthropic's tokens-per-minute rate limit because the full conversation history was sent with every request, causing exponential growth of prompt size.
+- **History trimming:** `/chat` route caps history sent to the Claude API at the last 6 messages (3 turns). Full history still passes to `build_context()` for back-reference anchoring. Prevents TPM rate limit errors in long sessions.
+- **Visualization:** Mermaid.js v11 + Chart.js v4 render diagrams/charts on request. Triggered by `VISUALIZATION_QUERY_RE` in the frontend; injects `VISUALIZATION_INSTRUCTIONS` into the system prompt (zero overhead when not triggered). Claude outputs ` ```mermaid ` or ` ```chartjs ` fenced blocks; `renderVisualizations()` converts them after streaming. Diagrams capped at 15 nodes. Plain-text ASCII trees must NOT use backticks.
+- **Session email:** `POST /email-session` sends a plain-text session transcript via SMTP (Bluehost, port 465 SSL). Credentials in `.env` as `SMTP_HOST/PORT/USER/PASSWORD`. UI panel lives in the input bar (right of the chat box).
+- **Easter egg:** Exact phrase "Tell me about the PII" bypasses Claude and streams `_EASTER_EGG_TEXT` directly from the `/chat` route.
 
-**Solution:** In `main.py` `/chat` route, conversation history sent to the Claude API is now capped at the last 6 messages (3 turns of user/assistant exchange). The full history is still passed to `build_context()` for back-reference anchoring and other retrieval logic, so conversational continuity and context awareness are unaffected.
-
-**Files changed:** `main.py` lines ~1665–1675 (chat route).
-
-**Result:** Rate limit errors eliminated. Sessions can now run longer without hitting TPM limits. The fix is transparent to users.
-
-### Visualization Feature: Mermaid Diagrams and Chart.js
-**Feature:** Users can now explicitly request visual representations (diagrams, charts, mind maps, flowcharts) which are rendered interactively in the browser using Mermaid.js v11 and Chart.js v4.
-
-**Trigger:** Query must contain explicit visualization language detected by `VISUALIZATION_QUERY_RE` (matches: "diagram", "chart", "mind map", "visualize", "flow chart", etc.). Claude is NOT prompted to produce visualizations proactively.
-
-**How it works:**
-1. Frontend detects `VISUALIZATION_QUERY_RE` match in user message
-2. Injects `VISUALIZATION_INSTRUCTIONS` into system prompt (conditional injection — zero overhead for non-visualization queries)
-3. Claude outputs fenced code blocks tagged ` ```mermaid ` or ` ```chartjs ` containing text-based definitions
-4. During streaming, placeholder divs are rendered with loading text
-5. After stream completes, `renderVisualizations()` calls Mermaid.render() or Chart() to transform the code blocks into interactive graphics
-6. Error fallbacks display friendly error messages if syntax is invalid
-
-**System Prompt Guidance:**
-- `VISUALIZATION_INSTRUCTIONS` (lines ~107–145 in main.py) explicitly tells Claude it is outputting *text* in a specific format, not rendering graphics. This works around Claude's training conviction that it is text-only. The instruction includes worked examples.
-- Removed the phrase "Use plain text only" from line 1561 (was overly broad and blocked visualization output).
-
-**Frontend Changes:**
-- `index.html`: Added Mermaid.js and Chart.js CDN script tags (lines ~485–486)
-- Added `.viz-block`, `.viz-mermaid`, `.viz-chartjs` CSS classes (lines ~462–483)
-- Updated `renderMarkdown()` to extract fenced visualization blocks BEFORE HTML escaping, then reinsert them as placeholder divs (lines ~622–660)
-- Added `renderVisualizations()` async function (lines ~895–919) that initializes Mermaid and Chart.js
-- Updated streaming handler to call `await renderVisualizations(bubble)` after stream completes (line ~836)
-- Added Mermaid initialization: `mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' })` (line ~893)
-
-**Example use cases that now work:**
-- *"Show me a diagram of how PLO 1 maps to the CLOs"* → Mermaid flowchart
-- *"Visualize the competency coverage as a bar chart"* → Chart.js bar chart
-- *"Give me a mind map of the PM curriculum"* → Mermaid mindmap
-
-**Plain text trees vs. fenced blocks:**
-- If Claude chooses to output an ASCII/plain text tree diagram (not a Mermaid diagram), it should NOT use backticks. The instruction clarifies this distinction (lines ~142–145).
-
-**Known limitations:**
-- Mermaid diagrams are capped at 15 nodes for readability; Claude notes total count if subsetting
-- Both Mermaid and Chart.js have error fallbacks that display friendly error messages
-- The feature only works when explicitly requested (proactive visualizations disabled to conserve inference)
-
-**Files changed:**
-- `main.py` (lines ~100–145 for regex and instructions, line ~1614 for conditional injection)
-- `index.html` (multiple sections; see above)
+## Future Needs & Longer-Term Considerations
+Architectural ideas and planning discussions that are not yet ready for implementation are
+captured in `planning/future-needs.md`. Read that file when the user asks what is missing
+from the PII, what should be built next, or what longer-term improvements have been discussed.
 
 ## Planned / Deferred Work
 - **SHRM item links + level descriptors:** Awaiting program director (Leadership-HRM).
 - **ITM competency framework for CMPL courses:** Awaiting decision on which framework applies.
-- **COMM-800 competency links:** Course not yet ingested. Will resolve automatically once
-  ingested and ingest_competencies.py is re-run. (LD-821 and LD-810 already resolved.)
-- **PLO/CLO quality review feature:** Bring in PLO Evaluator knowledge base (principles.md +
-  examples.csv). Inline advisory similar to CLO quality check, applied at program outcome level.
-- **CLO Tier 1 block scoping:** When no program is selected, do not load CLOs in Tier 1 —
-  they are too broad to be useful across all programs. Scope CLOs only when a program is active.
-  Priority: implement before the next program is added.
-- **Canvas API integration (Phase 1):** Replace manual IMSCC export pipeline with direct Canvas
-  REST API ingestion. Requires Canvas API token from UNH Canvas admin. sync.py fingerprint
-  detection → Canvas webhooks. This is the highest-value infrastructure improvement.
-- **LTI 1.3 integration (Phase 2):** Embed PII in Canvas via LTI launch + OAuth token for API
-  access. Requires LTI 1.3 Developer Key from Canvas admin and UNH IT security review.
-- **200+ course scaling:** Tier 2 inventory and inferential retrieval will exceed context limits.
-  Needs pre-filter step (lightweight Claude call to identify relevant courses first).
-- **Testing and refinement of all April 2026 system prompt additions:** Co-orientation rules,
-  CLO quality inline assessment, online pedagogy context blocks, AI integration two-tier
-  advisory, and rich media wrapper advisory have not yet been tested in live use.
+- **COMM-800 competency links:** Will resolve automatically once course is ingested and `ingest_competencies.py` is re-run.
+- **PLO/CLO quality review feature:** Bring in PLO Evaluator knowledge base (principles.md + examples.csv) for inline advisory at program outcome level.
+- **CLO Tier 1 block scoping:** Do not load CLOs in Tier 1 when no program is selected. Implement before the next program is added.
+- **Canvas API integration (Phase 1):** Replace manual IMSCC export with direct Canvas REST API. Requires Canvas API token from UNH admin. Highest-value infrastructure improvement.
+- **LTI 1.3 integration (Phase 2):** Embed PII in Canvas via LTI launch + OAuth. Requires LTI 1.3 Developer Key and UNH IT security review.
+- **200+ course scaling:** Tier 2 inventory and inferential retrieval will exceed context limits; needs a lightweight pre-filter Claude call.
 
 ## Ethical / Compliance Notes
 - FERPA: No student data used or stored
