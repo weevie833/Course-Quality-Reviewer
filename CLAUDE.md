@@ -123,8 +123,7 @@ Program selector in the UI allows filtering by one or more programs. No selectio
   - SHRM Competencies — SHRM-1 through SHRM-6: 46 total (no item links yet)
   - Total: 10 internal categories, 178 competencies
 - item_competency_links: 356 total
-  - A/B links: 64 (LD-804, LD-820, LD-821*, LD-823, LD-810*, LD-850, COMM-800*)
-    (* = placeholder — course not yet in DB; will resolve on re-run after course ingestion)
+  - A/B links: 61 (COM-800, LD-804, LD-810, LD-820, LD-821, LD-823, LD-850 — all resolved)
   - P/L links: 292 (PM courses) — with full 5-level descriptors (Novice→Exemplary)
   - SHRM links: 0 — pending program director decisions (by design, not a gap)
 
@@ -430,7 +429,7 @@ All competency codes use a program-prefix format consistently across all tables 
 - 19 competencies; codes: LD-1.X.X (formerly A.XX) and LD-2.X.X (formerly B.XX)
 - Canvas substitutes numeric prefixes for A/B: A→1, B→2, so LD-1.2.4 = formerly A.24
 - 5 rating levels per competency with full descriptors (competency_level_descriptors table)
-- Item links: LD-804, LD-810, LD-820, LD-821, LD-823, LD-850 active; COMM-800 pending (course not yet ingested)
+- Item links: COM-800, LD-804, LD-810, LD-820, LD-821, LD-823, LD-850 — all active
 - Applied to: Leadership, Leadership-HRM, Leadership-ITM programs (LD courses only)
 - Safe to re-run: drops and recreates all competency data each time
 
@@ -549,14 +548,12 @@ from the PII, what should be built next, or what longer-term improvements have b
 ## Planned / Deferred Work
 - **SHRM item links + level descriptors:** Awaiting program director (Leadership-HRM).
 - **ITM competency framework for CMPL courses:** Awaiting decision on which framework applies.
-- **COMM-800 competency links:** Will resolve automatically once course is ingested and `ingest_competencies.py` is re-run.
 - **CLO Tier 1 block scoping:** Do not load CLOs in Tier 1 when no program is selected. Implement before the next program is added.
 - **Rubric design/quality evaluation:** No framework yet for evaluating rubric quality (criteria-CLO alignment, behavioral anchoring of rating levels, point distribution). Identified as a skeletal knowledge area May 2026.
 - **Accreditation advisory:** No embedded framework connecting PII data (PLOs, CLOs, rubrics, competency mappings) to what ACBSP/HLC accreditors examine. Currently relies on Claude's training knowledge only. Identified May 2026.
 - **Canvas API integration (Phase 1):** Replace manual IMSCC export with direct Canvas REST API. Requires Canvas API token from UNH admin. Highest-value infrastructure improvement.
 - **LTI 1.3 integration (Phase 2):** Embed PII in Canvas via LTI launch + OAuth. Requires LTI 1.3 Developer Key and UNH IT security review.
 - **200+ course scaling:** Tier 2 inventory and inferential retrieval will exceed context limits; needs a lightweight pre-filter Claude call.
-- **Vercel deployment:** Not recommended — serverless model conflicts with SQLite, sync.py lifespan, app_state, and 60s timeout limit. Railway, Render, or Fly.io are better fits for this architecture with minimal code changes.
 
 ## Ethical / Compliance Notes
 - FERPA: No student data used or stored

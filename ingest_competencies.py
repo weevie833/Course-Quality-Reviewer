@@ -209,7 +209,7 @@ ITEM_ASSIGNMENTS = [
     ("LD-804",  "Organizational Plan, Team Charter (Leadership Students Only)", ["LD-1.2.4", "LD-1.3.1", "LD-2.1.1", "LD-2.1.2", "LD-2.3.1", "LD-2.3.2", "LD-2.3.3", "LD-2.3.4"]),
     ("LD-820",  "Leadership Action Plan (Leadership and Nonprofit Students)", ["LD-1.1.1", "LD-1.2.1", "LD-1.2.2", "LD-1.2.3", "LD-1.2.5", "LD-2.3.1"]),
     ("LD-821",  "Ethical Leadership",               ["LD-1.2.4", "LD-1.2.5", "LD-2.3.4", "LD-2.6.1", "LD-2.6.2"]),
-    ("COMM-800","Application",                      ["LD-1.1.1", "LD-1.2.3", "LD-2.1.1", "LD-2.1.2", "LD-2.4.1", "LD-2.5.1"]),
+    ("COM-800", "Application",                      ["LD-1.1.1", "LD-1.2.3", "LD-2.1.1", "LD-2.1.2", "LD-2.4.1", "LD-2.5.1"]),
     ("LD-823",  "Value of Diversity",               ["LD-1.1.1", "LD-2.1.1", "LD-2.1.2", "LD-2.3.1", "LD-2.3.2", "LD-2.6.1", "LD-2.6.2"]),
     ("LD-823",  "Identifying Desired Future States",["LD-1.1.1", "LD-2.1.2"]),
     ("LD-810",  "Change Management Plan",           ["LD-1.1.1", "LD-1.2.2", "LD-1.2.3", "LD-1.3.1", "LD-2.1.1", "LD-2.1.2", "LD-2.3.1", "LD-2.3.3", "LD-2.4.1", "LD-2.5.1"]),
