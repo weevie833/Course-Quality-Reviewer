@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import anthropic
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -2048,6 +2048,55 @@ _EASTER_EGG_TEXT = """The PII was created by Steve Covello, Senior Instructional
 The PII was tested for feedback by the Instructional Design team at UNH-CPSO and overseen by Reta Chaffee, Director of Educational Technology."""
 
 _EASTER_EGG_RE = re.compile(r"^\s*about the pii\s*[.!?]?\s*$", re.IGNORECASE)
+
+
+@app.get("/context-estimate")
+async def context_estimate(programs: list[str] = Query(default=[])):
+    """Estimate context token load for a given set of programs (Tier 1 + Tier 2)."""
+    if not programs:
+        return {"course_count": 0, "plo_count": 0, "clo_count": 0, "item_count": 0,
+                "estimated_tokens": 0, "feasible": True}
+
+    course_ids = get_program_course_ids(programs)
+    conn = get_conn()
+
+    plo_rows = conn.execute("""
+        SELECT COUNT(*) FROM plos p
+        JOIN programs pr ON p.program_id = pr.id
+        WHERE pr.short_name IN ({})
+    """.format(",".join("?" * len(programs))), programs).fetchone()
+    plo_count = plo_rows[0]
+
+    clo_count = conn.execute(
+        "SELECT COUNT(*) FROM clos WHERE course_id IN ({})".format(
+            ",".join("?" * len(course_ids))), course_ids
+    ).fetchone()[0] if course_ids else 0
+
+    item_count = conn.execute(
+        "SELECT COUNT(*) FROM course_items WHERE course_id IN ({})".format(
+            ",".join("?" * len(course_ids))), course_ids
+    ).fetchone()[0] if course_ids else 0
+
+    conn.close()
+
+    # Token estimates: system prompt base + Tier 1 (PLOs + CLOs) + Tier 2 (catalog titles)
+    system_base  = 5_000
+    plo_tokens   = plo_count  * 35
+    clo_tokens   = clo_count  * 30
+    item_tokens  = item_count * 45   # title + metadata, no body text
+    total        = system_base + plo_tokens + clo_tokens + item_tokens
+    context_limit = 200_000
+    safe_threshold = 150_000
+
+    return {
+        "course_count":      len(course_ids),
+        "plo_count":         plo_count,
+        "clo_count":         clo_count,
+        "item_count":        item_count,
+        "estimated_tokens":  total,
+        "context_limit":     context_limit,
+        "feasible":          total < safe_threshold,
+    }
 
 
 @app.post("/chat")

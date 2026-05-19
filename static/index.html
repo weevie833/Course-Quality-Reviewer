@@ -869,11 +869,7 @@
       selectedPrograms.add(shortName);
       pill.classList.add('active');
       pill.setAttribute('aria-pressed', 'true');
-      if (selectedPrograms.size > 2) {
-        const welcome = document.getElementById('welcome');
-        if (welcome) welcome.remove();
-        appendMessage('assistant', 'For best results, select no more than two programs at a time. Queries across three or more programs can produce very large responses and may take significantly longer to complete. Consider narrowing your selection before sending.');
-      }
+      // No static warning — context check fires at send time for 3+ programs
     }
     updateSendButton();
     updateHint();
@@ -1054,14 +1050,39 @@
     if (_modalReturnFocus) { _modalReturnFocus.focus(); _modalReturnFocus = null; }
   }
 
-  function confirmAndSend() {
+  async function confirmAndSend() {
     const input = document.getElementById('user-input');
     if (!input.value.trim() || isStreaming || selectedPrograms.size === 0) return;
+
     if (selectedPrograms.size === 2) {
       const names = [...selectedPrograms].join(' and ');
       showScopeModal(
         'Multiple Programs Selected',
         `You have selected <strong>${names}</strong>. Results will span both programs. Note that the same course may be required in one program and an elective in the other — responses will reflect each program's designation.<br><br>Would you like to proceed?`,
+        'Cancel — Adjust Selection'
+      );
+    } else if (selectedPrograms.size >= 3) {
+      const params = [...selectedPrograms].map(p => `programs=${encodeURIComponent(p)}`).join('&');
+      let est;
+      try {
+        const res = await fetch(`/context-estimate?${params}`);
+        est = await res.json();
+      } catch {
+        // If estimate fails, proceed anyway
+        sendMessage();
+        return;
+      }
+      const pct = Math.round((est.estimated_tokens / est.context_limit) * 100);
+      const names = [...selectedPrograms].join(', ');
+      let feasibilityMsg;
+      if (est.feasible) {
+        feasibilityMsg = `The estimated context load is <strong>~${est.estimated_tokens.toLocaleString()} tokens</strong> (${pct}% of the ${(est.context_limit / 1000).toFixed(0)}K limit). Simple queries should complete fully, but detailed or body-text queries may approach the limit.`;
+      } else {
+        feasibilityMsg = `The estimated context load is <strong>~${est.estimated_tokens.toLocaleString()} tokens</strong> (${pct}% of the ${(est.context_limit / 1000).toFixed(0)}K limit). This exceeds the recommended threshold — results for complex queries are likely to be incomplete. Consider narrowing to one or two programs.`;
+      }
+      showScopeModal(
+        'Large Selection — Context Check',
+        `You have selected <strong>${selectedPrograms.size} programs</strong> (${names}), spanning <strong>${est.course_count} courses</strong>, <strong>${est.clo_count} CLOs</strong>, and <strong>${est.item_count} learning items</strong>.<br><br>${feasibilityMsg}<br><br>Would you like to proceed?`,
         'Cancel — Adjust Selection'
       );
     } else {
