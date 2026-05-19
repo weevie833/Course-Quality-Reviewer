@@ -2130,7 +2130,8 @@ async def email_session(req: EmailSessionRequest):
     if not SMTP_HOST or not SMTP_USER or not SMTP_PASSWORD:
         raise HTTPException(status_code=503, detail="Email relay not configured. Add SMTP_HOST, SMTP_USER, and SMTP_PASSWORD to .env.")
 
-    if not req.email or "@" not in req.email:
+    addresses = [a.strip() for a in req.email.split(",") if a.strip()]
+    if not addresses or not all("@" in a for a in addresses):
         raise HTTPException(status_code=400, detail="Valid destination email address required.")
 
     if not req.history:
@@ -2156,7 +2157,7 @@ async def email_session(req: EmailSessionRequest):
 
     mime = MIMEMultipart()
     mime["From"] = SMTP_USER
-    mime["To"] = req.email
+    mime["To"] = ", ".join(addresses)
     mime["Subject"] = f"PII Session — {req.generated_at}"
     mime.attach(MIMEText(body, "plain", "utf-8"))
 
@@ -2165,13 +2166,13 @@ async def email_session(req: EmailSessionRequest):
             import ssl as _ssl
             with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=_ssl.create_default_context()) as smtp:
                 smtp.login(SMTP_USER, SMTP_PASSWORD)
-                smtp.sendmail(SMTP_USER, req.email, mime.as_string())
+                smtp.sendmail(SMTP_USER, addresses, mime.as_string())
         else:
             with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
                 smtp.ehlo()
                 smtp.starttls()
                 smtp.login(SMTP_USER, SMTP_PASSWORD)
-                smtp.sendmail(SMTP_USER, req.email, mime.as_string())
+                smtp.sendmail(SMTP_USER, addresses, mime.as_string())
     except smtplib.SMTPAuthenticationError:
         raise HTTPException(status_code=502, detail="SMTP authentication failed. Check SMTP_USER and SMTP_PASSWORD in .env.")
     except Exception as exc:

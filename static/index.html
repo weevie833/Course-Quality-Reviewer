@@ -757,8 +757,8 @@
         </div>
       </div>
       <div class="email-panel">
-        <span class="email-panel-label">Send me this session as a reminder</span>
-        <input type="email" id="email-input" placeholder="your@email.com" autocomplete="email">
+        <span class="email-panel-label">Send me this session as a reminder.<br>Separate multiple addresses with a comma.</span>
+        <input type="text" id="email-input" placeholder="your@email.com" autocomplete="email">
         <button id="email-btn" onclick="emailSession()">EMAIL</button>
         <span id="email-status"></span>
       </div>
@@ -1281,8 +1281,9 @@
     const email = emailInput.value.trim();
 
     status.className = '';
-    if (!email || !email.includes('@')) {
-      status.textContent = 'Enter a valid email address.';
+    const addresses = email.split(',').map(a => a.trim()).filter(Boolean);
+    if (addresses.length === 0 || !addresses.every(a => a.includes('@'))) {
+      status.textContent = 'Enter one or more valid email addresses.';
       status.className = 'error';
       return;
     }
