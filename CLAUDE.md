@@ -550,11 +550,13 @@ from the PII, what should be built next, or what longer-term improvements have b
 - **SHRM item links + level descriptors:** Awaiting program director (Leadership-HRM).
 - **ITM competency framework for CMPL courses:** Awaiting decision on which framework applies.
 - **COMM-800 competency links:** Will resolve automatically once course is ingested and `ingest_competencies.py` is re-run.
-- **PLO/CLO quality review feature:** Bring in PLO Evaluator knowledge base (principles.md + examples.csv) for inline advisory at program outcome level.
 - **CLO Tier 1 block scoping:** Do not load CLOs in Tier 1 when no program is selected. Implement before the next program is added.
+- **Rubric design/quality evaluation:** No framework yet for evaluating rubric quality (criteria-CLO alignment, behavioral anchoring of rating levels, point distribution). Identified as a skeletal knowledge area May 2026.
+- **Accreditation advisory:** No embedded framework connecting PII data (PLOs, CLOs, rubrics, competency mappings) to what ACBSP/HLC accreditors examine. Currently relies on Claude's training knowledge only. Identified May 2026.
 - **Canvas API integration (Phase 1):** Replace manual IMSCC export with direct Canvas REST API. Requires Canvas API token from UNH admin. Highest-value infrastructure improvement.
 - **LTI 1.3 integration (Phase 2):** Embed PII in Canvas via LTI launch + OAuth. Requires LTI 1.3 Developer Key and UNH IT security review.
 - **200+ course scaling:** Tier 2 inventory and inferential retrieval will exceed context limits; needs a lightweight pre-filter Claude call.
+- **Vercel deployment:** Not recommended — serverless model conflicts with SQLite, sync.py lifespan, app_state, and 60s timeout limit. Railway, Render, or Fly.io are better fits for this architecture with minimal code changes.
 
 ## Ethical / Compliance Notes
 - FERPA: No student data used or stored
