@@ -737,7 +737,7 @@
     </div>
     <div class="input-inner">
       <div class="chat-side">
-        <span class="email-panel-label">Ask about PLOs, CLOs, assignments, rubrics, or program alignment</span>
+        <span class="email-panel-label"></span>
         <div class="textarea-wrap">
           <textarea
             id="user-input"
@@ -890,10 +890,7 @@
   }
 
   function updateHint() {
-    const hint = document.querySelector('.input-hint');
-    hint.textContent = selectedPrograms.size === 0
-      ? 'Select at least one program to begin'
-      : 'Enter to send · Shift+Enter for new line';
+    // Hint text is static — always reads "Select at least one program to begin"
   }
 
   loadPrograms();
