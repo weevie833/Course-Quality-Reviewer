@@ -50,6 +50,15 @@ COMPETENCY_QUERY_RE = re.compile(
     r"\b(competenc(?:y|ies)|SHRM|BASK|PMI|LD competenc|ITM competenc|A/B framework|P/L framework)\b",
     re.IGNORECASE,
 )
+# Detects competency questions asking the model to recommend/select/match competencies
+# against assignment content (vs. simply browsing/listing the catalog). These need full
+# proficiency-indicator descriptions in context to do real semantic matching.
+COMPETENCY_MATCH_QUERY_RE = re.compile(
+    r"\b(best|recommend|which.*(?:assess|fit|align|map)|select.*competenc|"
+    r"most\s+(?:appropriate|relevant|suitable)|should\s+be\s+assessed|"
+    r"would\s+(?:be\s+)?best|strongest\s+(?:fit|match|alignment))\b",
+    re.IGNORECASE,
+)
 # Detects general questions about AI integration strategy in instruction.
 # Triggers framework-based advice from the system prompt only — no article retrieval.
 AI_INTEGRATION_QUERY_RE = re.compile(
@@ -827,14 +836,16 @@ def get_competency_categories_for_programs(program_names: list[str]) -> list[str
     return cats
 
 
-def fetch_competency_catalog(category_letters: list[str], label: str = "Competency Framework") -> str:
-    """All competencies (code + name) grouped by category — no full descriptions."""
+def fetch_competency_catalog(category_letters: list[str], label: str = "Competency Framework", include_descriptions: bool = False) -> str:
+    """Competencies grouped by category. By default just code + name; pass
+    include_descriptions=True (for recommendation/matching queries) to include
+    the full proficiency-indicator text needed for real semantic matching."""
     if not category_letters:
         return ""
     conn = get_conn()
     placeholders = ",".join("?" * len(category_letters))
     rows = conn.execute(f"""
-        SELECT cc.letter, cc.title AS cat_title, c.code, c.name
+        SELECT cc.letter, cc.title AS cat_title, c.code, c.name, c.description
         FROM competencies c
         JOIN competency_categories cc ON c.category_id = cc.id
         WHERE cc.letter IN ({placeholders})
@@ -849,7 +860,10 @@ def fetch_competency_catalog(category_letters: list[str], label: str = "Competen
         if r["letter"] != current_cat:
             current_cat = r["letter"]
             lines.append(f"\n### {r['cat_title']}")
-        lines.append(f"  {r['code']} — {r['name']}")
+        if include_descriptions and r["description"]:
+            lines.append(f"  {r['code']} — {r['name']}\n    {r['description']}")
+        else:
+            lines.append(f"  {r['code']} — {r['name']}")
     return "\n".join(lines)
 
 
@@ -1257,7 +1271,8 @@ def build_context(message: str, history: list[dict] = None, program_course_ids: 
                 comp_cats, course_ids=scope, competency_codes=specific_codes
             )
         else:
-            catalog = fetch_competency_catalog(comp_cats, label=comp_label)
+            wants_match = bool(COMPETENCY_MATCH_QUERY_RE.search(message))
+            catalog = fetch_competency_catalog(comp_cats, label=comp_label, include_descriptions=wants_match)
             if catalog:
                 parts.append(catalog)
             links = fetch_competency_assignment_links(comp_cats, course_ids=scope)

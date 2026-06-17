@@ -22,7 +22,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 DB_PATH = BASE_DIR / "data" / "program.db"
-CSV_PATH = Path("/Users/stevecovello/Desktop/PM-Outcome Set.csv")
+CSV_PATH = Path("/Users/stevecovello/Desktop/Claude-Codex Projects/_Program Intelligence Interface/PM Program/PM-Outcome Set.csv")
 
 LEVEL_COLS = {
     5: "Level 5",
@@ -53,7 +53,7 @@ def main():
         JOIN competency_categories cc ON c.category_id = cc.id
         WHERE cc.letter IN ('P', 'L')
     """).fetchall()
-    comp_by_code = {r["code"]: r["id"] for r in rows}
+    comp_by_code = {normalize_code(r["code"]): r["id"] for r in rows}
     print(f"P/L competencies in DB: {len(comp_by_code)}")
 
     # Clear existing P/L level descriptors and descriptions

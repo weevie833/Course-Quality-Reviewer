@@ -241,20 +241,15 @@ def run():
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = OFF")
 
-    # Drop and recreate competency tables cleanly
+    # Create competency tables if they don't exist yet (first run)
     conn.executescript("""
-        DROP TABLE IF EXISTS item_competency_links;
-        DROP TABLE IF EXISTS competency_level_descriptors;
-        DROP TABLE IF EXISTS competencies;
-        DROP TABLE IF EXISTS competency_categories;
-
-        CREATE TABLE competency_categories (
+        CREATE TABLE IF NOT EXISTS competency_categories (
             id     INTEGER PRIMARY KEY AUTOINCREMENT,
             letter TEXT NOT NULL UNIQUE,
             title  TEXT NOT NULL
         );
 
-        CREATE TABLE competencies (
+        CREATE TABLE IF NOT EXISTS competencies (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             category_id INTEGER NOT NULL REFERENCES competency_categories(id),
             code        TEXT NOT NULL UNIQUE,
@@ -262,7 +257,7 @@ def run():
             description TEXT NOT NULL
         );
 
-        CREATE TABLE competency_level_descriptors (
+        CREATE TABLE IF NOT EXISTS competency_level_descriptors (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
             competency_id INTEGER NOT NULL REFERENCES competencies(id),
             level         INTEGER NOT NULL CHECK(level BETWEEN 1 AND 5),
@@ -270,13 +265,35 @@ def run():
             UNIQUE(competency_id, level)
         );
 
-        CREATE TABLE item_competency_links (
+        CREATE TABLE IF NOT EXISTS item_competency_links (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
             item_id       INTEGER NOT NULL REFERENCES course_items(id),
             competency_id INTEGER NOT NULL REFERENCES competencies(id),
             UNIQUE(item_id, competency_id)
         );
     """)
+
+    # Remove only this script's own category data (LD's A/B), leave PM/SHRM intact
+    ld_letters = [letter for letter, _ in CATEGORIES]
+    placeholders = ",".join("?" * len(ld_letters))
+    existing_cat_ids = [
+        r["id"] for r in conn.execute(
+            f"SELECT id FROM competency_categories WHERE letter IN ({placeholders})", ld_letters
+        ).fetchall()
+    ]
+    if existing_cat_ids:
+        cat_placeholders = ",".join("?" * len(existing_cat_ids))
+        existing_comp_ids = [
+            r["id"] for r in conn.execute(
+                f"SELECT id FROM competencies WHERE category_id IN ({cat_placeholders})", existing_cat_ids
+            ).fetchall()
+        ]
+        if existing_comp_ids:
+            comp_placeholders = ",".join("?" * len(existing_comp_ids))
+            conn.execute(f"DELETE FROM item_competency_links WHERE competency_id IN ({comp_placeholders})", existing_comp_ids)
+            conn.execute(f"DELETE FROM competency_level_descriptors WHERE competency_id IN ({comp_placeholders})", existing_comp_ids)
+            conn.execute(f"DELETE FROM competencies WHERE id IN ({comp_placeholders})", existing_comp_ids)
+        conn.execute(f"DELETE FROM competency_categories WHERE id IN ({cat_placeholders})", existing_cat_ids)
 
     # Insert categories
     for letter, title in CATEGORIES:
