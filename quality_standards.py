@@ -513,7 +513,21 @@ STANDARDS = {
                 "interpretation": (
                     'Video and audio content includes captions or transcripts that contain equivalent '
                     'information. Captions and transcripts are edited for accuracy. Complex diagrams or '
-                    'imagery in a video should be described/transcribed.'
+                    'imagery in a video should be described/transcribed.\n\n'
+                    'IMPORTANT — Video detection: The extracted course content includes placeholders for '
+                    'embedded videos in the format [embedded video: "title" — captioning requires human verification] '
+                    'or [YouTube video: "title" — captioning requires human verification]. '
+                    'You CANNOT access external URLs or verify captioning status directly. '
+                    'Your role for 8.5 is to:\n'
+                    '1. List every video placeholder found in the course content, by title and location.\n'
+                    '2. State the default assumption: Kaltura videos embedded via Canvas typically include '
+                    'auto-generated captions through the Kaltura platform; YouTube videos typically include '
+                    'auto-generated captions. However, auto-generated captions are often inaccurate and do '
+                    'not meet ADA standards without human review and editing.\n'
+                    '3. Mark this standard as Partially Met and note in the Gaps section that a human reviewer '
+                    'must open each video in Canvas to confirm captions are present and edited for accuracy.\n'
+                    'If NO video placeholders are found in the extracted content, note that no embedded videos '
+                    'were detected and mark the standard as Met (no video content = no captioning requirement).'
                 ),
             },
             {

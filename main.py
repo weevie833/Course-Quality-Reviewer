@@ -259,6 +259,20 @@ def _strip_html(html_text: str) -> str:
                     self._parts.append("[Image: no alt text]")
                 else:
                     self._parts.append(f"[Image: alt='{alt}']")
+            elif tag == "iframe":
+                attr_map = dict(attrs)
+                title = attr_map.get("title", "").strip()
+                src = attr_map.get("src", "").lower()
+                if "youtube" in src:
+                    kind = "YouTube video"
+                elif "kaltura" in src or "brightcove" in src or "vimeo" in src:
+                    kind = "Kaltura/hosted video"
+                elif "$canvas_course_reference$" in src or "external_tools" in src:
+                    kind = "Canvas-embedded video (likely Kaltura)"
+                else:
+                    kind = "embedded video"
+                label = f'"{title}"' if title else "(untitled)"
+                self._parts.append(f"[{kind}: {label} — captioning requires human verification]")
 
         def handle_endtag(self, tag):
             if tag in ("script", "style"):
