@@ -447,6 +447,8 @@
     isEvaluating: false,
     pendingFile: null,
     chatHistory: [],
+    uploadAbortController: null,
+    evalAbortControllers: [],
   };
 
   // ── Init ──────────────────────────────────────────────────────────────────
@@ -640,6 +642,10 @@
     }
   }
 
+  function stopEvaluation() {
+    state.evalAbortControllers.forEach(c => c.abort());
+  }
+
   function showBeginEvaluation() {
     const c = state.course;
     document.getElementById('eval-panel').innerHTML = `
@@ -647,7 +653,6 @@
         <div class="course-name">${esc(c.course_title)}</div>
         <p>Course content has been extracted and is ready for evaluation.</p>
         <button class="primary-btn" onclick="beginEvaluation()">Begin Evaluation</button>
-        <span class="sub">This will run all 8 standards in parallel.</span>
       </div>`;
     setStandardButtons(false);
     document.getElementById('docx-btn').disabled = true;
@@ -692,20 +697,28 @@
   async function runEvaluation(standards) {
     if (state.isEvaluating) return;
     state.isEvaluating = true;
-    document.getElementById('eval-panel').innerHTML = '';
+
+    // Show Stop button in the main panel
+    document.getElementById('eval-panel').innerHTML = `
+      <div class="center-state" id="eval-stop-area">
+        <p style="color:#595959;font-size:14px;">Evaluating all 8 standards…</p>
+        <button class="stop-btn" onclick="stopEvaluation()">Stop Evaluation</button>
+      </div>`;
 
     const total = standards.length;
     let completed = 0;
+    let stopped = false;
     const startTime = Date.now();
     const completionTimes = [];
+
+    // One AbortController per standard
+    state.evalAbortControllers = standards.map(() => new AbortController());
 
     function elapsedSec() { return (Date.now() - startTime) / 1000; }
 
     function etaLabel() {
       if (completed === 0) return 'Typically completes in 60–90 seconds';
       if (completed >= total) return '';
-      // All calls started in parallel at t=0 — remaining ones are simply slower than those
-      // already finished. Best honest signal: time since last completion.
       const elapsed = elapsedSec();
       const lastDone = completionTimes[completionTimes.length - 1];
       const sinceLast = elapsed - lastDone;
@@ -728,17 +741,19 @@
 
     const body = JSON.stringify({ course_id: state.course.course_id, timestamp: state.course.timestamp });
 
-    await Promise.allSettled(standards.map(async n => {
+    await Promise.allSettled(standards.map(async (n, i) => {
       try {
         const res = await fetch(`/evaluate/${n}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body,
+          signal: state.evalAbortControllers[i].signal,
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         state.evaluation[n] = data.result;
       } catch (err) {
+        if (err.name === 'AbortError') { stopped = true; return; }
         state.evaluation[n] = { error: `Standard ${n} failed: ${err.message}` };
       }
       completed++;
@@ -747,9 +762,17 @@
     }));
 
     clearInterval(tick);
-    const totalSec = Math.round(elapsedSec());
+    state.evalAbortControllers = [];
     hideProgress();
+    state.isEvaluating = false;
 
+    if (stopped) {
+      setStatus('Evaluation stopped.');
+      showBeginEvaluation();
+      return;
+    }
+
+    const totalSec = Math.round(elapsedSec());
     setStatus(`Evaluation complete in ${totalSec}s — select a standard from the sidebar.`, 'success');
     setStandardButtons(true);
     state.evaluationComplete = true;
@@ -758,7 +781,6 @@
       <div class="center-state">
         <p>Evaluation complete. Select a standard from the sidebar to view results.</p>
       </div>`;
-    state.isEvaluating = false;
   }
 
   function selectStandard(n) {
