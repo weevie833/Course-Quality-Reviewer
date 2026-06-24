@@ -451,7 +451,7 @@
 
   async function saveAndReplace() {
     closeReplaceModal();
-    if (Object.keys(state.evaluation).length) await doSave();
+    if (Object.keys(state.evaluation).length) await saveEvaluation();
     const f = state.pendingFile;
     state.pendingFile = null;
     if (f) uploadFile(f);
@@ -741,12 +741,34 @@
   }
 
   // ── Save ──────────────────────────────────────────────────────────────────
-  async function saveEvaluation() {
-    if (!Object.keys(state.evaluation).length) return;
-    await doSave();
+  const STANDARD_TITLES = {
+    1: 'Course Overview and Introduction',
+    2: 'Learning Objectives',
+    3: 'Assessment and Measurement',
+    4: 'Instructional Materials',
+    5: 'Learning Activities and Learner Interaction',
+    6: 'Course Technology',
+    7: 'Learner Support',
+    8: 'Accessibility and Usability',
+  };
+
+  function formatEvaluationAsText(evalData) {
+    if (!evalData || !evalData.substandards) return '';
+    return evalData.substandards.map(ss => {
+      let block = `${ss.id}  ${ss.description}\n`;
+      block += `Verdict: ${ss.verdict}\n`;
+      if (ss.evidence && ss.evidence.trim()) {
+        block += `Evidence:\n${ss.evidence.trim()}\n`;
+      }
+      if (ss.gaps && ss.gaps.trim()) {
+        block += `Gaps:\n${ss.gaps.trim()}\n`;
+      }
+      return block;
+    }).join('\n');
   }
 
-  async function doSave() {
+  async function saveEvaluation() {
+    if (!Object.keys(state.evaluation).length) return;
     const c = state.course;
     let text = `Course Quality Review\n`;
     text += `${c.course_id}: ${c.course_title}\n`;
@@ -754,9 +776,12 @@
     text += '='.repeat(60) + '\n\n';
 
     for (let i = 1; i <= 8; i++) {
-      if (state.evaluation[i]) {
-        text += `STANDARD ${i}\n${'─'.repeat(40)}\n${state.evaluation[i]}\n\n`;
-      }
+      const evalData = state.evaluation[i];
+      if (!evalData) continue;
+      text += `STANDARD ${i}: ${STANDARD_TITLES[i] || ''}\n`;
+      text += '─'.repeat(60) + '\n';
+      text += formatEvaluationAsText(evalData);
+      text += '\n\n';
     }
 
     const blob = new Blob([text], { type: 'text/plain' });

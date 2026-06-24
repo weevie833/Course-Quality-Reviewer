@@ -360,12 +360,21 @@ def _run_standard_evaluation(
         messages=[{"role": "user", "content": user_message}],
     )
     raw = response.content[0].text.strip()
+    # Strip markdown fences if Claude wraps the JSON despite instructions
+    if raw.startswith("```"):
+        raw = re.sub(r'^```[a-z]*\n?', '', raw)
+        raw = re.sub(r'\n?```$', '', raw).strip()
     try:
         return json.loads(raw)
     except json.JSONDecodeError:
-        import logging
-        logging.error("CQR eval JSON parse failed. stop_reason=%s raw=%s", response.stop_reason, raw[-500:])
-        raise
+        # Attempt repair for minor issues (unescaped quotes, trailing commas, etc.)
+        try:
+            from json_repair import repair_json
+            return json.loads(repair_json(raw))
+        except Exception:
+            import logging
+            logging.error("CQR eval JSON unrecoverable. stop_reason=%s raw=%s", response.stop_reason, raw[-500:])
+            raise json.JSONDecodeError("Unrecoverable JSON from model", raw, 0)
 
 
 def _read_canvas_course_info(imscc_bytes: bytes) -> tuple[str, str]:
