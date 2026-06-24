@@ -490,7 +490,6 @@
 
   async function uploadFile(file, discardOldest = false) {
     setStatus('Extracting course content…');
-    document.getElementById('upload-btn').disabled = true;
 
     const formData = new FormData();
     formData.append('file', file);
@@ -522,7 +521,6 @@
     } catch (err) {
       setStatus('Upload error: ' + err.message, 'error');
     } finally {
-      document.getElementById('upload-btn').disabled = false;
     }
   }
 
