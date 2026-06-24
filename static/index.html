@@ -68,10 +68,10 @@
     .header-btn:hover:not(:disabled) { border-color: var(--spring-green); color: var(--spring-green); }
     .header-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── Progress bar ── */
+    /* ── Evaluation status strip ── */
     .progress-container {
       background: var(--wildcat-blue);
-      padding: 5px 20px 8px;
+      padding: 6px 20px;
       display: none;
       align-items: center;
       gap: 12px;
@@ -79,9 +79,16 @@
       border-top: 1px solid rgba(255,255,255,0.1);
     }
     .progress-container.visible { display: flex; }
-    .progress-track { flex: 1; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden; }
-    .progress-fill { height: 100%; background: var(--spring-green); border-radius: 3px; width: 0%; transition: width 0.35s ease; }
-    .progress-label { font-size: 12px; font-family: var(--font-label); color: rgba(255,255,255,0.75); letter-spacing: 0.04em; white-space: nowrap; min-width: 200px; }
+    .spinner {
+      width: 14px; height: 14px; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-top-color: var(--spring-green);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .progress-label { font-size: 12px; font-family: var(--font-label); color: rgba(255,255,255,0.75); letter-spacing: 0.04em; }
+    .progress-eta   { font-size: 12px; font-family: var(--font-label); color: rgba(255,255,255,0.45); letter-spacing: 0.04em; margin-left: auto; }
 
     /* ── Body area ── */
     .body-area { flex: 1; display: flex; overflow: hidden; }
@@ -345,10 +352,9 @@
   </header>
 
   <div class="progress-container" id="progress-container">
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
+    <div class="spinner" id="eval-spinner"></div>
     <span class="progress-label" id="progress-label"></span>
+    <span class="progress-eta" id="progress-eta"></span>
   </div>
 
   <div class="body-area">
@@ -568,7 +574,7 @@
         <div class="course-name">${esc(c.course_title)}</div>
         <p>Course content has been extracted and is ready for evaluation.</p>
         <button class="primary-btn" onclick="beginEvaluation()">Begin Evaluation</button>
-        <span class="sub">This will run all 8 standards in sequence.</span>
+        <span class="sub">This will run all 8 standards in parallel.</span>
       </div>`;
     setStandardButtons(false);
     document.getElementById('save-btn').disabled = true;
@@ -613,43 +619,72 @@
   async function runEvaluation(standards) {
     if (state.isEvaluating) return;
     state.isEvaluating = true;
-
-    showProgress(0, 'Starting evaluation…');
     document.getElementById('eval-panel').innerHTML = '';
 
-    for (let i = 0; i < standards.length; i++) {
-      const n = standards[i];
-      const pct = Math.round((i / standards.length) * 100);
-      showProgress(pct, `Evaluating Standard ${n} of 8…`);
-      setStatus(`Evaluating Standard ${n} of 8…`);
+    const total = standards.length;
+    let completed = 0;
+    const startTime = Date.now();
+    const completionTimes = [];
 
+    function elapsedSec() { return (Date.now() - startTime) / 1000; }
+
+    function etaLabel() {
+      if (completed === 0) return 'Typically completes in 60–90 seconds';
+      if (completed >= total) return '';
+      // All calls started in parallel at t=0 — remaining ones are simply slower than those
+      // already finished. Best honest signal: time since last completion.
+      const elapsed = elapsedSec();
+      const lastDone = completionTimes[completionTimes.length - 1];
+      const sinceLast = elapsed - lastDone;
+      if (sinceLast < 8) return 'More completing soon…';
+      return 'Awaiting slower standards…';
+    }
+
+    function updateProgress() {
+      const elapsed = Math.floor(elapsedSec());
+      const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+      const ss = String(elapsed % 60).padStart(2, '0');
+      document.getElementById('progress-label').textContent =
+        `Evaluating all 8 standards in parallel — ${completed} of ${total} complete — ${mm}:${ss} elapsed`;
+      document.getElementById('progress-eta').textContent = completed < total ? etaLabel() : '';
+    }
+
+    showProgress();
+    updateProgress();
+    const tick = setInterval(updateProgress, 1000);
+
+    const body = JSON.stringify({ course_id: state.course.course_id, timestamp: state.course.timestamp });
+
+    await Promise.allSettled(standards.map(async n => {
       try {
         const res = await fetch(`/evaluate/${n}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ course_id: state.course.course_id, timestamp: state.course.timestamp }),
+          body,
         });
-        if (!res.ok) throw new Error(`Standard ${n} failed (${res.status})`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         state.evaluation[n] = data.result;
       } catch (err) {
-        state.evaluation[n] = `Error evaluating Standard ${n}: ${err.message}`;
+        state.evaluation[n] = { error: `Standard ${n} failed: ${err.message}` };
       }
-    }
+      completed++;
+      completionTimes.push(elapsedSec());
+      updateProgress();
+    }));
 
-    showProgress(100, 'Evaluation complete.');
-    setStatus('Evaluation complete — select a standard from the sidebar.', 'success');
-    setTimeout(hideProgress, 2500);
+    clearInterval(tick);
+    const totalSec = Math.round(elapsedSec());
+    hideProgress();
 
+    setStatus(`Evaluation complete in ${totalSec}s — select a standard from the sidebar.`, 'success');
     setStandardButtons(true);
     state.evaluationComplete = true;
     document.getElementById('save-btn').disabled = false;
-
     document.getElementById('eval-panel').innerHTML = `
       <div class="center-state">
         <p>Evaluation complete. Select a standard from the sidebar to view results.</p>
       </div>`;
-
     state.isEvaluating = false;
   }
 
@@ -701,14 +736,14 @@
   }
 
   // ── Progress ──────────────────────────────────────────────────────────────
-  function showProgress(pct, label) {
+  function showProgress() {
     document.getElementById('progress-container').classList.add('visible');
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-label').textContent = label;
   }
 
   function hideProgress() {
     document.getElementById('progress-container').classList.remove('visible');
+    document.getElementById('progress-label').textContent = '';
+    document.getElementById('progress-eta').textContent = '';
   }
 
   function setStandardButtons(enabled) {
