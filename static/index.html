@@ -146,6 +146,31 @@
       cursor: pointer; transition: background 0.15s;
     }
     .primary-btn:hover { background: #002a6b; }
+    .primary-btn:disabled { opacity: 0.55; cursor: not-allowed; background: #555; }
+
+    .stop-btn {
+      background: none; color: #c0392b; border: 1px solid #c0392b;
+      border-radius: 6px; padding: 8px 22px; font-size: 13px;
+      font-family: var(--font-body); font-weight: 700; cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .stop-btn:hover { background: #c0392b; color: #fff; }
+
+    /* Upload progress bar in header */
+    .upload-progress-bar {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: rgba(255,255,255,0.15); overflow: hidden; display: none;
+    }
+    .upload-progress-bar.active { display: block; }
+    .upload-progress-bar::after {
+      content: ''; display: block; height: 100%;
+      background: var(--spring-green);
+      animation: upload-sweep 1.6s ease-in-out infinite;
+    }
+    @keyframes upload-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
 
     /* Resume banner */
     .resume-banner {
@@ -344,7 +369,7 @@
 
 <div class="app">
 
-  <header>
+  <header style="position:relative;">
     <div class="accent-bar"></div>
     <div class="titles">
       <div class="subtitle">University of New Hampshire</div>
@@ -355,6 +380,7 @@
       <input type="file" id="upload-input" accept=".imscc" style="display:none" onchange="handleFileSelected(this)">
       <button class="header-btn" onclick="resetApp()">Reset</button>
     </div>
+    <div class="upload-progress-bar" id="upload-progress-bar"></div>
   </header>
 
   <div class="progress-container" id="progress-container">
@@ -490,17 +516,25 @@
 
   async function uploadFile(file, discardOldest = false) {
     setStatus('Extracting course content…');
+    showProcessing();
+
+    state.uploadAbortController = new AbortController();
 
     const formData = new FormData();
     formData.append('file', file);
     if (discardOldest) formData.append('discard_oldest', 'true');
 
     try {
-      const res = await fetch('/upload', { method: 'POST', body: formData });
+      const res = await fetch('/upload', {
+        method: 'POST',
+        body: formData,
+        signal: state.uploadAbortController.signal,
+      });
       const data = await res.json();
 
       if (!res.ok) {
         setStatus('Upload failed: ' + (data.detail || 'Unknown error'), 'error');
+        showUploadPrompt();
         return;
       }
 
@@ -509,6 +543,7 @@
         document.getElementById('version-modal-body').textContent =
           `${data.course_id} already has ${data.version_count} saved versions (the maximum is 5). Discard the oldest version to proceed?`;
         document.getElementById('version-modal').classList.add('visible');
+        showUploadPrompt();
         return;
       }
 
@@ -519,8 +554,16 @@
       onCourseLoaded(true);
 
     } catch (err) {
-      setStatus('Upload error: ' + err.message, 'error');
+      if (err.name === 'AbortError') {
+        setStatus('Upload stopped.');
+        alert('The upload was stopped. You can upload a different file or try again.');
+      } else {
+        setStatus('Upload error: ' + err.message, 'error');
+      }
+      showUploadPrompt();
     } finally {
+      state.uploadAbortController = null;
+      document.getElementById('upload-progress-bar').classList.remove('active');
     }
   }
 
@@ -561,15 +604,41 @@
   // ── Panel states ──────────────────────────────────────────────────────────
   function showUploadPrompt() {
     document.getElementById('eval-panel').innerHTML = `
-      <div class="center-state">
+      <div class="center-state" id="upload-center">
         <h2>Course Quality Reviewer</h2>
         <p>Upload a Canvas .imscc export file to begin a course quality evaluation.</p>
-        <button class="primary-btn" onclick="triggerUpload()">Upload Course File</button>
+        <button class="primary-btn" id="upload-center-btn" onclick="triggerUpload()">Upload Course File</button>
       </div>`;
     setStandardButtons(false);
     document.getElementById('save-btn').disabled = true;
     document.getElementById('docx-btn').disabled = true;
     document.getElementById('user-input').disabled = true;
+    document.getElementById('upload-progress-bar').classList.remove('active');
+  }
+
+  function showProcessing() {
+    const btn = document.getElementById('upload-center-btn');
+    if (btn) {
+      btn.textContent = 'Processing…';
+      btn.disabled = true;
+    }
+    // Insert Stop button after the Processing button
+    const center = document.getElementById('upload-center');
+    if (center && !document.getElementById('stop-upload-btn')) {
+      const stop = document.createElement('button');
+      stop.className = 'stop-btn';
+      stop.id = 'stop-upload-btn';
+      stop.textContent = 'Stop';
+      stop.onclick = stopUpload;
+      center.appendChild(stop);
+    }
+    document.getElementById('upload-progress-bar').classList.add('active');
+  }
+
+  function stopUpload() {
+    if (state.uploadAbortController) {
+      state.uploadAbortController.abort();
+    }
   }
 
   function showBeginEvaluation() {
