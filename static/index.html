@@ -353,7 +353,6 @@
     <div class="status-bar" id="status-bar">Upload a Canvas export file to begin.</div>
     <div class="header-actions">
       <input type="file" id="upload-input" accept=".imscc" style="display:none" onchange="handleFileSelected(this)">
-      <button class="header-btn" id="upload-btn" onclick="triggerUpload()">Upload</button>
       <button class="header-btn" onclick="resetApp()">Reset</button>
     </div>
   </header>
@@ -763,6 +762,7 @@
   // ── Reset ─────────────────────────────────────────────────────────────────
   function resetApp() {
     if (state.isEvaluating) return;
+    state.course = null;
     state.evaluation = {};
     state.evaluationComplete = false;
     state.activeStandard = null;
@@ -770,16 +770,12 @@
     document.getElementById('messages').innerHTML = '';
     document.getElementById('chat-section').classList.remove('visible');
     document.getElementById('user-input').value = '';
+    document.getElementById('user-input').disabled = true;
+    document.getElementById('save-btn').disabled = true;
     document.querySelectorAll('.std-btn').forEach(b => b.classList.remove('active'));
     hideProgress();
-
-    if (state.course) {
-      showBeginEvaluation();
-      setStatus(`"${state.course.course_title}" — ready to evaluate.`);
-    } else {
-      showUploadPrompt();
-      setStatus('Upload a Canvas export file to begin.');
-    }
+    showUploadPrompt();
+    setStatus('Upload a Canvas export file to begin.');
   }
 
   // ── Save ──────────────────────────────────────────────────────────────────
