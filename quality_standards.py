@@ -371,9 +371,13 @@ STANDARDS = {
                 "id": "6.2",
                 "description": "Course tools promote learner engagement and active learning.",
                 "interpretation": (
-                    'The course tools support active learning through learner-instructor, learner-content, '
-                    'and learner-learner domains. Example tools: synchronous and asynchronous collaboration '
-                    'tools (Teams, Zoom), webinars, XR; collaborative documents; games; simulations, etc.'
+                    'All courses evaluated by CQR are 100% asynchronous online courses — no synchronous '
+                    'or hybrid engagement is expected or required. Do NOT flag the absence of synchronous '
+                    'tools (Zoom, Teams, webinars) as a gap. Evaluate only whether the asynchronous tools '
+                    'present support active learning through learner-instructor, learner-content, and '
+                    'learner-learner domains. Asynchronous tool examples: discussion forums, collaborative '
+                    'documents, games, simulations, self-paced quizzes, multimedia content, peer review '
+                    'activities, etc.'
                 ),
             },
             {
@@ -419,7 +423,11 @@ STANDARDS = {
                     'and accommodation services.'
                 ),
                 "interpretation": (
-                    'Accessibility policies and services are available for learners. Provided in course provisioning.'
+                    'Accessibility policies and services must be accessible to learners. Accept this standard '
+                    'as Met if the syllabus, any course page, or any module content references disability '
+                    'services, ADA policy, or accommodation procedures — regardless of whether the content '
+                    'was authored by the instructor or provided by the institution. A reference to UNH '
+                    'Student Disability Services or the Americans with Disabilities Act satisfies this standard.'
                 ),
             },
             {
@@ -480,7 +488,15 @@ STANDARDS = {
                     'discoverable (selectable, searchable), hierarchical (styles), and of sufficient '
                     'contrast. Text color does not convey meaning by itself. Tables are used to organize '
                     'information/data and are set up with headings, captions, etc. Tables should not be '
-                    'used merely as a formatting tool.'
+                    'used merely as a formatting tool. '
+                    'IMPORTANT: All courses evaluated by CQR are Canvas courses. The Canvas course template '
+                    'provides the heading hierarchy (course title, module title, page title) through the LMS '
+                    'shell — this structural hierarchy is NOT present in the extracted content because it is '
+                    'part of the Canvas template, not instructor-authored HTML. Instructor-authored content '
+                    'is written as paragraph text within that template by design. Do NOT flag the absence of '
+                    'heading tags (H1, H2, H3) in extracted page or assignment content as a gap. Instead, '
+                    'evaluate whether: text is selectable/not image-based, color is not the sole means of '
+                    'conveying meaning, and any instructor-authored tables use proper structure.'
                 ),
             },
             {

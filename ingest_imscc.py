@@ -272,6 +272,88 @@ def get_page_html(extracted_dir: Path, resource: dict) -> str:
     return ""
 
 
+def get_quiz_html(extracted_dir: Path, resource: dict) -> str:
+    """Parse QTI assessment XML and return a plain-text summary of the quiz questions."""
+    import html as _html
+
+    qti_path = None
+    meta_path = None
+    for rel in [resource.get("href", ""), *resource.get("files", [])]:
+        p = extracted_dir / rel
+        if rel.endswith("assessment_qti.xml") and p.exists():
+            qti_path = p
+        elif rel.endswith("assessment_meta.xml") and p.exists():
+            meta_path = p
+
+    if not qti_path:
+        return ""
+
+    def lname(tag):
+        return tag.split("}")[-1] if "}" in tag else tag
+
+    def strip_html(text):
+        import re as _re
+        return _re.sub(r"<[^>]+>", " ", text).strip()
+
+    # Points from meta
+    points_str = ""
+    if meta_path:
+        try:
+            meta_root = ET.parse(meta_path).getroot()
+            pts_el = meta_root.find(f".//{{{CANVAS_NS}}}points_possible")
+            if pts_el is not None and pts_el.text:
+                val = float(pts_el.text)
+                points_str = f" ({int(val) if val == int(val) else val} points)"
+        except Exception:
+            pass
+
+    try:
+        qti_root = ET.parse(qti_path).getroot()
+    except ET.ParseError:
+        return ""
+
+    # If the standard QTI has no items, fall back to Canvas-native non_cc_assessments format
+    has_items = any(lname(el.tag) == "item" for el in qti_root.iter())
+    if not has_items:
+        ident = resource.get("identifier", "")
+        non_cc_path = extracted_dir / "non_cc_assessments" / f"{ident}.xml.qti"
+        if non_cc_path.exists():
+            try:
+                qti_root = ET.parse(non_cc_path).getroot()
+            except ET.ParseError:
+                return ""
+
+    lines = []
+    q_num = 0
+    for item in qti_root.iter():
+        if lname(item.tag) != "item":
+            continue
+        q_num += 1
+        # Question text — first mattext under presentation
+        q_text = ""
+        pres = item.find(".//{*}presentation")
+        if pres is not None:
+            for mat in pres.iter():
+                if lname(mat.tag) == "mattext" and mat.text:
+                    q_text = strip_html(_html.unescape(mat.text))
+                    break
+        lines.append(f"Q{q_num}. {q_text}")
+        # Answer options
+        for label in item.iter():
+            if lname(label.tag) != "response_label":
+                continue
+            for mat in label.iter():
+                if lname(mat.tag) == "mattext" and mat.text:
+                    lines.append(f"  - {mat.text.strip()}")
+                    break
+        lines.append("")
+
+    if not lines:
+        return ""
+    header_line = f"Quiz{points_str} — {q_num} question{'s' if q_num != 1 else ''}\n"
+    return f"<pre>{header_line}\n" + "\n".join(lines) + "</pre>"
+
+
 # ---------------------------------------------------------------------------
 # Syllabus extraction
 # ---------------------------------------------------------------------------
@@ -299,9 +381,29 @@ def extract_syllabus(extracted_dir: Path, course_id: str, course_dir: Path) -> b
         if docx_path.exists():
             try:
                 import docx as _docx
+                from docx.oxml.ns import qn as _qn
                 doc = _docx.Document(str(docx_path))
-                paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
-                text = "\n".join(paragraphs)
+
+                def _table_to_text(tbl):
+                    lines = []
+                    for row in tbl.rows:
+                        cells = [c.text.strip() for c in row.cells]
+                        if any(cells):
+                            lines.append(" | ".join(cells))
+                    return "\n".join(lines)
+
+                # Walk body children in document order so tables appear in context
+                blocks = []
+                for child in doc.element.body:
+                    tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
+                    if tag == "p":
+                        para = _docx.text.paragraph.Paragraph(child, doc)
+                        if para.text.strip():
+                            blocks.append(para.text)
+                    elif tag == "tbl":
+                        tbl = _docx.table.Table(child, doc)
+                        blocks.append(_table_to_text(tbl))
+                text = "\n".join(blocks)
                 header = (
                     f"<!-- CONTENT-TYPE: Syllabus -->\n"
                     f"<!-- COURSE: {course_id} -->\n"
@@ -347,7 +449,7 @@ def write_course_files(
             log_file.unlink()
     course_dir.mkdir(parents=True, exist_ok=True)
 
-    counts = {"assignments": 0, "discussions": 0, "pages": 0, "rubrics": 0, "skipped": 0}
+    counts = {"assignments": 0, "discussions": 0, "pages": 0, "quizzes": 0, "rubrics": 0, "skipped": 0}
     included_items: list[tuple[str, str]] = []   # (type_label, title)
     ignored_items: list[tuple[str, str]] = []    # (title, reason)
 
@@ -410,6 +512,23 @@ def write_course_files(
             counts["pages"] += 1
             included_items.append(("Page", title))
 
+        elif content_type == "Quizzes::Quiz":
+            html = get_quiz_html(extracted_dir, resource)
+            if html:
+                header = (
+                    f"<!-- CONTENT-TYPE: Quiz -->\n"
+                    f"<!-- COURSE: {course_id} -->\n"
+                    f"<!-- MODULE: {module_title} -->\n"
+                    f"<!-- TITLE: {title} -->"
+                )
+                filename = f"{course_id}_quiz_{slugify(title)}.html"
+                (course_dir / filename).write_text(f"{header}\n\n{html}", encoding="utf-8")
+                counts["quizzes"] += 1
+                included_items.append(("Quiz", title))
+            else:
+                counts["skipped"] += 1
+                ignored_items.append((title, "quiz QTI not found"))
+
         else:
             counts["skipped"] += 1
             ignored_items.append((title, content_type or "unsupported type"))
@@ -437,7 +556,7 @@ def write_course_files(
         included_items.append((label, "Course Syllabus"))
 
     extracted_at = datetime.now(timezone.utc).isoformat()
-    total_files = sum(counts[k] for k in ("assignments", "discussions", "pages", "rubrics", "syllabus"))
+    total_files = sum(counts[k] for k in ("assignments", "discussions", "pages", "quizzes", "rubrics", "syllabus"))
 
     # Extraction log (read by sync.py for course title discovery)
     log = {

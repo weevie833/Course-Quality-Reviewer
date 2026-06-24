@@ -240,10 +240,40 @@ async def email_session(req: EmailSessionRequest):
 # ---------------------------------------------------------------------------
 
 def _strip_html(html_text: str) -> str:
-    html_text = re.sub(r'<(script|style)[^>]*>.*?</(script|style)>', '', html_text,
-                       flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r'<[^>]+>', ' ', html_text)
-    return re.sub(r'\s+', ' ', text).strip()
+    from html.parser import HTMLParser
+
+    class _Stripper(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self._parts: list[str] = []
+            self._skip = False
+
+        def handle_starttag(self, tag, attrs):
+            if tag in ("script", "style"):
+                self._skip = True
+            elif tag == "img":
+                attr_map = dict(attrs)
+                alt = attr_map.get("alt", "").strip()
+                role = attr_map.get("role", "")
+                if role == "presentation" or alt == "":
+                    self._parts.append("[Image: no alt text]")
+                else:
+                    self._parts.append(f"[Image: alt='{alt}']")
+
+        def handle_endtag(self, tag):
+            if tag in ("script", "style"):
+                self._skip = False
+
+        def handle_data(self, data):
+            if not self._skip:
+                self._parts.append(data)
+
+        def get_text(self):
+            return re.sub(r'\s+', ' ', "".join(self._parts)).strip()
+
+    stripper = _Stripper()
+    stripper.feed(html_text)
+    return stripper.get_text()
 
 
 def _parse_file_meta(raw: str) -> tuple[str, str, str]:
@@ -251,6 +281,20 @@ def _parse_file_meta(raw: str) -> tuple[str, str, str]:
         m = re.search(rf'<!--\s*{re.escape(key)}:\s*(.+?)\s*-->', raw, re.IGNORECASE)
         return m.group(1).strip() if m else ""
     return _get("CONTENT-TYPE"), _get("TITLE"), _get("MODULE")
+
+
+def _module_sort_key(item: dict) -> tuple:
+    """Sort key: Syllabus → Course Overview → Module 1-N → everything else."""
+    ct = item["content_type"]
+    mod = item["module"]
+    if ct == "Syllabus":
+        return (0, 0, "")
+    if mod == "Course Overview & Resources":
+        return (1, 0, "")
+    m = re.match(r"Module\s+(\d+)", mod, re.IGNORECASE)
+    if m:
+        return (2, int(m.group(1)), item["title"])
+    return (3, 0, mod + item["title"])
 
 
 def _load_course_content(version_dir: Path, char_limit_per_item: int = 2000) -> list[dict]:
@@ -269,6 +313,7 @@ def _load_course_content(version_dir: Path, char_limit_per_item: int = 2000) -> 
             text = truncated[:last_space] + ' [...]'
         if text:
             items.append({"content_type": content_type, "title": title, "module": module, "text": text})
+    items.sort(key=_module_sort_key)
     return items
 
 
