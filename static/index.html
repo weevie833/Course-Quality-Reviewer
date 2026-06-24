@@ -305,14 +305,14 @@
     #send-btn.stop-mode { background: #c0392b; }
     #send-btn.stop-mode:hover { background: #a93226; }
 
-    #save-btn, #docx-btn {
+    #docx-btn {
       background: var(--seacoast-blue); color: var(--white); border: none;
       border-radius: 6px; padding: 0 20px; font-size: 12px; font-family: var(--font-label);
       font-weight: 700; letter-spacing: 0.07em; cursor: pointer; flex-shrink: 0;
       transition: background 0.15s;
     }
-    #save-btn:hover:not(:disabled), #docx-btn:hover:not(:disabled) { background: #3a89c3; }
-    #save-btn:disabled, #docx-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    #docx-btn:hover:not(:disabled) { background: #3a89c3; }
+    #docx-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ── Modals ── */
     .modal-overlay {
@@ -610,7 +610,6 @@
         <button class="primary-btn" id="upload-center-btn" onclick="triggerUpload()">Upload Course File</button>
       </div>`;
     setStandardButtons(false);
-    document.getElementById('save-btn').disabled = true;
     document.getElementById('docx-btn').disabled = true;
     document.getElementById('user-input').disabled = true;
     document.getElementById('upload-progress-bar').classList.remove('active');
@@ -651,7 +650,6 @@
         <span class="sub">This will run all 8 standards in parallel.</span>
       </div>`;
     setStandardButtons(false);
-    document.getElementById('save-btn').disabled = true;
     document.getElementById('docx-btn').disabled = true;
   }
 
@@ -673,7 +671,6 @@
   function restoreCompletedEvaluation() {
     setStandardButtons(true);
     state.evaluationComplete = true;
-    document.getElementById('save-btn').disabled = false;
     document.getElementById('docx-btn').disabled = false;
     const c = state.course;
     document.getElementById('eval-panel').innerHTML = `
@@ -756,7 +753,6 @@
     setStatus(`Evaluation complete in ${totalSec}s — select a standard from the sidebar.`, 'success');
     setStandardButtons(true);
     state.evaluationComplete = true;
-    document.getElementById('save-btn').disabled = false;
     document.getElementById('docx-btn').disabled = false;
     document.getElementById('eval-panel').innerHTML = `
       <div class="center-state">
@@ -842,7 +838,6 @@
     document.getElementById('chat-section').classList.remove('visible');
     document.getElementById('user-input').value = '';
     document.getElementById('user-input').disabled = true;
-    document.getElementById('save-btn').disabled = true;
     document.getElementById('docx-btn').disabled = true;
     document.querySelectorAll('.std-btn').forEach(b => b.classList.remove('active'));
     hideProgress();
