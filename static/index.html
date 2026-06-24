@@ -280,14 +280,14 @@
     #send-btn.stop-mode { background: #c0392b; }
     #send-btn.stop-mode:hover { background: #a93226; }
 
-    #save-btn {
+    #save-btn, #docx-btn {
       background: var(--seacoast-blue); color: var(--white); border: none;
       border-radius: 6px; padding: 0 20px; font-size: 12px; font-family: var(--font-label);
       font-weight: 700; letter-spacing: 0.07em; cursor: pointer; flex-shrink: 0;
       transition: background 0.15s;
     }
-    #save-btn:hover:not(:disabled) { background: #3a89c3; }
-    #save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    #save-btn:hover:not(:disabled), #docx-btn:hover:not(:disabled) { background: #3a89c3; }
+    #save-btn:disabled, #docx-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ── Modals ── */
     .modal-overlay {
@@ -404,7 +404,8 @@
           </button>
         </span>
       </div>
-      <button id="save-btn" disabled onclick="saveEvaluation()">SAVE</button>
+      <button id="save-btn" disabled onclick="saveEvaluation()">SAVE TXT</button>
+      <button id="docx-btn" disabled onclick="saveAsDocx()">SAVE WORD</button>
     </div>
   </div>
 
@@ -570,6 +571,7 @@
       </div>`;
     setStandardButtons(false);
     document.getElementById('save-btn').disabled = true;
+    document.getElementById('docx-btn').disabled = true;
     document.getElementById('user-input').disabled = true;
   }
 
@@ -584,6 +586,7 @@
       </div>`;
     setStandardButtons(false);
     document.getElementById('save-btn').disabled = true;
+    document.getElementById('docx-btn').disabled = true;
   }
 
   function showResumePrompt(incomplete) {
@@ -605,6 +608,7 @@
     setStandardButtons(true);
     state.evaluationComplete = true;
     document.getElementById('save-btn').disabled = false;
+    document.getElementById('docx-btn').disabled = false;
     const c = state.course;
     document.getElementById('eval-panel').innerHTML = `
       <div class="center-state">
@@ -687,6 +691,7 @@
     setStandardButtons(true);
     state.evaluationComplete = true;
     document.getElementById('save-btn').disabled = false;
+    document.getElementById('docx-btn').disabled = false;
     document.getElementById('eval-panel').innerHTML = `
       <div class="center-state">
         <p>Evaluation complete. Select a standard from the sidebar to view results.</p>
@@ -772,6 +777,7 @@
     document.getElementById('user-input').value = '';
     document.getElementById('user-input').disabled = true;
     document.getElementById('save-btn').disabled = true;
+    document.getElementById('docx-btn').disabled = true;
     document.querySelectorAll('.std-btn').forEach(b => b.classList.remove('active'));
     hideProgress();
     showUploadPrompt();
@@ -829,6 +835,30 @@
     a.download = `CQR_${c.course_id.replace(/[\s/]/g, '_')}_${new Date().toISOString().slice(0,10)}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function saveAsDocx() {
+    if (!Object.keys(state.evaluation).length) return;
+    const c = state.course;
+    try {
+      const res = await fetch('/download/docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course_id: c.course_id, timestamp: c.timestamp }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const disp = res.headers.get('Content-Disposition') || '';
+      const match = disp.match(/filename="([^"]+)"/);
+      a.download = match ? match[1] : `CQR_${c.course_id}.docx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setStatus(`Word export failed: ${err.message}`, 'error');
+    }
   }
 
   // ── Compare ───────────────────────────────────────────────────────────────

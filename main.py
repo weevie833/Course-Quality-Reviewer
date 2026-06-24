@@ -566,6 +566,141 @@ async def get_current_course():
     return app_state.get("current_course") or {}
 
 
+STANDARD_TITLES = {
+    1: "Course Overview and Introduction",
+    2: "Learning Objectives",
+    3: "Assessment and Measurement",
+    4: "Instructional Materials",
+    5: "Learning Activities and Learner Interaction",
+    6: "Course Technology",
+    7: "Learner Support",
+    8: "Usability",
+}
+
+TEMPLATE_PATH = BASE_DIR / "templates" / "UNH_CQR_Template.docx"
+
+
+class DocxRequest(BaseModel):
+    course_id: str
+    timestamp: str
+
+
+def _build_docx(course_title: str, evaluation: dict) -> bytes:
+    import io
+    from docx import Document
+    from docx.shared import Pt, RGBColor
+    from docx.oxml import OxmlElement
+
+    doc = Document(str(TEMPLATE_PATH))
+
+    # The "[Course ID and title]" line is a body paragraph styled "Header" (not a page header)
+    # Replace the placeholder run text in-place before clearing the rest of the body
+    for p in doc.paragraphs:
+        for run in p.runs:
+            if "[Course ID and title]" in run.text:
+                run.text = run.text.replace("[Course ID and title]", course_title)
+
+    # Remove all body paragraphs from the first bold sub-standard line onwards
+    body = doc.element.body
+    paragraphs = doc.paragraphs
+    cut_from = None
+    for i, p in enumerate(paragraphs):
+        if p.runs and any(r.bold for r in p.runs) and re.match(r"\d+\.\d+:", p.text.strip()):
+            cut_from = i
+            break
+    if cut_from is not None:
+        for p in paragraphs[cut_from:]:
+            body.remove(p._element)
+
+    def add_para(text="", bold=False, size_pt=None, color=None, indent_pt=None, bullet=False):
+        p = doc.add_paragraph()
+        if bullet:
+            # Manual bullet with hanging indent
+            pf = p.paragraph_format
+            from docx.shared import Inches
+            pf.left_indent = Inches(0.25)
+            pf.first_line_indent = Inches(-0.25)
+            run = p.add_run(f"• {text}")
+        else:
+            run = p.add_run(text)
+        if bold:
+            run.bold = True
+        if size_pt:
+            run.font.size = Pt(size_pt)
+        if color:
+            run.font.color.rgb = RGBColor(*color)
+        if indent_pt and not bullet:
+            from docx.shared import Pt as _Pt
+            p.paragraph_format.left_indent = _Pt(indent_pt)
+        return p
+
+    def split_bullets(text):
+        return [l.strip().lstrip("-• ").strip() for l in (text or "").split("\n") if l.strip()]
+
+    for std_num in range(1, 9):
+        std_data = evaluation.get(str(std_num))
+        if not std_data:
+            continue
+
+        add_para()
+        add_para(f"Standard {std_num}: {STANDARD_TITLES[std_num]}", bold=True, size_pt=12)
+
+        for ss in std_data.get("substandards", []):
+            add_para()
+            add_para(f"{ss['id']}: {ss['description']}", bold=True)
+
+            # Verdict: label bold, value explicitly non-bold
+            p = doc.add_paragraph()
+            r1 = p.add_run("Verdict: ")
+            r1.bold = True
+            r2 = p.add_run(ss.get("verdict", ""))
+            r2.bold = False
+
+            for line in split_bullets(ss.get("evidence", "")):
+                add_para(line, bullet=True)
+
+            gaps = ss.get("gaps", "")
+            if gaps and gaps.strip():
+                add_para()
+                add_para("Gaps", bold=True, color=(0xB4, 0x53, 0x09))
+                for line in split_bullets(gaps):
+                    p = doc.add_paragraph()
+                    from docx.shared import Inches
+                    pf = p.paragraph_format
+                    pf.left_indent = Inches(0.25)
+                    pf.first_line_indent = Inches(-0.25)
+                    run = p.add_run(f"• {line}")
+                    run.font.color.rgb = RGBColor(0x92, 0x40, 0x0E)
+
+    buf = io.BytesIO()
+    doc.save(buf)
+    buf.seek(0)
+    return buf.read()
+
+
+@app.post("/download/docx")
+async def download_docx(req: DocxRequest):
+    version_dir = EXTRACTED_COURSES_DIR / req.course_id / req.timestamp
+    meta_path = version_dir / "meta.json"
+    if not meta_path.exists():
+        raise HTTPException(status_code=404, detail="No evaluation found for this course version.")
+
+    meta = json.loads(meta_path.read_text())
+    course_title = meta.get("course_title", req.course_id)
+    evaluation = meta.get("evaluation", {})
+
+    import asyncio as _asyncio
+    docx_bytes = await _asyncio.to_thread(_build_docx, course_title, evaluation)
+
+    safe_title = re.sub(r"[^\w\s-]", "", course_title)[:60].strip()
+    filename = f"CQR_{safe_title}.docx"
+    return Response(
+        content=docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
 @app.post("/evaluate/{standard_num}")
 async def evaluate_standard(standard_num: int, req: EvaluateRequest):
     if standard_num < 1 or standard_num > 8:
