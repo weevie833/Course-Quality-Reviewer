@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Program Intelligence Interface</title>
+  <title>Course Quality Reviewer</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,213 +14,205 @@
       --parchment: #F5F4EC;
       --white: #FFFFFF;
       --border: #D0CEBC;
-      --user-bubble: #E8EDF5;
       --font-body: 'Calibri', Arial, sans-serif;
       --font-label: 'Arial Narrow', Arial, sans-serif;
     }
 
-    html, body {
-      height: 100%;
-      font-family: var(--font-body);
-      background: var(--parchment);
-      color: #1a1a1a;
-    }
+    html, body { height: 100%; font-family: var(--font-body); background: var(--parchment); color: #1a1a1a; }
 
-    /* ── Layout ── */
-    .app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+    .app { display: flex; flex-direction: column; height: 100vh; }
 
     /* ── Header ── */
     header {
       background: var(--wildcat-blue);
       color: var(--white);
-      padding: 0 24px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       min-height: 64px;
       flex-shrink: 0;
     }
-    header .accent-bar {
-      width: 4px;
-      height: 36px;
-      background: var(--spring-green);
-      border-radius: 2px;
-    }
-    header .titles { flex: 1; }
-    header h1 {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-    header .subtitle {
-      font-size: 12px;
-      color: rgba(255,255,255,0.65);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-family: var(--font-label);
-    }
-    header .badge {
-      background: var(--spring-green);
-      color: var(--wildcat-blue);
-      font-size: 10px;
-      font-weight: 700;
-      font-family: var(--font-label);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 2px;
-    }
+    .accent-bar { width: 4px; height: 36px; background: var(--spring-green); border-radius: 2px; flex-shrink: 0; }
+    .titles { flex-shrink: 0; min-width: 0; }
+    header h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
+    .subtitle { font-size: 11px; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-label); white-space: nowrap; }
 
-    /* ── Chat area ── */
-    .chat-area {
+    .status-bar {
       flex: 1;
-      overflow-y: auto;
-      padding: 24px 0;
-      scroll-behavior: smooth;
+      text-align: center;
+      font-size: 13px;
+      font-family: var(--font-label);
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.03em;
+      padding: 0 12px;
     }
+    .status-bar.success { color: var(--spring-green); font-weight: 700; }
+    .status-bar.error   { color: #ff8888; }
 
-    .messages {
-      max-width: 80%;
-      margin: 0 auto;
-      padding: 0 24px;
+    .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .header-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.85);
+      border-radius: 4px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-family: var(--font-label);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .header-btn:hover:not(:disabled) { border-color: var(--spring-green); color: var(--spring-green); }
+    .header-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Progress bar ── */
+    .progress-container {
+      background: var(--wildcat-blue);
+      padding: 5px 20px 8px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .progress-container.visible { display: flex; }
+    .progress-track { flex: 1; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--spring-green); border-radius: 3px; width: 0%; transition: width 0.35s ease; }
+    .progress-label { font-size: 12px; font-family: var(--font-label); color: rgba(255,255,255,0.75); letter-spacing: 0.04em; white-space: nowrap; min-width: 200px; }
+
+    /* ── Body area ── */
+    .body-area { flex: 1; display: flex; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 152px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      padding: 14px 10px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 6px;
+      overflow-y: auto;
     }
-
-    /* ── Welcome state ── */
-    .welcome {
-      text-align: center;
-      padding: 40px 24px 0;
+    .std-btn {
       width: 100%;
-      max-width: 640px;
-      margin: 0 auto;
+      padding: 10px 10px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      background: var(--parchment);
+      color: #555;
+      font-size: 13px;
+      font-family: var(--font-body);
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      line-height: 1.3;
     }
-    .welcome h2 {
-      font-size: 24px;
-      color: var(--wildcat-blue);
-      margin-bottom: 10px;
+    .std-btn:hover:not(:disabled) { background: var(--white); border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
+    .std-btn.active { background: var(--wildcat-blue); border-color: var(--wildcat-blue); color: var(--white); font-weight: 700; }
+    .std-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    /* ── Main area ── */
+    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+    /* ── Evaluation panel ── */
+    .eval-panel { flex: 1; overflow-y: auto; padding: 36px 48px; }
+
+    /* Upload / ready states */
+    .center-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; height: 100%; gap: 14px; text-align: center;
     }
-    .welcome p {
-      font-size: 14px;
-      color: #595959;
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.6;
+    .center-state h2 { font-size: 20px; color: var(--wildcat-blue); }
+    .center-state .course-name { font-size: 22px; font-weight: 700; color: var(--wildcat-blue); }
+    .center-state p { font-size: 14px; color: #595959; max-width: 420px; line-height: 1.6; }
+    .center-state .sub { font-size: 12px; color: #888; margin-top: 4px; }
+
+    .primary-btn {
+      background: var(--wildcat-blue); color: var(--white); border: none;
+      border-radius: 6px; padding: 12px 28px; font-size: 14px;
+      font-family: var(--font-body); font-weight: 700; letter-spacing: 0.03em;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .primary-btn:hover { background: #002a6b; }
+
+    /* Resume banner */
+    .resume-banner {
+      background: #fff8e1; border: 1px solid #f0c040; border-radius: 6px;
+      padding: 14px 18px; display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; margin-top: 8px;
+    }
+    .resume-banner p { font-size: 13px; color: #6b4900; line-height: 1.4; }
+    .resume-btn {
+      background: #e6a800; color: var(--white); border: none; border-radius: 5px;
+      padding: 8px 16px; font-size: 13px; font-family: var(--font-body);
+      font-weight: 700; cursor: pointer; white-space: nowrap;
+      transition: background 0.15s; flex-shrink: 0;
+    }
+    .resume-btn:hover { background: #cc9600; }
+
+    /* Evaluation content */
+    .std-content { max-width: 820px; }
+    .substandard { margin-bottom: 28px; }
+    .substandard-label {
+      font-size: 14px; font-weight: 700; color: #1a1a1a;
+      margin-bottom: 8px; line-height: 1.4;
+    }
+    .evidence {
+      font-size: 14px; line-height: 1.7; color: #333;
+      padding: 12px 16px; background: var(--white);
+      border: 1px solid var(--border); border-radius: 5px;
+    }
+    .evidence-list {
+      margin: 0; padding-left: 18px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .evidence-list li { line-height: 1.6; }
+    .gaps-list {
+      margin: 10px 0 0 0; padding-left: 18px;
+      display: flex; flex-direction: column; gap: 6px;
+      border-top: 1px solid var(--border); padding-top: 10px;
+    }
+    .gaps-list li { line-height: 1.6; color: #555; }
+    .verdict {
+      font-size: 13px; font-weight: 700; color: #1a1a1a;
+      margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border);
     }
 
-    /* ── Messages ── */
-    .message { display: flex; flex-direction: column; gap: 4px; }
+    /* ── Chat section ── */
+    .chat-section {
+      flex-shrink: 0; max-height: 220px; overflow-y: auto;
+      border-top: 1px solid var(--border); background: #f9f9f5;
+      padding: 14px 48px; display: none; flex-direction: column; gap: 10px;
+    }
+    .chat-section.visible { display: flex; }
 
+    .message { display: flex; flex-direction: column; gap: 3px; }
     .message.user { align-items: flex-end; }
     .message.assistant { align-items: flex-start; }
-
     .bubble {
-      max-width: 90%;
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 1.6;
+      max-width: 88%; padding: 9px 13px; border-radius: 8px;
+      font-size: 13px; line-height: 1.6;
     }
-    .message.user .bubble {
-      background: var(--wildcat-blue);
-      color: var(--white);
-      border-bottom-right-radius: 2px;
-    }
-    .message.assistant .bubble {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-bottom-left-radius: 2px;
-      color: #1a1a1a;
-    }
-
-    /* Markdown rendering inside assistant bubbles */
-    .bubble h1, .bubble h2, .bubble h3 {
-      color: var(--wildcat-blue);
-      margin: 14px 0 6px;
-      font-size: 15px;
-    }
-    .bubble h1:first-child, .bubble h2:first-child, .bubble h3:first-child { margin-top: 0; }
-    .bubble p { margin-bottom: 8px; }
+    .message.user .bubble { background: var(--wildcat-blue); color: var(--white); border-bottom-right-radius: 2px; }
+    .message.assistant .bubble { background: var(--white); border: 1px solid var(--border); border-bottom-left-radius: 2px; color: #1a1a1a; }
+    .bubble p { margin-bottom: 5px; }
     .bubble p:last-child { margin-bottom: 0; }
-    .bubble ul, .bubble ol { padding-left: 20px; margin-bottom: 8px; }
-    .bubble li { margin-bottom: 4px; }
     .bubble strong { color: var(--wildcat-blue); }
-    .bubble em { font-style: italic; }
-    .bubble code {
-      background: #f0f0ea;
-      border-radius: 3px;
-      padding: 1px 5px;
-      font-family: monospace;
-      font-size: 13px;
-    }
-    .bubble table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 10px 0;
-      font-size: 13px;
-    }
-    .bubble th {
-      background: var(--wildcat-blue);
-      color: var(--white);
-      padding: 8px 10px;
-      text-align: left;
-      font-weight: 600;
-    }
-    .bubble td {
-      border: 1px solid var(--border);
-      padding: 7px 10px;
-      vertical-align: top;
-    }
-    .bubble tr:nth-child(even) td { background: var(--parchment); }
-    /* Download button on assistant bubbles */
-    .message.assistant { position: relative; }
-    .download-btn {
-      display: none;
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: var(--parchment);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 3px 8px;
-      font-size: 11px;
-      color: #555;
-      cursor: pointer;
-      font-family: var(--font-label);
-      letter-spacing: 0.04em;
-    }
-    .download-btn:hover { background: var(--white); border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
-    .message.assistant:hover .download-btn { display: block; }
+    .bubble ul { padding-left: 16px; margin-bottom: 5px; }
 
-    .bubble blockquote {
-      border-left: 3px solid var(--spring-green);
-      padding-left: 12px;
-      margin: 8px 0;
-      color: #555;
-    }
-
-    /* Typing indicator */
     .typing-indicator {
-      display: flex;
-      gap: 5px;
-      padding: 14px 18px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      border-bottom-left-radius: 2px;
-      width: fit-content;
+      display: flex; gap: 4px; padding: 9px 13px;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; border-bottom-left-radius: 2px; width: fit-content;
     }
     .typing-indicator span {
-      width: 7px;
-      height: 7px;
-      background: var(--seacoast-blue);
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
+      width: 6px; height: 6px; background: var(--seacoast-blue);
+      border-radius: 50%; animation: bounce 1.2s infinite;
     }
     .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
     .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
@@ -231,469 +223,107 @@
 
     /* ── Input bar ── */
     .input-bar {
-      flex-shrink: 0;
-      background: var(--white);
-      border-top: 1px solid var(--border);
-      padding: 14px 24px;
+      flex-shrink: 0; background: var(--white);
+      border-top: 1px solid var(--border); padding: 10px 20px 14px;
     }
-    .input-inner {
-      max-width: 80%;
-      margin: 0 auto;
-      display: flex;
-      gap: 10px;
-      align-items: stretch;
+    .compare-bar {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
     }
+    #compare-btn {
+      background: none; border: 1px solid var(--border); border-radius: 4px;
+      padding: 5px 12px; font-size: 12px; font-family: var(--font-label);
+      letter-spacing: 0.04em; color: #555; cursor: pointer;
+      transition: border-color 0.15s, color 0.15s; white-space: nowrap;
+    }
+    #compare-btn:hover:not(:disabled) { border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
+    #compare-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .prior-version-label {
+      font-size: 12px; font-family: var(--font-label); color: #595959; letter-spacing: 0.02em;
+    }
+
+    .input-inner { display: flex; gap: 10px; align-items: stretch; }
+    .textarea-wrap { position: relative; flex: 1; }
     #user-input {
-      flex: 1;
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 58px 10px 14px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      resize: none;
-      min-height: 44px;
-      max-height: 160px;
-      overflow-y: auto;
-      outline: none;
-      transition: border-color 0.15s;
-      background: var(--parchment);
-      color: #1a1a1a;
+      width: 100%; border: 1px solid var(--border); border-radius: 6px;
+      padding: 10px 50px 10px 14px; font-family: var(--font-body); font-size: 14px;
+      resize: none; min-height: 44px; max-height: 120px; overflow-y: auto;
+      outline: none; transition: border-color 0.15s; background: var(--parchment); color: #1a1a1a;
     }
     #user-input:focus { border-color: var(--seacoast-blue); background: var(--white); }
-    #user-input::placeholder { color: #595959; }
+    #user-input::placeholder { color: #888; }
+    #user-input:disabled { opacity: 0.5; cursor: not-allowed; }
 
+    #send-btn-wrapper { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); }
     #send-btn {
-      background: var(--wildcat-blue);
-      color: var(--white);
-      border: none;
-      border-radius: 6px;
-      width: 44px;
-      height: 44px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.15s;
+      background: var(--wildcat-blue); color: var(--white); border: none;
+      border-radius: 5px; width: 36px; height: 36px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; flex-shrink: 0;
     }
     #send-btn:hover:not(:disabled) { background: #002a6b; }
-    #send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    #send-btn svg { width: 18px; height: 18px; fill: var(--white); }
+    #send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    #send-btn svg { width: 16px; height: 16px; fill: var(--white); }
     #send-btn.stop-mode { background: #c0392b; }
     #send-btn.stop-mode:hover { background: #a93226; }
 
-    /* ── Email reminder panel ── */
-    .chat-side {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .textarea-wrap {
-      position: relative;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .email-panel {
-      flex-shrink: 0;
-      width: 196px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      border-left: 1px solid var(--border);
-      padding-left: 16px;
-    }
-    .email-panel-label {
-      font-size: 13px;
-      font-family: var(--font-label);
-      color: #595959;
-      line-height: 1.35;
-    }
-    #email-input {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 7px 10px;
-      font-size: 13px;
-      font-family: var(--font-body);
-      background: var(--parchment);
-      color: #1a1a1a;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    #email-input:focus { border-color: var(--seacoast-blue); background: var(--white); }
-    #email-btn {
-      background: var(--seacoast-blue);
-      color: var(--white);
-      border: none;
-      border-radius: 6px;
-      padding: 7px 0;
-      font-size: 12px;
-      font-family: var(--font-label);
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      width: 100%;
-      flex: 1;
+    #save-btn {
+      background: var(--seacoast-blue); color: var(--white); border: none;
+      border-radius: 6px; padding: 0 20px; font-size: 12px; font-family: var(--font-label);
+      font-weight: 700; letter-spacing: 0.07em; cursor: pointer; flex-shrink: 0;
       transition: background 0.15s;
     }
-    #email-btn:hover:not(:disabled) { background: #3a89c3; }
-    #email-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    #email-status {
-      font-size: 11px;
-      color: #595959;
-      min-height: 0;
-      line-height: 1.3;
-    }
-    #email-status.success { color: #2a7a3b; }
-    #email-status.error   { color: #b0281a; }
+    #save-btn:hover:not(:disabled) { background: #3a89c3; }
+    #save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── No-program confirmation modal ── */
-    #scope-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
+    /* ── Modals ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 1000;
+      align-items: center; justify-content: center;
     }
-    #scope-modal.visible { display: flex; }
+    .modal-overlay.visible { display: flex; }
     .modal-box {
-      background: var(--white);
-      border-radius: 8px;
-      padding: 28px 32px;
-      max-width: 420px;
-      width: 90%;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      background: var(--white); border-radius: 8px; padding: 26px 30px;
+      max-width: 420px; width: 92%; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
     }
-    .modal-box h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--wildcat-blue);
-      margin-bottom: 10px;
-    }
-    .modal-box p {
-      font-size: 0.92rem;
-      color: #444;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
+    .modal-box h3 { font-size: 15px; font-weight: 700; color: var(--wildcat-blue); margin-bottom: 10px; }
+    .modal-box p { font-size: 13px; color: #444; line-height: 1.55; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
     .modal-actions button {
-      padding: 8px 18px;
-      border-radius: 5px;
-      border: none;
-      font-size: 0.9rem;
-      cursor: pointer;
-      font-family: var(--font-body);
+      padding: 8px 16px; border-radius: 5px; border: none;
+      font-size: 13px; cursor: pointer; font-family: var(--font-body); transition: background 0.15s;
     }
-    #modal-cancel {
-      background: #e8e8e8;
-      color: #333;
-    }
-    #modal-cancel:hover { background: #d4d4d4; }
-    #modal-proceed {
-      background: var(--wildcat-blue);
-      color: var(--white);
-    }
-    #modal-proceed:hover { background: #002a6b; }
-
-    /* ── Program selector ── */
-    .program-selector {
-      max-width: 80%;
-      margin: 0 auto 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
-    .program-selector-label {
-      font-size: 11px;
-      font-family: var(--font-label);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #595959;
-      margin-right: 4px;
-      white-space: nowrap;
-    }
-    .prog-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--parchment);
-      font-size: 12px;
-      font-family: var(--font-label);
-      color: #555;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
-    .prog-pill:hover { border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
-    .prog-pill.active {
-      background: var(--seacoast-blue);
-      border-color: var(--seacoast-blue);
-      color: var(--white);
-    }
-    .prog-pill.active:hover { background: #002a6b; border-color: #002a6b; }
-
-    .input-hint {
-      text-align: center;
-      font-size: 11px;
-      color: #595959;
-      margin-top: 6px;
-    }
-
-    /* ── Inline content-type filter prompt (injected after broad responses) ── */
-    .filter-prompt {
-      margin: 6px 0 4px 0;
-      padding: 10px 14px;
-      background: #f0f4f8;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 7px;
-    }
-    .filter-prompt-label {
-      font-size: 11px;
-      font-family: var(--font-label);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #595959;
-      white-space: nowrap;
-      margin-right: 2px;
-    }
-    .filter-chip-inline {
-      padding: 4px 11px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--white);
-      font-size: 12px;
-      font-family: var(--font-label);
-      color: #555;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
-    .filter-chip-inline:hover { border-color: var(--seacoast-blue); color: var(--seacoast-blue); }
-    .filter-chip-inline.active {
-      background: var(--wildcat-blue);
-      border-color: var(--wildcat-blue);
-      color: var(--white);
-    }
-    .filter-chip-inline.active:hover { background: #002a6b; border-color: #002a6b; }
-    .filter-rerun-btn {
-      padding: 4px 14px;
-      background: var(--spring-green);
-      color: var(--wildcat-blue);
-      border: none;
-      border-radius: 20px;
-      font-size: 12px;
-      font-family: var(--font-label);
-      font-weight: 700;
-      cursor: pointer;
-      margin-left: 4px;
-      transition: opacity 0.15s;
-    }
-    .filter-rerun-btn:hover { opacity: 0.82; }
-
-    /* ── Send button tooltip ── */
-    #send-btn-wrapper {
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: inline-flex;
-    }
-    #send-btn-wrapper[data-tooltip]:hover::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: calc(100% + 8px);
-      right: 0;
-      background: #333;
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 100;
-    }
-
-    /* ── Admin toggle button (header) ── */
-    .admin-toggle-btn {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: rgba(255,255,255,0.8);
-      border-radius: 4px;
-      padding: 6px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: var(--font-label);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: border-color 0.15s, color 0.15s;
-      margin-right: 8px;
-    }
-    .admin-toggle-btn:hover { border-color: var(--spring-green); color: var(--spring-green); }
-
-    /* ── Admin panel ── */
-    #admin-panel {
-      display: none;
-      background: #f4f5f7;
-      border-bottom: 1px solid #d0d4db;
-      padding: 14px 20px;
-    }
-    #admin-panel.visible { display: block; }
-    .admin-panel-inner {
-      max-width: 700px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: flex-end;
-    }
-    .admin-field { display: flex; flex-direction: column; gap: 4px; }
-    .admin-field label { font-size: 11px; font-family: var(--font-label); text-transform: uppercase; letter-spacing: 0.06em; color: #595959; }
-    .admin-field input[type="file"] { font-size: 13px; }
-    .admin-field input[type="text"] {
-      font-size: 13px;
-      padding: 5px 8px;
-      border: 1px solid #c0c4cc;
-      border-radius: 4px;
-      font-family: var(--font-body);
-      width: 110px;
-    }
-    #admin-ingest-btn {
-      background: var(--wildcat-blue);
-      color: var(--white);
-      border: none;
-      border-radius: 4px;
-      padding: 7px 16px;
-      font-size: 13px;
-      font-family: var(--font-label);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      transition: background 0.15s;
-      height: 32px;
-    }
-    #admin-ingest-btn:hover:not(:disabled) { background: #002a6b; }
-    #admin-ingest-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    #admin-status {
-      font-size: 12px;
-      color: #333;
-      font-family: var(--font-body);
-      margin-top: 8px;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      min-height: 18px;
-    }
-    #admin-status.error { color: #b00020; }
-    #admin-status.success { color: #1a5c1a; }
-
-    /* ── New chat button ── */
-    .new-chat-btn {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: rgba(255,255,255,0.8);
-      border-radius: 4px;
-      padding: 6px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: var(--font-label);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .new-chat-btn:hover {
-      border-color: var(--spring-green);
-      color: var(--spring-green);
-    }
-
-    /* ── Option buttons (injected below assistant bubbles) ── */
-    .option-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-    .option-btn {
-      background: #002a6b;
-      border: 1px solid #002a6b;
-      color: var(--white);
-      border-radius: 4px;
-      padding: 5px 14px;
-      font-size: 13px;
-      font-family: var(--font-body);
-      cursor: pointer;
-      transition: background 0.15s;
-      text-align: left;
-    }
-    .option-btn:hover:not(:disabled) {
-      background: var(--seacoast-blue);
-      border-color: var(--seacoast-blue);
-    }
-    .option-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    .option-hint {
-      font-size: 11px;
-      color: #595959;
-      margin-top: 5px;
-      font-style: italic;
-    }
-    /* ── Visualization blocks ── */
-    .viz-block {
-      margin: 12px 0;
-      overflow-x: auto;
-    }
-    .viz-block svg {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-    .viz-block canvas {
-      max-width: 100%;
-    }
-    .viz-loading {
-      color: #888;
-      font-style: italic;
-      font-size: 0.9em;
-    }
-    .viz-error {
-      color: #a00;
-      font-style: italic;
-      font-size: 0.88em;
-    }
+    .btn-neutral { background: #e8e8e8; color: #333; }
+    .btn-neutral:hover { background: #d4d4d4; }
+    .btn-confirm { background: var(--wildcat-blue); color: var(--white); }
+    .btn-confirm:hover { background: #002a6b; }
+    .btn-save { background: var(--seacoast-blue); color: var(--white); }
+    .btn-save:hover { background: #3a89c3; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-<!-- Scope confirmation modal (no program selected / multiple programs selected) -->
-<div id="scope-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+<!-- Replace-course modal -->
+<div class="modal-overlay" id="replace-modal" role="dialog" aria-modal="true" aria-labelledby="replace-title">
   <div class="modal-box">
-    <h3 id="modal-title"></h3>
-    <p id="modal-body"></p>
+    <h3 id="replace-title">Replace Current Evaluation?</h3>
+    <p>Uploading a new course will replace the current evaluation. Would you like to save it first?</p>
     <div class="modal-actions">
-      <button id="modal-cancel"></button>
-      <button id="modal-proceed">Proceed</button>
+      <button class="btn-neutral" onclick="closeReplaceModal()">Cancel</button>
+      <button class="btn-save"    onclick="saveAndReplace()">Save First</button>
+      <button class="btn-confirm" onclick="proceedReplace()">Replace</button>
+    </div>
+  </div>
+</div>
+
+<!-- Version-limit modal -->
+<div class="modal-overlay" id="version-modal" role="dialog" aria-modal="true" aria-labelledby="version-title">
+  <div class="modal-box">
+    <h3 id="version-title">Version Limit Reached</h3>
+    <p id="version-modal-body">This course already has 5 saved versions (the maximum). Discard the oldest version to proceed?</p>
+    <div class="modal-actions">
+      <button class="btn-neutral" onclick="closeVersionModal()">Cancel</button>
+      <button class="btn-confirm" onclick="proceedDiscardOldest()">Discard Oldest &amp; Continue</button>
     </div>
   </div>
 </div>
@@ -703,49 +333,56 @@
   <header>
     <div class="accent-bar"></div>
     <div class="titles">
-      <div class="subtitle">University of New Hampshire · College of Professional Studies</div>
-      <h1>Program Intelligence Interface</h1>
+      <div class="subtitle">University of New Hampshire</div>
+      <h1>Course Quality Reviewer</h1>
     </div>
-    <button class="admin-toggle-btn" onclick="toggleAdmin()">Admin</button>
-    <button class="new-chat-btn" onclick="newChat()">New Chat</button>
+    <div class="status-bar" id="status-bar">Upload a Canvas export file to begin.</div>
+    <div class="header-actions">
+      <input type="file" id="upload-input" accept=".imscc" style="display:none" onchange="handleFileSelected(this)">
+      <button class="header-btn" id="upload-btn" onclick="triggerUpload()">Upload</button>
+      <button class="header-btn" onclick="resetApp()">Reset</button>
+    </div>
   </header>
 
-  <div id="admin-panel">
-    <div class="admin-panel-inner">
-      <div class="admin-field">
-        <label for="admin-file">Canvas Export (.imscc)</label>
-        <input type="file" id="admin-file" accept=".imscc">
-      </div>
-      <button id="admin-ingest-btn" onclick="ingestCourse()">Ingest</button>
+  <div class="progress-container" id="progress-container">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
     </div>
-    <div id="admin-status"></div>
+    <span class="progress-label" id="progress-label"></span>
   </div>
 
-  <div class="chat-area" id="chat-area">
-    <div class="messages" id="messages" aria-live="polite" aria-label="Conversation">
-      <div class="welcome" id="welcome">
-        <h2>Program Intelligence Interface</h2>
-        <p>Ask questions about PLO coverage, CLO alignment, assignments, and rubrics across any program.</p>
+  <div class="body-area">
+
+    <aside class="sidebar" aria-label="Standards navigation">
+      <button class="std-btn" id="std-btn-1" disabled onclick="selectStandard(1)">Standard 1</button>
+      <button class="std-btn" id="std-btn-2" disabled onclick="selectStandard(2)">Standard 2</button>
+      <button class="std-btn" id="std-btn-3" disabled onclick="selectStandard(3)">Standard 3</button>
+      <button class="std-btn" id="std-btn-4" disabled onclick="selectStandard(4)">Standard 4</button>
+      <button class="std-btn" id="std-btn-5" disabled onclick="selectStandard(5)">Standard 5</button>
+      <button class="std-btn" id="std-btn-6" disabled onclick="selectStandard(6)">Standard 6</button>
+      <button class="std-btn" id="std-btn-7" disabled onclick="selectStandard(7)">Standard 7</button>
+      <button class="std-btn" id="std-btn-8" disabled onclick="selectStandard(8)">Standard 8</button>
+    </aside>
+
+    <div class="main-area">
+      <div class="eval-panel" id="eval-panel" aria-live="polite"></div>
+      <div class="chat-section" id="chat-section" aria-live="polite" aria-label="Chat conversation">
+        <div id="messages"></div>
       </div>
     </div>
+
   </div>
 
   <div class="input-bar">
-    <div class="program-selector" id="program-selector">
-      <span class="program-selector-label input-hint">Select at least one program to begin</span>
-      <!-- pills injected by JS -->
+    <div class="compare-bar">
+      <button id="compare-btn" disabled onclick="compareVersions()">Compare to prior version</button>
+      <span id="prior-version-label" class="prior-version-label"></span>
     </div>
     <div class="input-inner">
-      <div class="chat-side">
-        <span class="email-panel-label"></span>
-        <div class="textarea-wrap">
-          <textarea
-            id="user-input"
-            aria-label="Chat input"
-            autofocus
-          ></textarea>
-          <span id="send-btn-wrapper">
-          <button id="send-btn" onclick="handleSendStop()" title="Send">
+      <div class="textarea-wrap">
+        <textarea id="user-input" placeholder="Ask a question about this course…" aria-label="Chat input" disabled></textarea>
+        <span id="send-btn-wrapper">
+          <button id="send-btn" onclick="handleSendStop()" title="Send" disabled>
             <svg class="icon-send" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
             </svg>
@@ -753,364 +390,439 @@
               <rect x="5" y="5" width="14" height="14" rx="2"/>
             </svg>
           </button>
-          </span>
-        </div>
+        </span>
       </div>
-      <div class="email-panel">
-        <span class="email-panel-label">Send me this session as a reminder.<br>Separate multiple addresses with a comma.</span>
-        <input type="text" id="email-input" placeholder="your@email.com" autocomplete="email">
-        <button id="email-btn" onclick="emailSession()">EMAIL</button>
-        <span id="email-status"></span>
-      </div>
+      <button id="save-btn" disabled onclick="saveEvaluation()">SAVE</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  let history = [];
-  let isStreaming = false;
-  let selectedPrograms = new Set();      // short_names of active filter pills
-  let selectedContentTypes = new Set();  // e.g. "Assignment", "Rubric" — empty = no filter
+  // ── App state ─────────────────────────────────────────────────────────────
+  const state = {
+    course: null,           // { course_id, course_title, timestamp, prior_version_ts, version_count }
+    evaluation: {},         // { 1: "text...", 2: "text..." }
+    evaluationComplete: false,
+    activeStandard: null,
+    isStreaming: false,
+    isEvaluating: false,
+    pendingFile: null,
+    chatHistory: [],
+  };
 
-  const CONTENT_TYPE_LABELS = [
-    { label: 'Submissions',   value: 'Assignment' },
-    { label: 'Discussions',   value: 'Discussion' },
-    { label: 'Pages',         value: 'Page' },
-    { label: 'Rubrics',       value: 'Rubric' },
-    { label: 'Competencies',  value: 'Competency' },
-  ];
-
-  function toggleInlineChip(type, el) {
-    if (selectedContentTypes.has(type)) {
-      selectedContentTypes.delete(type);
-    } else {
-      selectedContentTypes.add(type);
-    }
-    // Sync all inline chips of this type across any injected filter prompts
-    document.querySelectorAll(`.filter-chip-inline[data-type="${type}"]`).forEach(chip => {
-      chip.classList.toggle('active', selectedContentTypes.has(type));
-    });
-  }
-
-  function rerunWithFilter(text) {
-    document.querySelectorAll('.filter-prompt').forEach(el => el.remove());
-    sendWithText(text);
-  }
-
-  function injectContentFilterPrompt(lastUserMessage, targetEl) {
-    // Remove any prior filter prompt so only one is shown at a time
-    document.querySelectorAll('.filter-prompt').forEach(el => el.remove());
-
-    const prompt = document.createElement('div');
-    prompt.className = 'filter-prompt';
-
-    const lbl = document.createElement('span');
-    lbl.className = 'filter-prompt-label';
-    lbl.textContent = 'Narrow results to:';
-    prompt.appendChild(lbl);
-
-    CONTENT_TYPE_LABELS.forEach(({ label, value }) => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-chip-inline' + (selectedContentTypes.has(value) ? ' active' : '');
-      btn.dataset.type = value;
-      btn.textContent = label;
-      btn.addEventListener('click', () => toggleInlineChip(value, btn));
-      prompt.appendChild(btn);
-    });
-
-    const rerun = document.createElement('button');
-    rerun.className = 'filter-rerun-btn';
-    rerun.textContent = 'Re-run';
-    rerun.addEventListener('click', () => rerunWithFilter(lastUserMessage));
-    prompt.appendChild(rerun);
-
-    // Append inside the message div (same parent as the bubble) so it stays
-    // anchored to this response and isn't affected by scroll or layout changes.
-    targetEl.appendChild(prompt);
-    scrollToBottom();
-  }
-
-  // Inject the filter prompt only when Claude's response is a Stage 1 scope summary.
-  // The system prompt instructs Claude to say "filter chips" in that response — detect it here.
-  function maybeShowContentFilter(queryText, responseText, bubble) {
-    if (selectedContentTypes.size === 0 && /filter chips/i.test(responseText)) {
-      injectContentFilterPrompt(queryText, bubble.parentElement);
-    }
-  }
-
-  // Load program pills from /programs on startup
-  async function loadPrograms() {
+  // ── Init ──────────────────────────────────────────────────────────────────
+  async function init() {
+    showUploadPrompt();
     try {
-      const res = await fetch('/programs');
-      const programs = await res.json();
-      const container = document.getElementById('program-selector');
-      programs.forEach(p => {
-        const pill = document.createElement('button');
-        pill.className = 'prog-pill';
-        pill.textContent = p.short_name;
-        pill.title = p.name;
-        pill.setAttribute('aria-pressed', 'false');
-        pill.dataset.shortName = p.short_name;
-        pill.addEventListener('click', () => toggleProgram(pill, p.short_name));
-        container.appendChild(pill);
-      });
-    } catch (e) {
-      console.warn('Could not load programs:', e);
-    }
+      const res = await fetch('/course/current');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.course_id) {
+          state.course = data;
+          if (data.evaluation) state.evaluation = data.evaluation;
+          onCourseLoaded(false);
+        }
+      }
+    } catch (_) { /* no course yet */ }
   }
 
-  function toggleProgram(pill, shortName) {
-    if (selectedPrograms.has(shortName)) {
-      selectedPrograms.delete(shortName);
-      pill.classList.remove('active');
-      pill.setAttribute('aria-pressed', 'false');
+  // ── Upload ────────────────────────────────────────────────────────────────
+  function triggerUpload() {
+    document.getElementById('upload-input').click();
+  }
+
+  function handleFileSelected(input) {
+    if (!input.files.length) return;
+    const file = input.files[0];
+    input.value = '';
+    if (state.course) {
+      state.pendingFile = file;
+      document.getElementById('replace-modal').classList.add('visible');
     } else {
-      selectedPrograms.add(shortName);
-      pill.classList.add('active');
-      pill.setAttribute('aria-pressed', 'true');
-      // No static warning — context check fires at send time for 3+ programs
+      uploadFile(file);
     }
-    updateSendButton();
-    updateHint();
   }
 
-  function updateSendButton() {
-    const btn = document.getElementById('send-btn');
-    const wrapper = document.getElementById('send-btn-wrapper');
-    if (!isStreaming) {
-      const noProgram = selectedPrograms.size === 0;
-      btn.disabled = noProgram;
-      if (noProgram) {
-        wrapper.setAttribute('data-tooltip', 'Select at least one program to begin');
-      } else {
-        wrapper.removeAttribute('data-tooltip');
+  function closeReplaceModal() {
+    document.getElementById('replace-modal').classList.remove('visible');
+    state.pendingFile = null;
+  }
+
+  async function saveAndReplace() {
+    closeReplaceModal();
+    if (Object.keys(state.evaluation).length) await doSave();
+    const f = state.pendingFile;
+    state.pendingFile = null;
+    if (f) uploadFile(f);
+  }
+
+  function proceedReplace() {
+    document.getElementById('replace-modal').classList.remove('visible');
+    const f = state.pendingFile;
+    state.pendingFile = null;
+    if (f) uploadFile(f);
+  }
+
+  function closeVersionModal() {
+    document.getElementById('version-modal').classList.remove('visible');
+    state.pendingFile = null;
+  }
+
+  async function proceedDiscardOldest() {
+    document.getElementById('version-modal').classList.remove('visible');
+    const f = state.pendingFile;
+    state.pendingFile = null;
+    if (f) uploadFile(f, true);
+  }
+
+  async function uploadFile(file, discardOldest = false) {
+    setStatus('Extracting course content…');
+    document.getElementById('upload-btn').disabled = true;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    if (discardOldest) formData.append('discard_oldest', 'true');
+
+    try {
+      const res = await fetch('/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setStatus('Upload failed: ' + (data.detail || 'Unknown error'), 'error');
+        return;
+      }
+
+      if (data.at_version_limit) {
+        state.pendingFile = file;
+        document.getElementById('version-modal-body').textContent =
+          `${data.course_id} already has ${data.version_count} saved versions (the maximum is 5). Discard the oldest version to proceed?`;
+        document.getElementById('version-modal').classList.add('visible');
+        return;
+      }
+
+      state.course = data;
+      state.evaluation = {};
+      state.evaluationComplete = false;
+      state.activeStandard = null;
+      onCourseLoaded(true);
+
+    } catch (err) {
+      setStatus('Upload error: ' + err.message, 'error');
+    } finally {
+      document.getElementById('upload-btn').disabled = false;
+    }
+  }
+
+  // ── Course loaded ─────────────────────────────────────────────────────────
+  function onCourseLoaded(freshUpload) {
+    updatePriorVersionDisplay();
+    document.getElementById('user-input').disabled = false;
+
+    const incomplete = state.course.incomplete_standards || [];
+    const hasEvaluation = Object.keys(state.evaluation).length > 0;
+
+    if (incomplete.length > 0) {
+      showResumePrompt(incomplete);
+    } else if (hasEvaluation) {
+      restoreCompletedEvaluation();
+    } else {
+      showBeginEvaluation();
+    }
+
+    setStatus('');
+  }
+
+  function updatePriorVersionDisplay() {
+    const lbl = document.getElementById('prior-version-label');
+    const btn = document.getElementById('compare-btn');
+    const pts = state.course && state.course.prior_version_ts;
+    if (pts) {
+      const d = new Date(pts.replace(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6'));
+      lbl.textContent = 'Prior version: ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        + ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      btn.disabled = false;
+    } else {
+      lbl.textContent = 'No prior version available';
+      btn.disabled = true;
+    }
+  }
+
+  // ── Panel states ──────────────────────────────────────────────────────────
+  function showUploadPrompt() {
+    document.getElementById('eval-panel').innerHTML = `
+      <div class="center-state">
+        <h2>Course Quality Reviewer</h2>
+        <p>Upload a Canvas .imscc export file to begin a course quality evaluation.</p>
+        <button class="primary-btn" onclick="triggerUpload()">Upload Course File</button>
+      </div>`;
+    setStandardButtons(false);
+    document.getElementById('save-btn').disabled = true;
+    document.getElementById('user-input').disabled = true;
+  }
+
+  function showBeginEvaluation() {
+    const c = state.course;
+    document.getElementById('eval-panel').innerHTML = `
+      <div class="center-state">
+        <div class="course-name">${esc(c.course_title)}</div>
+        <p>Course content has been extracted and is ready for evaluation.</p>
+        <button class="primary-btn" onclick="beginEvaluation()">Begin Evaluation</button>
+        <span class="sub">This will run all 8 standards in sequence.</span>
+      </div>`;
+    setStandardButtons(false);
+    document.getElementById('save-btn').disabled = true;
+  }
+
+  function showResumePrompt(incomplete) {
+    const c = state.course;
+    const missing = incomplete.map(n => `Standard ${n}`).join(', ');
+    document.getElementById('eval-panel').innerHTML = `
+      <div class="center-state">
+        <div class="course-name">${esc(c.course_title)}</div>
+        <div class="resume-banner">
+          <p>Evaluation incomplete — ${esc(missing)} not yet evaluated.</p>
+          <button class="resume-btn" onclick="resumeEvaluation(${JSON.stringify(incomplete)})">Resume Evaluation</button>
+        </div>
+      </div>`;
+    const completed = [1,2,3,4,5,6,7,8].filter(n => !incomplete.includes(n));
+    completed.forEach(n => { const b = document.getElementById(`std-btn-${n}`); if (b) b.disabled = false; });
+  }
+
+  function restoreCompletedEvaluation() {
+    setStandardButtons(true);
+    state.evaluationComplete = true;
+    document.getElementById('save-btn').disabled = false;
+    const c = state.course;
+    document.getElementById('eval-panel').innerHTML = `
+      <div class="center-state">
+        <div class="course-name">${esc(c.course_title)}</div>
+        <p>Evaluation results are available. Select a standard from the sidebar.</p>
+      </div>`;
+  }
+
+  // ── Evaluation ────────────────────────────────────────────────────────────
+  async function beginEvaluation() {
+    await runEvaluation([1]);
+  }
+
+  async function resumeEvaluation(standards) {
+    await runEvaluation(standards);
+  }
+
+  async function runEvaluation(standards) {
+    if (state.isEvaluating) return;
+    state.isEvaluating = true;
+
+    showProgress(0, 'Starting evaluation…');
+    document.getElementById('eval-panel').innerHTML = '';
+
+    for (let i = 0; i < standards.length; i++) {
+      const n = standards[i];
+      const pct = Math.round((i / standards.length) * 100);
+      showProgress(pct, `Evaluating Standard ${n} of 8…`);
+      setStatus(`Evaluating Standard ${n} of 8…`);
+
+      try {
+        const res = await fetch(`/evaluate/${n}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ course_id: state.course.course_id, timestamp: state.course.timestamp }),
+        });
+        if (!res.ok) throw new Error(`Standard ${n} failed (${res.status})`);
+        const data = await res.json();
+        state.evaluation[n] = data.result;
+      } catch (err) {
+        state.evaluation[n] = `Error evaluating Standard ${n}: ${err.message}`;
       }
     }
+
+    showProgress(100, 'Evaluation complete.');
+    setStatus('Evaluation complete — select a standard from the sidebar.', 'success');
+    setTimeout(hideProgress, 2500);
+
+    setStandardButtons(true);
+    state.evaluationComplete = true;
+    document.getElementById('save-btn').disabled = false;
+
+    document.getElementById('eval-panel').innerHTML = `
+      <div class="center-state">
+        <p>Evaluation complete. Select a standard from the sidebar to view results.</p>
+      </div>`;
+
+    state.isEvaluating = false;
   }
 
-  function updateHint() {
-    // Hint text is static — always reads "Select at least one program to begin"
+  function selectStandard(n) {
+    document.querySelectorAll('.std-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`std-btn-${n}`);
+    if (btn) btn.classList.add('active');
+    state.activeStandard = n;
+
+    const content = state.evaluation[n];
+    if (!content) {
+      document.getElementById('eval-panel').innerHTML =
+        `<div class="center-state"><p>No evaluation content for Standard ${n}.</p></div>`;
+      return;
+    }
+
+    document.getElementById('eval-panel').innerHTML =
+      `<div class="std-content">${renderEvalContent(content)}</div>`;
+    document.getElementById('eval-panel').scrollTop = 0;
   }
 
-  loadPrograms();
-  updateSendButton();
-  updateHint();
-
-  function renderMarkdown(text) {
-    // Extract visualization fenced blocks before HTML escaping so their
-    // content isn't mangled. Replace with safe sentinel tokens.
-    const vizBlocks = [];
-    text = text.replace(/```(mermaid|chartjs)\n([\s\S]*?)```/g, (_, lang, code) => {
-      const idx = vizBlocks.length;
-      vizBlocks.push({ lang, code: code.trim() });
-      return `%%VIZ${idx}%%`;
-    });
-
-    let html = text
-      .replace(/^(-{3,}|\*{3,})$/gm, '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n?)+)/g, (_, header, body) => {
-        const ths = header.split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
-        const rows = body.trim().split('\n').map(row => {
-          const tds = row.split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
-          return `<tr>${tds}</tr>`;
-        }).join('');
-        return `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
-      })
-      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
-      .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
-      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-      .replace(/\n{2,}/g, '</p><p>')
-      .replace(/\n/g, '<br>');
-    if (!html.startsWith('<')) html = `<p>${html}</p>`;
-    // Remove stray breaks between list items before wrapping so consecutive <li>s are adjacent
-    html = html.replace(/<\/li>\s*(?:<br\s*\/?>|<\/p><p>)+\s*<li>/g, '</li><li>');
-    html = html.replace(/(<li>.*?<\/li>)+/gs, m => `<ul>${m}</ul>`);
-    // Remove any remaining breaks inside <ul> blocks (before first <li>, between items, after last </li>)
-    html = html.replace(/(<ul>)(?:<br\s*\/?>|<\/p><p>)*/g, '$1');
-    html = html.replace(/(?:<br\s*\/?>|<\/p><p>)*(<\/ul>)/g, '$1');
-    html = html.replace(/<\/blockquote>\s*(?:<br\s*\/?>)+\s*(?=<blockquote>)/g, '</blockquote>');
-
-    // Reinsert visualization placeholders
-    vizBlocks.forEach(({ lang, code }, i) => {
-      const encoded = encodeURIComponent(code);
-      const placeholder = lang === 'mermaid'
-        ? `<div class="viz-block viz-mermaid" data-code="${encoded}"><span class="viz-loading">Rendering diagram…</span></div>`
-        : `<div class="viz-block viz-chartjs" data-config="${encoded}"><span class="viz-loading">Rendering chart…</span></div>`;
-      html = html.replace(`%%VIZ${i}%%`, placeholder);
-    });
-
-    return html;
+  function renderBulletList(text, cssClass) {
+    const lines = (text || '').split('\n').map(l => l.trim()).filter(Boolean);
+    const items = lines.map(l => l.replace(/^[-•]\s*/, ''));
+    return `<ul class="${cssClass}">${items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`;
   }
 
-  function appendMessage(role, content) {
-    const container = document.getElementById('messages');
-    const div = document.createElement('div');
-    div.className = `message ${role}`;
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    if (role === 'assistant') {
-      bubble.innerHTML = renderMarkdown(content);
-      const dlBtn = document.createElement('button');
-      dlBtn.className = 'download-btn';
-      dlBtn.textContent = 'Download as text';
-      dlBtn.onclick = () => downloadResponse(bubble, content);
-      div.appendChild(dlBtn);
+  function renderEvalContent(data) {
+    if (typeof data === 'string') {
+      return `<div style="white-space:pre-wrap;font-size:14px;line-height:1.7;">${esc(data)}</div>`;
+    }
+    const subs = (data && data.substandards) ? data.substandards : [];
+    if (!subs.length) return `<div class="center-state"><p>No evaluation content returned.</p></div>`;
+
+    return subs.map(ss => {
+      const gapsHtml = ss.gaps
+        ? renderBulletList(ss.gaps, 'gaps-list')
+        : '';
+      return `
+        <div class="substandard">
+          <div class="substandard-label">${esc(ss.id)}: ${esc(ss.description)}</div>
+          <div class="evidence">
+            ${renderBulletList(ss.evidence, 'evidence-list')}
+            ${gapsHtml}
+            <div class="verdict">Standard ${esc(ss.id)}: ${esc(ss.verdict)}</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Progress ──────────────────────────────────────────────────────────────
+  function showProgress(pct, label) {
+    document.getElementById('progress-container').classList.add('visible');
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = label;
+  }
+
+  function hideProgress() {
+    document.getElementById('progress-container').classList.remove('visible');
+  }
+
+  function setStandardButtons(enabled) {
+    for (let i = 1; i <= 8; i++) {
+      const b = document.getElementById(`std-btn-${i}`);
+      if (b) b.disabled = !enabled;
+    }
+  }
+
+  // ── Reset ─────────────────────────────────────────────────────────────────
+  function resetApp() {
+    if (state.isEvaluating) return;
+    state.evaluation = {};
+    state.evaluationComplete = false;
+    state.activeStandard = null;
+    state.chatHistory = [];
+    document.getElementById('messages').innerHTML = '';
+    document.getElementById('chat-section').classList.remove('visible');
+    document.getElementById('user-input').value = '';
+    document.querySelectorAll('.std-btn').forEach(b => b.classList.remove('active'));
+    hideProgress();
+
+    if (state.course) {
+      showBeginEvaluation();
+      setStatus(`"${state.course.course_title}" — ready to evaluate.`);
     } else {
-      bubble.textContent = content;
-    }
-    div.appendChild(bubble);
-    container.appendChild(div);
-    scrollToBottom();
-    return bubble;
-  }
-
-  async function downloadResponse(bubble, fallbackText) {
-    const text = bubble.innerText || fallbackText;
-    try {
-      const res = await fetch('/download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, filename: 'program-intelligence-response.txt' }),
-      });
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'program-intelligence-response.txt';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert('Download failed: ' + e.message);
+      showUploadPrompt();
+      setStatus('Upload a Canvas export file to begin.');
     }
   }
 
-  function showTyping() {
-    const div = document.createElement('div');
-    div.className = 'message assistant';
-    div.id = 'typing-msg';
-    div.innerHTML = `<div class="typing-indicator" role="status" aria-label="Processing"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></div>`;
-    document.getElementById('messages').appendChild(div);
-    scrollToBottom();
+  // ── Save ──────────────────────────────────────────────────────────────────
+  async function saveEvaluation() {
+    if (!Object.keys(state.evaluation).length) return;
+    await doSave();
   }
 
-  function removeTyping() {
-    const t = document.getElementById('typing-msg');
-    if (t) t.remove();
+  async function doSave() {
+    const c = state.course;
+    let text = `Course Quality Review\n`;
+    text += `${c.course_id}: ${c.course_title}\n`;
+    text += `Evaluated: ${new Date().toLocaleString()}\n`;
+    text += '='.repeat(60) + '\n\n';
+
+    for (let i = 1; i <= 8; i++) {
+      if (state.evaluation[i]) {
+        text += `STANDARD ${i}\n${'─'.repeat(40)}\n${state.evaluation[i]}\n\n`;
+      }
+    }
+
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CQR_${c.course_id.replace(/[\s/]/g, '_')}_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 
-  function scrollToBottom() {
-    const area = document.getElementById('chat-area');
-    area.scrollTop = area.scrollHeight;
+  // ── Compare ───────────────────────────────────────────────────────────────
+  async function compareVersions() {
+    setStatus('Comparison feature — coming in a future session.', 'success');
   }
 
+  // ── Status bar ────────────────────────────────────────────────────────────
+  function setStatus(msg, type) {
+    const el = document.getElementById('status-bar');
+    el.textContent = msg;
+    el.className = 'status-bar' + (type ? ' ' + type : '');
+  }
+
+  // ── Chat ──────────────────────────────────────────────────────────────────
   let abortController = null;
 
-  function setInputEnabled(enabled) {
-    document.getElementById('user-input').disabled = !enabled;
-    isStreaming = !enabled;
-    const btn = document.getElementById('send-btn');
-    btn.disabled = enabled ? selectedPrograms.size === 0 : false;
-    btn.classList.toggle('stop-mode', !enabled);
-    btn.title = enabled ? 'Send' : 'Stop';
-    btn.querySelector('.icon-send').style.display = enabled ? '' : 'none';
-    btn.querySelector('.icon-stop').style.display = enabled ? 'none' : '';
-  }
-
   function handleSendStop() {
-    if (isStreaming) {
+    if (state.isStreaming) {
       if (abortController) abortController.abort();
     } else {
-      confirmAndSend();
+      sendChatMessage();
     }
   }
 
-  let _modalReturnFocus = null;
-  function showScopeModal(title, body, cancelLabel) {
-    document.getElementById('modal-title').textContent = title;
-    document.getElementById('modal-body').innerHTML = body;
-    document.getElementById('modal-cancel').textContent = cancelLabel;
-    _modalReturnFocus = document.activeElement;
-    document.getElementById('scope-modal').classList.add('visible');
-    document.getElementById('modal-cancel').focus();
-  }
-
-  function closeScopeModal() {
-    document.getElementById('scope-modal').classList.remove('visible');
-    if (_modalReturnFocus) { _modalReturnFocus.focus(); _modalReturnFocus = null; }
-  }
-
-  async function confirmAndSend() {
-    const input = document.getElementById('user-input');
-    if (!input.value.trim() || isStreaming || selectedPrograms.size === 0) return;
-
-    if (selectedPrograms.size === 2) {
-      const names = [...selectedPrograms].join(' and ');
-      showScopeModal(
-        'Multiple Programs Selected',
-        `You have selected <strong>${names}</strong>. Results will span both programs. Note that the same course may be required in one program and an elective in the other — responses will reflect each program's designation.<br><br>Would you like to proceed?`,
-        'Cancel — Adjust Selection'
-      );
-    } else if (selectedPrograms.size >= 3) {
-      showScopeModal(
-        'Multiple Programs Selected',
-        `The PII can process a limited amount of data for each request. Consider narrowing your selection to one or two programs. You can proceed, but the response may be curtailed to remain within processing limits.<br><br>Would you like to proceed?`,
-        'Cancel — Adjust Selection'
-      );
-    } else {
-      sendMessage();
-    }
-  }
-
-  document.getElementById('modal-proceed').addEventListener('click', () => {
-    closeScopeModal();
-    sendMessage();
-  });
-
-  document.getElementById('modal-cancel').addEventListener('click', () => {
-    closeScopeModal();
-  });
-
-  async function sendMessage() {
+  async function sendChatMessage() {
     const input = document.getElementById('user-input');
     const text = input.value.trim();
-    if (!text || isStreaming) return;
+    if (!text || state.isStreaming || !state.course) return;
 
-    const welcome = document.getElementById('welcome');
-    if (welcome) welcome.remove();
+    const chatSection = document.getElementById('chat-section');
+    chatSection.classList.add('visible');
 
     input.value = '';
     input.style.height = 'auto';
-    setInputEnabled(false);
-    appendMessage('user', text);
+    setChatEnabled(false);
+    appendChatMsg('user', text);
     showTyping();
-    history.push({ role: 'user', content: text });
+    state.chatHistory.push({ role: 'user', content: text });
 
     abortController = new AbortController();
-
     try {
       const res = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: text,
-          history: history.slice(0, -1),
-          programs: [...selectedPrograms],
-          content_types: [...selectedContentTypes],
+          history: state.chatHistory.slice(0, -1),
+          course_id: state.course.course_id,
+          timestamp: state.course.timestamp,
         }),
         signal: abortController.signal,
       });
-      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
 
       removeTyping();
-      const bubble = appendMessage('assistant', '');
+      const bubble = appendChatMsg('assistant', '');
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let fullText = '';
@@ -1120,215 +832,107 @@
           if (done) break;
           fullText += decoder.decode(value, { stream: true });
           bubble.innerHTML = renderMarkdown(fullText);
-          scrollToBottom();
+          chatSection.scrollTop = chatSection.scrollHeight;
         }
-      } catch (streamErr) {
-        if (streamErr.name !== 'AbortError') throw streamErr;
+      } catch (e) {
+        if (e.name !== 'AbortError') throw e;
       }
-      if (fullText) {
-        history.push({ role: 'assistant', content: fullText });
-        injectOptionButtons(bubble, fullText);
-        await renderVisualizations(bubble);
-        maybeShowContentFilter(text, fullText, bubble);
-      }
+      if (fullText) state.chatHistory.push({ role: 'assistant', content: fullText });
 
     } catch (err) {
       removeTyping();
-      if (err.name !== 'AbortError') {
-        appendMessage('assistant', `Something went wrong: ${err.message}`);
-      }
+      if (err.name !== 'AbortError') appendChatMsg('assistant', 'Something went wrong: ' + err.message);
     } finally {
       abortController = null;
-      setInputEnabled(true);
+      setChatEnabled(true);
       input.focus();
     }
   }
 
-  function sendWithText(text) {
-    document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-    document.querySelectorAll('.option-hint').forEach(h => h.style.display = 'none');
+  function setChatEnabled(enabled) {
+    state.isStreaming = !enabled;
+    const btn = document.getElementById('send-btn');
+    btn.classList.toggle('stop-mode', !enabled);
+    btn.title = enabled ? 'Send' : 'Stop';
+    btn.querySelector('.icon-send').style.display = enabled ? '' : 'none';
+    btn.querySelector('.icon-stop').style.display = enabled ? 'none' : '';
+    document.getElementById('user-input').disabled = !enabled;
+    updateSendBtn();
+  }
+
+  function updateSendBtn() {
     const input = document.getElementById('user-input');
-    input.value = text;
-    sendMessage();
-  }
-
-  function injectOptionButtons(bubble, text) {
-    const matches = [...text.matchAll(/^> \*\*Option (\d+):\*\*\s*(.+)$/gm)];
-    if (matches.length < 1) return;
-    const messageDiv = bubble.parentElement;
-    const row = document.createElement('div');
-    row.className = 'option-buttons';
-    matches.forEach(m => {
-      const label = `Option ${m[1]}: ${m[2].trim()}`;
-      const btn = document.createElement('button');
-      btn.className = 'option-btn';
-      btn.textContent = label;
-      btn.onclick = () => sendWithText(label);
-      row.appendChild(btn);
-    });
-    const hint = document.createElement('div');
-    hint.className = 'option-hint';
-    hint.textContent = 'You can select an option above or type your own reply below.';
-    messageDiv.appendChild(row);
-    messageDiv.appendChild(hint);
-  }
-
-  // ── Admin panel ──────────────────────────────────────────────────────────
-
-  function toggleAdmin() {
-    const panel = document.getElementById('admin-panel');
-    panel.classList.toggle('visible');
-    if (panel.classList.contains('visible')) {
-      document.getElementById('admin-status').textContent = '';
-      document.getElementById('admin-status').className = '';
+    const btn = document.getElementById('send-btn');
+    if (!state.isStreaming) {
+      btn.disabled = !input.value.trim() || !state.course;
     }
   }
 
-  async function ingestCourse() {
-    const fileInput = document.getElementById('admin-file');
-    const statusEl = document.getElementById('admin-status');
-    const btn = document.getElementById('admin-ingest-btn');
-
-    if (!fileInput.files.length) {
-      statusEl.textContent = 'Select a .imscc file first.';
-      statusEl.className = 'error';
-      return;
-    }
-
-    const file = fileInput.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-
-    btn.disabled = true;
-    statusEl.className = '';
-    statusEl.textContent = `Ingesting ${file.name}…`;
-
-    try {
-      const resp = await fetch('/admin/ingest', { method: 'POST', body: formData });
-      const data = await resp.json();
-      if (!resp.ok) {
-        statusEl.textContent = `Error: ${data.detail || resp.statusText}`;
-        statusEl.className = 'error';
-        return;
-      }
-      const f = data.files_written;
-      const d = data.db_ingested;
-      statusEl.textContent = (
-        `✓ ${data.course_id} — "${data.course_title}" ingested. ` +
-        `Files: ${f.assignments} assignments, ${f.discussions} discussions, ` +
-        `${f.pages} pages, ${f.rubrics} rubrics. ` +
-        `DB: ${d.items} items, ${d.rubrics} rubrics.`
-      );
-      statusEl.className = 'success';
-      fileInput.value = '';
-    } catch (err) {
-      statusEl.textContent = `Request failed: ${err.message}`;
-      statusEl.className = 'error';
-    } finally {
-      btn.disabled = false;
-    }
+  function appendChatMsg(role, content) {
+    const messages = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = `message ${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    if (role === 'assistant') bubble.innerHTML = renderMarkdown(content);
+    else bubble.textContent = content;
+    div.appendChild(bubble);
+    messages.appendChild(div);
+    const cs = document.getElementById('chat-section');
+    cs.scrollTop = cs.scrollHeight;
+    return bubble;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-
-  function newChat() {
-    history = [];
-    selectedContentTypes.clear();
-    document.getElementById('messages').innerHTML = `
-      <div class="welcome" id="welcome">
-        <h2>Program Intelligence Interface</h2>
-        <p>Ask questions about PLO coverage, CLO alignment, assignments, and rubrics across any program.</p>
-      </div>`;
-    const input = document.getElementById('user-input');
-    input.value = '';
-    input.style.height = 'auto';
-    input.focus();
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'message assistant';
+    div.id = 'typing-msg';
+    div.innerHTML = `<div class="typing-indicator" role="status" aria-label="Processing"><span></span><span></span><span></span></div>`;
+    document.getElementById('messages').appendChild(div);
+    document.getElementById('chat-section').scrollTop = 99999;
   }
 
-  // Initialize Mermaid (startOnLoad:false — we call render manually)
-  mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
-
-  async function renderVisualizations(bubble) {
-    // Mermaid diagrams
-    for (const el of bubble.querySelectorAll('.viz-mermaid')) {
-      try {
-        const code = decodeURIComponent(el.dataset.code);
-        const id = 'mermaid-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-        const { svg } = await mermaid.render(id, code);
-        el.innerHTML = svg;
-      } catch (err) {
-        el.innerHTML = `<span class="viz-error">Diagram could not be rendered: ${err.message}</span>`;
-      }
-    }
-    // Chart.js charts
-    for (const el of bubble.querySelectorAll('.viz-chartjs')) {
-      try {
-        const config = JSON.parse(decodeURIComponent(el.dataset.config));
-        const canvas = document.createElement('canvas');
-        el.innerHTML = '';
-        el.appendChild(canvas);
-        new Chart(canvas, config);
-      } catch (err) {
-        el.innerHTML = `<span class="viz-error">Chart could not be rendered: ${err.message}</span>`;
-      }
-    }
+  function removeTyping() {
+    const t = document.getElementById('typing-msg');
+    if (t) t.remove();
   }
 
-  async function emailSession() {
-    const emailInput = document.getElementById('email-input');
-    const btn = document.getElementById('email-btn');
-    const status = document.getElementById('email-status');
-    const email = emailInput.value.trim();
-
-    status.className = '';
-    const addresses = email.split(',').map(a => a.trim()).filter(Boolean);
-    if (addresses.length === 0 || !addresses.every(a => a.includes('@'))) {
-      status.textContent = 'Enter one or more valid email addresses.';
-      status.className = 'error';
-      return;
-    }
-    if (history.length === 0) {
-      status.textContent = 'No session content to send yet.';
-      status.className = 'error';
-      return;
-    }
-
-    btn.disabled = true;
-    status.textContent = 'Sending…';
-    try {
-      const res = await fetch('/email-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          programs: [...selectedPrograms],
-          history,
-          generated_at: new Date().toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'short' })
-        })
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `Server error ${res.status}`);
-      }
-      status.textContent = 'Sent!';
-      status.className = 'success';
-      setTimeout(() => { status.textContent = ''; status.className = ''; }, 5000);
-    } catch (err) {
-      status.textContent = err.message;
-      status.className = 'error';
-    } finally {
-      btn.disabled = false;
-    }
+  // ── Markdown renderer ─────────────────────────────────────────────────────
+  function renderMarkdown(text) {
+    let html = text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
+      .replace(/\n{2,}/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+    if (!html.startsWith('<')) html = `<p>${html}</p>`;
+    html = html.replace(/(<li>[\s\S]*?<\/li>)+/g, m => `<ul>${m}</ul>`);
+    return html;
   }
 
+  // ── Utilities ─────────────────────────────────────────────────────────────
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Event listeners ───────────────────────────────────────────────────────
   const textarea = document.getElementById('user-input');
   textarea.addEventListener('input', () => {
     textarea.style.height = 'auto';
-    textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    updateSendBtn();
   });
   textarea.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); confirmAndSend(); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendStop(); }
   });
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  init();
 </script>
 </body>
 </html>

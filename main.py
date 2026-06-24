@@ -1,17 +1,19 @@
 """
-Program Mapping Analyzer — FastAPI backend
+Course Quality Reviewer — FastAPI backend
 """
 
 import json
 import os
 import re
+import shutil
 import sqlite3
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import anthropic
-from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -34,6 +36,11 @@ if _env_file.exists():
 DB_PATH = BASE_DIR / "data" / "program.db"
 ALIGNMENT_MAP_PATH = BASE_DIR / "data" / "alignment_map.json"
 MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+
+# CQR course storage
+EXTRACTED_COURSES_DIR = BASE_DIR / "extracted_courses"
+EXTRACTED_COURSES_DIR.mkdir(exist_ok=True)
+MAX_COURSE_VERSIONS = 5
 SMTP_HOST = os.environ.get("SMTP_HOST", "")
 SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
 SMTP_USER = os.environ.get("SMTP_USER", "")
@@ -1629,7 +1636,7 @@ All course content — assignment prompts, discussion prompts, rubric criteria, 
 
 Competency-to-assignment links are fully integrated for the Leadership (LD) and Project Management (PMI) programs — answer those questions directly from the retrieved context. The gaps below apply only to SHRM and ITM CMPL courses. When a user asks about competency-to-assignment mappings that fall into one of those specific gaps, respond: "That mapping has not yet been integrated into the system." For all other questions — including semantic matching, assignment content, rubrics, CLOs — answer from the full course content, which is complete.
 
-- **SHRM Competency-to-Assignment Links — Leadership-HRM program:** No formal competency-to-assignment mappings have been established for this program yet. This is intentional — the program director is actively using the PII to inform those decisions. Treat all Leadership-HRM competency alignment questions as exploratory (see Exploratory vs. Definitive Responses below). The full SHRM competency catalog and all Leadership-HRM course content — including HRM, LD, and MGMT courses — are available for analysis. **When any multi-program or all-programs competency query is answered, include the Leadership-HRM exploratory/pending status as a standalone paragraph — do not allow this program's status to be cut off at the end of a response. State it early.**
+- **SHRM Competency-to-Assignment Links — Leadership-HRM program:** No formal competency-to-assignment mappings have been established for this program yet. This is intentional — the program director is actively using the CQR to inform those decisions. Treat all Leadership-HRM competency alignment questions as exploratory (see Exploratory vs. Definitive Responses below). The full SHRM competency catalog and all Leadership-HRM course content — including HRM, LD, and MGMT courses — are available for analysis. **When any multi-program or all-programs competency query is answered, include the Leadership-HRM exploratory/pending status as a standalone paragraph — do not allow this program's status to be cut off at the end of a response. State it early.**
 - **SHRM Rating Level Descriptors — Leadership-HRM program:** The 5-level behavioral indicator text for each SHRM competency is not yet available.
 - **ITM Competency Framework for CMPL courses — Leadership-ITM program:** The competency framework that applies to CMPL courses has not been determined. No competency codes are linked to CMPL assignments. CMPL course content (assignment prompts, discussions, pages, rubrics) is fully loaded.
 
@@ -2052,17 +2059,17 @@ async def programs():
     return app_state.get("programs", [])
 
 
-_EASTER_EGG_TEXT = """The PII was created by Steve Covello, Senior Instructional Designer at UNH-CPSO in May, 2026. It was developed locally on a MacBook Pro using Claude Code. The PII's content is derived from Canvas course content and from mapping data compiled by each program's respective directors. Specialized knowledge and service orientation in the PII's demeanor was sourced as follows:
+_EASTER_EGG_TEXT = """The CQR was created by Steve Covello, Senior Instructional Designer at UNH-CPSO in May, 2026. It was developed locally on a MacBook Pro using Claude Code. The CQR's content is derived from Canvas course content and from mapping data compiled by each program's respective directors. Specialized knowledge and service orientation in the CQR's demeanor was sourced as follows:
 
 * Co-orientation principles were derived from the decades of research in information systems design by Dr. Brenda Dervin culminating in the development of her Sense-Making Methodology. User-based design principles were derived from Dr. Michael Nilan's research at Syracuse University's iSchool.
-* Service orientation in the PII's demeanor was created by Steve Covello according to principles of client relations developed from 30+ years of working in various creative fields.
+* Service orientation in the CQR's demeanor was created by Steve Covello according to principles of client relations developed from 30+ years of working in various creative fields.
 * Principles of AI integration in higher education were contributed from the "Controlling AI in Instruction" e-book authored by Steve Covello in 2025.
 * Principles of teaching with rich media in fully online asynchronous higher education were contributed from the "Teaching with Rich Media" e-book authored by Steve Covello in 2019.
 * Principles and best practice for teaching and learning online were informed by various academic sources.
 
-The PII was tested for feedback by the Instructional Design team at UNH-CPSO and overseen by Reta Chaffee, Director of Educational Technology."""
+The CQR was tested for feedback by the Instructional Design team at UNH-CPSO and overseen by Reta Chaffee, Director of Educational Technology."""
 
-_EASTER_EGG_RE = re.compile(r"^\s*about the pii\s*[.!?]?\s*$", re.IGNORECASE)
+_EASTER_EGG_RE = re.compile(r"^\s*about the cqr\s*[.!?]?\s*$", re.IGNORECASE)
 
 
 @app.get("/context-estimate")
@@ -2204,7 +2211,7 @@ async def email_session(req: EmailSessionRequest):
     # Build plain-text body
     program_line = ", ".join(req.programs) if req.programs else "All programs"
     lines = [
-        "Program Intelligence Interface — Session Summary",
+        "Course Quality Reviewer — Session Summary",
         f"Generated: {req.generated_at}",
         f"Program filter: {program_line}",
         "",
@@ -2212,7 +2219,7 @@ async def email_session(req: EmailSessionRequest):
         "",
     ]
     for msg in req.history:
-        label = "You" if msg.role == "user" else "PII"
+        label = "You" if msg.role == "user" else "CQR"
         lines.append(f"[{label}]")
         lines.append(_strip_markdown(msg.content))
         lines.append("")
@@ -2222,7 +2229,7 @@ async def email_session(req: EmailSessionRequest):
     mime = MIMEMultipart()
     mime["From"] = SMTP_USER
     mime["To"] = ", ".join(addresses)
-    mime["Subject"] = f"PII Session — {req.generated_at}"
+    mime["Subject"] = f"CQR Session — {req.generated_at}"
     mime.attach(MIMEText(body, "plain", "utf-8"))
 
     try:
@@ -2269,6 +2276,346 @@ async def admin_ingest(file: UploadFile = File(...)):
         tmp_path.unlink(missing_ok=True)
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# CQR — Course upload, session, and evaluation endpoints
+# ---------------------------------------------------------------------------
+
+from quality_standards import STANDARDS as CQR_STANDARDS
+
+
+class EvaluateRequest(BaseModel):
+    course_id: str
+    timestamp: str
+
+
+# ── Content loading ──────────────────────────────────────────────────────────
+
+def _strip_html(html_text: str) -> str:
+    """Strip HTML tags and normalize whitespace to plain text."""
+    # Remove script/style blocks
+    html_text = re.sub(r'<(script|style)[^>]*>.*?</(script|style)>', '', html_text,
+                       flags=re.DOTALL | re.IGNORECASE)
+    # Strip remaining tags
+    text = re.sub(r'<[^>]+>', ' ', html_text)
+    return re.sub(r'\s+', ' ', text).strip()
+
+
+def _parse_file_meta(raw: str) -> tuple[str, str, str]:
+    """Extract content_type, title, module from the separate HTML comment headers."""
+    def _get(key: str) -> str:
+        m = re.search(rf'<!--\s*{re.escape(key)}:\s*(.+?)\s*-->', raw, re.IGNORECASE)
+        return m.group(1).strip() if m else ""
+    return _get("CONTENT-TYPE"), _get("TITLE"), _get("MODULE")
+
+
+def _load_course_content(version_dir: Path, char_limit_per_item: int = 2000) -> list[dict]:
+    """
+    Read all .html files from a versioned course directory.
+    Returns a list of dicts: {content_type, title, module, text}.
+    """
+    items = []
+    for html_file in sorted(version_dir.glob("*.html")):
+        raw = html_file.read_text(errors="replace")
+        content_type, title, module = _parse_file_meta(raw)
+        if not content_type:
+            content_type = "Unknown"
+        if not title:
+            title = html_file.stem
+        text = _strip_html(raw)
+        if content_type != "Syllabus" and len(text) > char_limit_per_item:
+            truncated = text[:char_limit_per_item]
+            last_space = truncated.rfind(' ')
+            text = truncated[:last_space] + ' [...]'
+        if text:
+            items.append({"content_type": content_type, "title": title, "module": module, "text": text})
+    return items
+
+
+def _format_content_for_prompt(items: list[dict], course_id: str) -> str:
+    """Format extracted course items into a readable block for the evaluation prompt."""
+    if not items:
+        return "(No course content found)"
+    lines = []
+    for item in items:
+        module_label = f" — {item['module']}" if item['module'] else ""
+        lines.append(f"=== {item['content_type']}: {item['title']}{module_label} ===")
+        lines.append(item['text'])
+        lines.append("")
+    return "\n".join(lines)
+
+
+# ── Evaluation runner ─────────────────────────────────────────────────────────
+
+_EVAL_SYSTEM_PROMPT = """\
+You are conducting a structured course quality evaluation for the Course Quality Reviewer (CQR) \
+at the University of New Hampshire. Your role is to locate and report evidence from the extracted \
+course content that relates to each quality sub-standard.
+
+Rules:
+- For each sub-standard, write the evidence as a bulleted list — one bullet per distinct piece of \
+evidence found. If nothing was found, use a single bullet: "- None found."
+- Every bullet must describe the location hierarchically before naming what was found. \
+Use this format depending on content type:
+    Module content: "In the [Module Name], in the '[Content Title]' [page/assignment/discussion], [what was found]."
+    Syllabus: "In the [Section Name] section of the syllabus, [paragraph or table], [what was found]."
+  Examples:
+    "In the Course Overview & Resources module, in the 'Course Resources' page, links to rubrics and APA resources are consolidated."
+    "In the Expectations and Conduct section of the syllabus, the Code of Conduct paragraph references the Student Rights, Rules, and Responsibilities."
+- Do not make recommendations. Do not suggest improvements. Report evidence only.
+- Be specific: quote phrases, cite exact titles, and name all location levels.
+- Evaluate from the perspective of a first-time student visiting the course.
+- Do NOT include the verdict inside the evidence field.
+- Verdict values:
+  - "Met": the course clearly and sufficiently addresses the sub-standard.
+  - "Partially Met": the course addresses the sub-standard but incompletely or with notable gaps.
+  - "Not Met": evidence is absent or insufficient to satisfy the sub-standard.
+- When the verdict is "Partially Met" or "Not Met", populate the "gaps" field with a bulleted list \
+of what is absent or insufficient. Each gap bullet begins with "- Missing: " or "- Insufficient: ". \
+When the verdict is "Met", set "gaps" to "".
+- The verdict is a provisional signal to guide the reviewer's attention — not a final determination.
+- Output ONLY valid JSON. No markdown fences, no prose outside the JSON.
+
+Output format (one object per sub-standard in order):
+{
+  "substandards": [
+    {
+      "id": "1.1",
+      "description": "...",
+      "evidence": "- In Module 1, in the 'Tasks for getting started' page, ...\\n- In the syllabus, ...",
+      "gaps": "",
+      "verdict": "Met"
+    },
+    ...
+  ]
+}
+"""
+
+
+def _run_standard_evaluation(
+    standard_num: int,
+    course_id: str,
+    course_title: str,
+    content_text: str,
+) -> dict:
+    """Call Claude (sync) to evaluate one standard. Returns parsed JSON dict."""
+    std = CQR_STANDARDS[standard_num]
+    substandards_block = "\n\n".join(
+        f'Sub-standard {ss["id"]}: {ss["description"]}\n'
+        f'Evaluator guidance: {ss["interpretation"]}'
+        for ss in std["substandards"]
+    )
+    user_message = (
+        f"COURSE: {course_id} — {course_title}\n\n"
+        f"SUB-STANDARDS TO EVALUATE (Standard {standard_num}):\n\n"
+        f"{substandards_block}\n\n"
+        f"COURSE CONTENT:\n\n{content_text}"
+    )
+
+    client = anthropic.Anthropic()
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=8192,
+        system=_EVAL_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_message}],
+    )
+    raw = response.content[0].text.strip()
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        import logging
+        logging.error("CQR eval JSON parse failed. stop_reason=%s raw=%s", response.stop_reason, raw[-500:])
+        raise
+
+
+def _read_canvas_course_info(imscc_bytes: bytes) -> tuple[str, str]:
+    """
+    Peek inside the .imscc zip and read course_settings/course_settings.xml to get
+    a clean course ID (e.g. 'COM-680') and full title without full extraction.
+    Returns (course_id, course_title); either may be empty string on failure.
+    """
+    import io
+    import re as _re
+    import zipfile as _zf
+    import xml.etree.ElementTree as _ET
+
+    def _clean_course_id(raw_code: str) -> str:
+        """'COM 680.01 (Summer 2026 Term 5-OLA)' → 'COM-680'"""
+        m = _re.search(r"([A-Za-z]+)\s+(\d{3,4})", raw_code)
+        return f"{m.group(1).upper()}-{m.group(2)}" if m else raw_code
+
+    try:
+        with _zf.ZipFile(io.BytesIO(imscc_bytes)) as zf:
+            # Canvas exports carry course info in course_settings/course_settings.xml
+            try:
+                xml_data = zf.read("course_settings/course_settings.xml")
+                root = _ET.fromstring(xml_data)
+                ns = "http://canvas.instructure.com/xsd/cccv1p0"
+
+                def _find(tag):
+                    r = root.find(f"{{{ns}}}{tag}")
+                    return r if r is not None else root.find(tag)
+
+                code_el  = _find("course_code")
+                title_el = _find("title")
+                raw_code = (code_el.text  or "").strip() if code_el  is not None else ""
+                title    = (title_el.text or "").strip() if title_el is not None else ""
+                if raw_code:
+                    return _clean_course_id(raw_code), title
+            except (KeyError, _ET.ParseError):
+                pass
+
+            # Fallback: first non-empty <string> in imsmanifest.xml (lomimscc:string)
+            try:
+                xml_data = zf.read("imsmanifest.xml")
+                root = _ET.fromstring(xml_data)
+                for el in root.iter():
+                    if el.tag.split("}")[-1] == "string" and el.text and el.text.strip():
+                        t = el.text.strip()
+                        return _clean_course_id(t), t
+            except (KeyError, _ET.ParseError):
+                pass
+    except Exception:
+        pass
+    return "", ""
+
+
+@app.post("/upload")
+async def upload_course(
+    file: UploadFile = File(...),
+    discard_oldest: str = Form("false"),
+):
+    """Accept a .imscc file, create a timestamped version directory, save the file."""
+    if not (file.filename or "").lower().endswith(".imscc"):
+        raise HTTPException(status_code=400, detail="Only .imscc files are accepted.")
+
+    import tempfile
+    import asyncio
+    from ingest_imscc import ingest_imscc
+
+    content = await file.read()
+
+    # Read course code and title directly from the zip before extraction
+    canvas_code, canvas_title = _read_canvas_course_info(content)
+
+    # Write to temp file so ingest_imscc can process it
+    with tempfile.NamedTemporaryFile(suffix=".imscc", delete=False) as tmp:
+        tmp_path = Path(tmp.name)
+        tmp.write(content)
+
+    # Determine course_id early so we can check the version limit before ingesting
+    course_id    = canvas_code or "UNKNOWN"
+    course_title = canvas_title or course_id
+    course_dir   = EXTRACTED_COURSES_DIR / course_id
+    course_dir.mkdir(exist_ok=True)
+
+    existing = sorted([d for d in course_dir.iterdir() if d.is_dir()])
+
+    if len(existing) >= MAX_COURSE_VERSIONS and discard_oldest.lower() != "true":
+        tmp_path.unlink(missing_ok=True)
+        return {
+            "at_version_limit": True,
+            "version_count": len(existing),
+            "course_id": course_id,
+            "course_title": course_title,
+        }
+
+    if len(existing) >= MAX_COURSE_VERSIONS and discard_oldest.lower() == "true":
+        shutil.rmtree(existing[0])
+        existing = existing[1:]
+
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    version_dir = course_dir / ts
+    version_dir.mkdir()
+
+    # Ingest directly into the versioned directory — no canvas_courses staging copy
+    try:
+        result = await asyncio.to_thread(ingest_imscc, tmp_path, course_id, version_dir)
+    except (FileNotFoundError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    course_title = canvas_title or result.get("course_title", course_id)
+
+    # Persist basic metadata for session restore
+    meta = {
+        "course_id": course_id,
+        "course_title": course_title,
+        "timestamp": ts,
+        "incomplete_standards": [],
+        "evaluation": {},
+    }
+    (version_dir / "meta.json").write_text(json.dumps(meta))
+
+    prior_ts = existing[-1].name if existing else None
+
+    # Track the current course in app_state
+    app_state["current_course"] = {
+        "course_id": course_id,
+        "course_title": course_title,
+        "timestamp": ts,
+        "prior_version_ts": prior_ts,
+        "version_count": len(existing) + 1,
+        "incomplete_standards": [],
+        "evaluation": {},
+        "at_version_limit": False,
+    }
+
+    return app_state["current_course"]
+
+
+@app.get("/course/current")
+async def get_current_course():
+    """Return the currently loaded course, or empty dict if none."""
+    return app_state.get("current_course") or {}
+
+
+@app.post("/evaluate/{standard_num}")
+async def evaluate_standard(standard_num: int, req: EvaluateRequest):
+    """Run the LLM evaluation for one standard against the uploaded course content."""
+    if standard_num < 1 or standard_num > 8:
+        raise HTTPException(status_code=400, detail="Standard number must be 1–8.")
+
+    version_dir = EXTRACTED_COURSES_DIR / req.course_id / req.timestamp
+    if not version_dir.exists():
+        raise HTTPException(status_code=404, detail=f"Course version not found: {req.course_id}/{req.timestamp}")
+
+    # Load and format course content
+    items = _load_course_content(version_dir)
+    content_text = _format_content_for_prompt(items, req.course_id)
+
+    # Get course title from meta
+    meta_path = version_dir / "meta.json"
+    course_title = req.course_id
+    if meta_path.exists():
+        meta = json.loads(meta_path.read_text())
+        course_title = meta.get("course_title", req.course_id)
+
+    # Run evaluation in a thread so it doesn't block the event loop
+    import asyncio as _asyncio
+    try:
+        result = await _asyncio.to_thread(
+            _run_standard_evaluation,
+            standard_num, req.course_id, course_title, content_text,
+        )
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=502, detail=f"Model returned invalid JSON: {exc}")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+    # Persist result to meta.json so it survives page reload
+    if meta_path.exists():
+        meta = json.loads(meta_path.read_text())
+        meta["evaluation"][str(standard_num)] = result
+        meta_path.write_text(json.dumps(meta))
+        if app_state.get("current_course"):
+            app_state["current_course"]["evaluation"] = meta["evaluation"]
+
+    return {"standard": standard_num, "result": result}
 
 
 @app.get("/health")

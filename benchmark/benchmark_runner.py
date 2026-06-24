@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PII Benchmark Runner
+CQR Benchmark Runner
 Usage:
   python3 benchmark/benchmark_runner.py                          # run all tests
   python3 benchmark/benchmark_runner.py --filter user_type=program_director
@@ -381,7 +381,7 @@ def apply_filter(tests: list, filter_str: str | None) -> list:
 # ---------------------------------------------------------------------------
 
 ARCHITECTURE_CONTEXT = """
-## PII Architecture Summary (for diagnostic use)
+## CQR Architecture Summary (for diagnostic use)
 
 ### Retrieval layers (build_context in main.py)
 - Tier 1 (always): PLOs scoped to active program(s), CLOs for program courses, course title list
@@ -431,7 +431,7 @@ also scans history for competency codes (cap 10).
 - get_course_role_lookup() — program-aware required/elective labels
 """
 
-ANALYSIS_PROMPT_TEMPLATE = """You are a diagnostic engineer reviewing benchmark test failures for the Program Intelligence Interface (PII), a RAG-based AI system.
+ANALYSIS_PROMPT_TEMPLATE = """You are a diagnostic engineer reviewing benchmark test failures for the Course Quality Reviewer (CQR), a RAG-based AI system.
 
 {architecture}
 
@@ -517,7 +517,7 @@ def run_analysis_pass(run: dict, skip_semantic: bool) -> str:
     client = Anthropic()
     note = " (some semantic criteria were skipped — diagnosis may be incomplete)" if skip_semantic else ""
     header = (
-        f"# PII Benchmark Analysis — {run['run_id']}\n"
+        f"# CQR Benchmark Analysis — {run['run_id']}\n"
         f"Overall score: {run['overall_score']}/100  "
         f"Non-passing: {len(non_passing)}/{run['tests_run']}{note}\n\n"
     )
@@ -536,8 +536,8 @@ def run_analysis_pass(run: dict, skip_semantic: bool) -> str:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="PII Benchmark Runner")
-    parser.add_argument("--url", default=BASE_URL, help="Base URL of PII server")
+    parser = argparse.ArgumentParser(description="CQR Benchmark Runner")
+    parser.add_argument("--url", default=BASE_URL, help="Base URL of CQR server")
     parser.add_argument("--filter", help="Filter tests: user_type=X, entry_point=Y, or id=A,B,C")
     parser.add_argument("--skip-semantic", action="store_true", help="Skip semantic (LLM-judge) criteria")
     parser.add_argument("--dry-run", action="store_true", help="List tests without running them")

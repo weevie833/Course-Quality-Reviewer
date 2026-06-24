@@ -1,4 +1,4 @@
-# Program Intelligence Interface — Project Reference
+# Course Quality Reviewer — Project Reference
 
 ## What This App Is
 A local RAG (retrieval-augmented generation) web application that serves as a plain-language

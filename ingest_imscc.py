@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Ingest a Canvas .imscc export directly into the PII database.
+Ingest a Canvas .imscc export directly into the CQR database.
 
-Extracts the ZIP, converts content to PII-compatible HTML files in
+Extracts the ZIP, converts content to CQR-compatible HTML files in
 canvas_courses/{course_id}/, then ingests into SQLite using sync.py's
 existing pipeline (delete_course_data → ingest_one_course → set_fingerprint).
 
@@ -32,15 +32,7 @@ DB_PATH = BASE_DIR / "data" / "program.db"
 CANVAS_NS = "http://canvas.instructure.com/xsd/cccv1p0"
 
 # Boilerplate page titles to exclude — not course content
-EXCLUDED_PAGE_PATTERNS = [
-    r"instructor notes",
-    r"about the use of ai in this course",
-    r"about your instructor",
-    r"home cpso",
-    r"faculty quick guide",
-    r"getting started.*canvas",
-    r"general q\s*&\s*a",
-]
+EXCLUDED_PAGE_PATTERNS: list[str] = []  # CQR extracts all course content without filtering
 
 
 # ---------------------------------------------------------------------------
@@ -127,11 +119,27 @@ def parse_manifest_resources(manifest_path: Path) -> dict:
 
 
 def detect_course_title(manifest_path: Path, course_id: str) -> str:
-    """Read the first <title> element from imsmanifest.xml."""
-    root = ET.parse(manifest_path).getroot()
-    for el in root.iter():
-        if local_name(el.tag) == "title" and el.text:
-            return el.text.strip()
+    """Read course title from course_settings.xml, falling back to imsmanifest.xml."""
+    # course_settings/course_settings.xml has the cleanest title
+    settings_path = manifest_path.parent / "course_settings" / "course_settings.xml"
+    if settings_path.exists():
+        try:
+            root = ET.parse(settings_path).getroot()
+            el = root.find(f"{{{CANVAS_NS}}}title")
+            if el is None:
+                el = root.find("title")
+            if el is not None and el.text and el.text.strip():
+                return el.text.strip()
+        except ET.ParseError:
+            pass
+    # Fallback: first non-empty <string> (lomimscc:string) in imsmanifest.xml
+    try:
+        root = ET.parse(manifest_path).getroot()
+        for el in root.iter():
+            if local_name(el.tag) == "string" and el.text and el.text.strip():
+                return el.text.strip()
+    except ET.ParseError:
+        pass
     return course_id
 
 
@@ -265,6 +273,58 @@ def get_page_html(extracted_dir: Path, resource: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Syllabus extraction
+# ---------------------------------------------------------------------------
+
+def extract_syllabus(extracted_dir: Path, course_id: str, course_dir: Path) -> bool:
+    """
+    Read course_settings/syllabus.html, resolve the $IMS-CC-FILEBASE$ link to a
+    .docx in web_resources/, extract its text with python-docx, and write
+    {course_id}_syllabus.html into course_dir.
+    Returns True if a docx was successfully extracted, False otherwise.
+    """
+    from urllib.parse import unquote
+
+    syllabus_html_path = extracted_dir / "course_settings" / "syllabus.html"
+    if not syllabus_html_path.exists():
+        return False
+
+    syl_html = syllabus_html_path.read_text(encoding="utf-8", errors="replace")
+
+    # Find the $IMS-CC-FILEBASE$/... link pointing at a .docx
+    m = re.search(r'\$IMS-CC-FILEBASE\$/([^"?]+\.docx)', syl_html, re.IGNORECASE)
+    if m:
+        rel_path = unescape(unquote(m.group(1)))  # URL-decode then HTML-unescape (&amp; → &)
+        docx_path = extracted_dir / "web_resources" / rel_path
+        if docx_path.exists():
+            try:
+                import docx as _docx
+                doc = _docx.Document(str(docx_path))
+                paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+                text = "\n".join(paragraphs)
+                header = (
+                    f"<!-- CONTENT-TYPE: Syllabus -->\n"
+                    f"<!-- COURSE: {course_id} -->\n"
+                    f"<!-- TITLE: Course Syllabus -->"
+                )
+                out_path = course_dir / f"{course_id}_syllabus.html"
+                out_path.write_text(f"{header}\n\n<pre>{text}</pre>", encoding="utf-8")
+                return True
+            except Exception:
+                pass
+
+    # Fallback: write the raw syllabus.html (link only, better than nothing)
+    header = (
+        f"<!-- CONTENT-TYPE: Syllabus -->\n"
+        f"<!-- COURSE: {course_id} -->\n"
+        f"<!-- TITLE: Course Syllabus -->"
+    )
+    out_path = course_dir / f"{course_id}_syllabus.html"
+    out_path.write_text(f"{header}\n\n{syl_html}", encoding="utf-8")
+    return False
+
+
+# ---------------------------------------------------------------------------
 # Write canvas_courses output
 # ---------------------------------------------------------------------------
 
@@ -277,7 +337,7 @@ def write_course_files(
     extracted_dir: Path,
     course_title: str,
 ) -> dict:
-    """Write PII-compatible HTML files to canvas_courses/{course_id}/. Returns counts."""
+    """Write CQR-compatible HTML files to canvas_courses/{course_id}/. Returns counts."""
     # Clear existing HTML files and the extraction log so no Cowork artifacts linger
     if course_dir.exists():
         for old_file in course_dir.glob("*.html"):
@@ -368,8 +428,16 @@ def write_course_files(
         counts["rubrics"] += 1
         included_items.append(("Rubric", title))
 
+    # Syllabus — extract from course_settings/syllabus.html + linked .docx
+    counts["syllabus"] = 0
+    syl_extracted = extract_syllabus(extracted_dir, course_id, course_dir)
+    if (course_dir / f"{course_id}_syllabus.html").exists():
+        counts["syllabus"] = 1
+        label = "Syllabus (from .docx)" if syl_extracted else "Syllabus (link only)"
+        included_items.append((label, "Course Syllabus"))
+
     extracted_at = datetime.now(timezone.utc).isoformat()
-    total_files = sum(counts[k] for k in ("assignments", "discussions", "pages", "rubrics"))
+    total_files = sum(counts[k] for k in ("assignments", "discussions", "pages", "rubrics", "syllabus"))
 
     # Extraction log (read by sync.py for course title discovery)
     log = {
@@ -418,10 +486,20 @@ def write_course_files(
 # Main ingestion pipeline
 # ---------------------------------------------------------------------------
 
-def ingest_imscc(imscc_path: Path, course_id: str | None = None) -> dict:
+def ingest_imscc(
+    imscc_path: Path,
+    course_id: str | None = None,
+    dest_dir: Path | None = None,
+) -> dict:
     """
-    Full pipeline: extract .imscc → write HTML files → ingest to SQLite.
-    Returns summary dict with course_id, course_title, file counts, db counts.
+    Full pipeline: extract .imscc → write HTML files → optionally ingest to SQLite.
+
+    If dest_dir is provided, files are written directly there and SQLite ingestion
+    is skipped (CQR path). Otherwise files go to canvas_courses/{course_id}/ and
+    SQLite is updated (PII path).
+
+    Returns summary dict with course_id, course_title, file counts, and db counts
+    (db counts are zero when dest_dir is provided).
     """
     if not imscc_path.exists():
         raise FileNotFoundError(f"File not found: {imscc_path}")
@@ -452,12 +530,21 @@ def ingest_imscc(imscc_path: Path, course_id: str | None = None) -> dict:
         rubrics = parse_rubrics(rubrics_xml_path)
         course_title = detect_course_title(manifest_path, course_id)
 
-        course_dir = COURSES_DIR / course_id
+        course_dir = dest_dir if dest_dir is not None else COURSES_DIR / course_id
         file_counts = write_course_files(
             course_id, course_dir, module_items, resources, rubrics, extracted_dir, course_title
         )
 
-    # Ingest into SQLite via sync.py's pipeline
+    # CQR path: skip SQLite ingestion
+    if dest_dir is not None:
+        return {
+            "course_id": course_id,
+            "course_title": course_title,
+            "files_written": file_counts,
+            "db_ingested": {},
+        }
+
+    # PII path: ingest into SQLite via sync.py's pipeline
     from sync import (
         ensure_ingest_log_table, ensure_course_registered, save_competency_links,
         delete_course_data, restore_competency_links, set_fingerprint, compute_fingerprint,
@@ -491,7 +578,7 @@ def ingest_imscc(imscc_path: Path, course_id: str | None = None) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Ingest a Canvas .imscc export into the PII database."
+        description="Ingest a Canvas .imscc export into the CQR database."
     )
     parser.add_argument("imscc_file", help="Path to the .imscc export file")
     parser.add_argument("--course-id", help="Override detected course ID (e.g. PM-810)")
