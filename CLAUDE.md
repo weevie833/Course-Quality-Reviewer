@@ -48,7 +48,6 @@ GitHub: https://github.com/weevie833/Course-Quality-Reviewer
 - `POST /evaluate/{standard_num}` — runs Claude evaluation for one standard (1–8)
 - `POST /download/docx` — generates Word report from UNH_CQR_Template.docx
 - `POST /chat` — chat with course content as context
-- `POST /email-session` — sends session transcript via SMTP
 
 ## Course ID / Directory Naming
 - `course_code` from Canvas `course_settings.xml` (e.g. "COM 680") → `COM-680` via `_clean_course_id`

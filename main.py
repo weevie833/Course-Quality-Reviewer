@@ -6,12 +6,8 @@ import json
 import os
 import re
 import shutil
-import smtplib
-import ssl
 from contextlib import asynccontextmanager
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Any
 
@@ -37,10 +33,6 @@ if _env_file.exists():
                 os.environ[_key] = _val
 
 MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
-SMTP_HOST     = os.environ.get("SMTP_HOST", "")
-SMTP_PORT     = int(os.environ.get("SMTP_PORT", "587"))
-SMTP_USER     = os.environ.get("SMTP_USER", "")
-SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
 
 EXTRACTED_COURSES_DIR = BASE_DIR / "extracted_courses"
 EXTRACTED_COURSES_DIR.mkdir(exist_ok=True)
@@ -76,12 +68,6 @@ class Message(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     history: list[Message] = []
-
-
-class EmailSessionRequest(BaseModel):
-    email: str
-    history: list[Message] = []
-    generated_at: str = ""
 
 
 class EvaluateRequest(BaseModel):
@@ -176,63 +162,6 @@ async def chat(req: ChatRequest):
             yield f"Unexpected error: {type(e).__name__}: {e}"
 
     return StreamingResponse(generate(), media_type="text/plain")
-
-
-@app.post("/email-session")
-async def email_session(req: EmailSessionRequest):
-    if not SMTP_HOST or not SMTP_USER or not SMTP_PASSWORD:
-        raise HTTPException(
-            status_code=503,
-            detail="Email relay not configured. Add SMTP_HOST, SMTP_USER, and SMTP_PASSWORD to .env.",
-        )
-
-    addresses = [a.strip() for a in req.email.split(",") if a.strip()]
-    if not addresses or not all("@" in a for a in addresses):
-        raise HTTPException(status_code=400, detail="Valid destination email address required.")
-    if not req.history:
-        raise HTTPException(status_code=400, detail="No session content to send.")
-
-    current = app_state.get("current_course", {})
-    course_line = f"{current.get('course_id', '')} — {current.get('course_title', '')}" if current else "No course loaded"
-
-    lines = [
-        "Course Quality Reviewer — Session Transcript",
-        f"Generated: {req.generated_at}",
-        f"Course: {course_line}",
-        "",
-        "=" * 60,
-        "",
-    ]
-    for msg in req.history:
-        label = "You" if msg.role == "user" else "CQR"
-        lines.append(f"[{label}]")
-        lines.append(msg.content)
-        lines.append("")
-
-    body = "\n".join(lines)
-    mime = MIMEMultipart()
-    mime["From"] = SMTP_USER
-    mime["To"] = ", ".join(addresses)
-    mime["Subject"] = f"CQR Session — {req.generated_at}"
-    mime.attach(MIMEText(body, "plain", "utf-8"))
-
-    try:
-        if SMTP_PORT == 465:
-            with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=ssl.create_default_context()) as smtp:
-                smtp.login(SMTP_USER, SMTP_PASSWORD)
-                smtp.sendmail(SMTP_USER, addresses, mime.as_string())
-        else:
-            with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
-                smtp.ehlo()
-                smtp.starttls()
-                smtp.login(SMTP_USER, SMTP_PASSWORD)
-                smtp.sendmail(SMTP_USER, addresses, mime.as_string())
-    except smtplib.SMTPAuthenticationError:
-        raise HTTPException(status_code=502, detail="SMTP authentication failed.")
-    except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"Email send failed: {exc}")
-
-    return {"status": "sent"}
 
 
 # ---------------------------------------------------------------------------
